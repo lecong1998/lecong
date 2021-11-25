@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.diendan.Write.WriteFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/relativelayout"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        >
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/image_writefragment"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:layout_alignStart="@id/relativelayout"
+            android:layout_alignLeft="@id/relativelayout"
+            android:padding="3dp"
+            android:src="@drawable/_60279747_1127526494354946_6683273208343303265_n"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="NotSibling" />
+
+        <TextView
+            android:layout_marginLeft="20dp"
+            android:id="@+id/txtname_writefragment"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="Lê Công"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            app:layout_constraintLeft_toRightOf="@id/image_writefragment"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <EditText
+        android:defaultFocusHighlightEnabled="false"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/vienvuongtrang"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:hint="Hãy Viết gì đó..."
+        android:gravity="top"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:id="@+id/edtxt_status"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:id="@+id/thaotac"/>
+    <Button
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:background="@color/purple_500"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Đăng Bài"
+        android:id="@+id/chuyentrang"/>
+
+</LinearLayout>

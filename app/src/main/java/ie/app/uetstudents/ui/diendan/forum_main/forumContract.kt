@@ -1,0 +1,16 @@
+package ie.app.uetstudents.ui.diendan.forum_main
+
+import ie.app.uetstudents.ui.Entity.Question.QuestionX
+
+interface forumContract {
+
+    interface View{
+        fun updateViewData(data : QuestionX)
+    }
+
+    interface Presenter{
+        fun getQuestions(id_type_content : Int ,index: Int)
+        fun updateUI(data: QuestionX)
+        fun getQuestions_of_Category(id_category: Int,index: Int)
+    }
+}
