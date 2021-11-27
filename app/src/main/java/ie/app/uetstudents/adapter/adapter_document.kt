@@ -5,15 +5,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ie.app.uetstudents.R
+import ie.app.uetstudents.ui.Entity.subject.SubjectDto
 import kotlinx.android.synthetic.main.item_document.view.*
 import java.util.zip.Inflater
 
-class adapter_document(var listdocument : ArrayList<document>) : RecyclerView.Adapter<adapter_document.ViewHoldel>() {
+class adapter_document(var listdocument : List<SubjectDto>, var ClickItem : OnClickItem_Subject) : RecyclerView.Adapter<adapter_document.ViewHoldel>() {
     inner class ViewHoldel(var itemview: View) : RecyclerView.ViewHolder(itemview) {
-        fun onBinData(document: document)
+        fun onBinData(subjectDto: SubjectDto)
         {
-            itemview.item_document_name.text = document.name_documnet
-            itemview.item_document_image.setImageResource(document.image)
+            itemview.item_document_name.text = subjectDto.subject_name
         }
 
     }
@@ -25,10 +25,17 @@ class adapter_document(var listdocument : ArrayList<document>) : RecyclerView.Ad
     }
 
     override fun onBindViewHolder(holder: ViewHoldel, position: Int) {
-        return holder.onBinData(listdocument.get(position))
+        val itemSubject = listdocument.get(position)
+        holder.onBinData(itemSubject)
+        holder.itemview.setOnClickListener {
+            ClickItem.OnClick(itemSubject)
+        }
     }
 
     override fun getItemCount(): Int {
         return listdocument.size
     }
+}
+interface OnClickItem_Subject{
+    fun OnClick(subjectDto: SubjectDto)
 }

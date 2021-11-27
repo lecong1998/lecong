@@ -64,7 +64,9 @@ class WritingStatusFragment : Fragment() {
         super.onPrepareOptionsMenu(menu)
         val item : MenuItem= menu.findItem(R.id.action_search)
         val item2 : MenuItem = menu.findItem(R.id.action_profile)
+        val item3 : MenuItem = menu.findItem(R.id.action_notification)
         item.isVisible = false
         item2.setVisible(false)
+        item3.isVisible = false
     }
 }

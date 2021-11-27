@@ -11,13 +11,6 @@ import androidx.lifecycle.ViewModelProvider
 import ie.app.uetstudents.adapter.adapter_pageView
 import ie.app.uetstudents.databinding.FragmentExamBinding
 import ie.app.uetstudents.ui.dethi.fragment.dethi_CNTTFragment
-import ie.app.uetstudents.ui.dethi.fragment.dethi_Co_KTFragment
-import ie.app.uetstudents.ui.dethi.fragment.dethi_DTVTFragment
-import ie.app.uetstudents.ui.dethi.fragment.dethi_RoBotFragment
-import ie.app.uetstudents.ui.tailieu.fragment.CNTTFragment
-import ie.app.uetstudents.ui.tailieu.fragment.Co_KTFragment
-import ie.app.uetstudents.ui.tailieu.fragment.DTVTFragment
-import ie.app.uetstudents.ui.tailieu.fragment.RoBotFragment
 import kotlinx.android.synthetic.main.fragment_documents.view.*
 import kotlinx.android.synthetic.main.fragment_exam.view.*
 
@@ -40,10 +33,22 @@ class ExamFragment: Fragment() {
         _binding = FragmentExamBinding.inflate(inflater, container, false)
         val root: View = binding.root
         val adapterPageview = activity?.supportFragmentManager?.let { adapter_pageView(it) }
-        adapterPageview?.addFragment(dethi_CNTTFragment(),"CNTT")
-        adapterPageview?.addFragment(dethi_DTVTFragment(),"DTVT")
-        adapterPageview?.addFragment(dethi_Co_KTFragment(), "Cơ Kỹ Thuật")
-        adapterPageview?.addFragment(dethi_RoBotFragment(), "RoBot")
+        adapterPageview?.addFragment(dethi_CNTTFragment.newInstance(1),"CNTT")
+        adapterPageview?.addFragment(dethi_CNTTFragment.newInstance(2),"KHMT")
+        adapterPageview?.addFragment(dethi_CNTTFragment.newInstance(3), "HTTT")
+        adapterPageview?.addFragment(dethi_CNTTFragment.newInstance(4), "CNKTDTTT")
+        adapterPageview?.addFragment(dethi_CNTTFragment.newInstance(5), "VLKT")
+        adapterPageview?.addFragment(dethi_CNTTFragment.newInstance(6), "KTNL")
+        adapterPageview?.addFragment(dethi_CNTTFragment.newInstance(7), "Cơ-KT")
+        adapterPageview?.addFragment(dethi_CNTTFragment.newInstance(8), "CN-KT-Cơ-DT")
+        adapterPageview?.addFragment(dethi_CNTTFragment.newInstance(9), "MMT-TT")
+        adapterPageview?.addFragment(dethi_CNTTFragment.newInstance(10), "KTMT")
+        adapterPageview?.addFragment(dethi_CNTTFragment.newInstance(11), "CN-KTXD-GT")
+        adapterPageview?.addFragment(dethi_CNTTFragment.newInstance(12), "CNHKVT")
+        adapterPageview?.addFragment(dethi_CNTTFragment.newInstance(13), "KTRB")
+        adapterPageview?.addFragment(dethi_CNTTFragment.newInstance(14), "CNNN")
+        adapterPageview?.addFragment(dethi_CNTTFragment.newInstance(15), "KTDK-TDH")
+
         root.viewpager_dethi?.adapter = adapterPageview
         root.tablayout_dethi?.setupWithViewPager(root.viewpager_dethi)
         return root

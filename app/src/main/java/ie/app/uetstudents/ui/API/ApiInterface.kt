@@ -12,6 +12,8 @@ import ie.app.uetstudents.ui.Entity.Question.QuestionX
 import ie.app.uetstudents.ui.Entity.Search.search_person
 import ie.app.uetstudents.ui.Entity.Search.search_question
 import ie.app.uetstudents.ui.Entity.like.like_comment
+import ie.app.uetstudents.ui.Entity.subject.DataSubject.data_subject
+import ie.app.uetstudents.ui.Entity.subject.subject
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -62,8 +64,31 @@ interface ApiInterface {
     @GET("account/search")
     fun getPerSonSearch(@Query("index") index: Int, @Query("text") text: String) : Call<search_person>
 
-    /*-------------------------lấy danh sách Question theo id account-------------------------------*/
+    /*-------------------------lấy danh sách Question theo id account-------------------------------*/ // chua call
     @GET("question/account/{account_id}")
     fun getQuestion_of_account(@Path("account_id") account_id : Int, @Query("index") index : Int) : Call<QuestionX>
+    /*---------------------------Thông Báo--------------------------------------------*/
+    @GET("notification-comment/author-account/{account_id}")
+    fun getNotification_comment_account(@Path("account_id") account_id: Int,@Query("index") index: Int)
+    @GET("notification-question/author-account/{account_id}")
+    fun getNotification_question_account(@Path("account_id") account_id: Int,@Query("index") index: Int)
+    /*--------------------------------Lây danh sách những ngươi đã like comment-----------------------------------------------*/
+    @GET("react-icon-comment/comment/{id_comment}")
+    fun getPersonLikeComment(@Path("id_comment") id_comment: Int,@Query("index") index: Int)
+    /*--------------------Lây ra danh sách những người đã like bài viết---------------------------------*/
+    @GET("react-icon-question/question/{id_question}")
+    fun getPersonLikeQuestion(@Path("id_question") id_question: Int, @Query("index") index: Int)
+
+
+    /*-------------------------------Lấy danh sách môn học theo ID Category-------------------------------------------------*/
+
+    @GET("subject/category/{id_category}")
+    fun getSubject_category(@Path("id_category") id_category: Int, @Query("index") index: Int) : Call<subject>
+
+    /*--------------------------------------------Lấy danh sách tài liệu môn học ----------------------------------------------------------------*/
+
+    @GET("exam-document/subject/{id_subject}")
+    fun getDataSubjectforid(@Path("id_subject") id_subject : Int, @Query("type") type : String,@Query("index") index : Int) : Call<data_subject>
+
 
 }

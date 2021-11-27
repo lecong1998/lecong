@@ -11,9 +11,6 @@ import androidx.lifecycle.ViewModelProvider
 import ie.app.uetstudents.adapter.adapter_pageView
 import ie.app.uetstudents.databinding.FragmentDocumentsBinding
 import ie.app.uetstudents.ui.tailieu.fragment.CNTTFragment
-import ie.app.uetstudents.ui.tailieu.fragment.Co_KTFragment
-import ie.app.uetstudents.ui.tailieu.fragment.DTVTFragment
-import ie.app.uetstudents.ui.tailieu.fragment.RoBotFragment
 import kotlinx.android.synthetic.main.fragment_documents.*
 import kotlinx.android.synthetic.main.fragment_documents.view.*
 
@@ -38,13 +35,23 @@ class DocumentFragment: Fragment() {
         val root: View = binding.root
 
         val adapterPageview = activity?.supportFragmentManager?.let { adapter_pageView(it) }
-        adapterPageview?.addFragment(CNTTFragment(),"CNTT")
-        adapterPageview?.addFragment(DTVTFragment(),"DTVT")
-        adapterPageview?.addFragment(Co_KTFragment(), "Cơ Kỹ Thuật")
-        adapterPageview?.addFragment(RoBotFragment(), "RoBot")
+        adapterPageview?.addFragment(CNTTFragment.newInstance(1),"CNTT")
+        adapterPageview?.addFragment(CNTTFragment.newInstance(2),"KHMT")
+        adapterPageview?.addFragment(CNTTFragment.newInstance(3), "HTTT")
+        adapterPageview?.addFragment(CNTTFragment.newInstance(4), "CNKTDTTT")
+        adapterPageview?.addFragment(CNTTFragment.newInstance(5), "VLKT")
+        adapterPageview?.addFragment(CNTTFragment.newInstance(6), "KTNL")
+        adapterPageview?.addFragment(CNTTFragment.newInstance(7), "Cơ-KT")
+        adapterPageview?.addFragment(CNTTFragment.newInstance(8), "CN-KT-Cơ-DT")
+        adapterPageview?.addFragment(CNTTFragment.newInstance(9), "MMT-TT")
+        adapterPageview?.addFragment(CNTTFragment.newInstance(10), "KTMT")
+        adapterPageview?.addFragment(CNTTFragment.newInstance(11), "CN-KTXD-GT")
+        adapterPageview?.addFragment(CNTTFragment.newInstance(12), "CNHKVT")
+        adapterPageview?.addFragment(CNTTFragment.newInstance(13), "KTRB")
+        adapterPageview?.addFragment(CNTTFragment.newInstance(14), "CNNN")
+        adapterPageview?.addFragment(CNTTFragment.newInstance(15), "KTDK-TDH")
+
         root.viewpager?.adapter = adapterPageview
-        val bundle = Bundle()
-        bundle.putInt("id",1)
         root.tablayout?.setupWithViewPager(root.viewpager)
         return root
     }

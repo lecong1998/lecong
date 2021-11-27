@@ -1,37 +1,45 @@
 package ie.app.uetstudents.ui.dethi.fragment
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
 import ie.app.uetstudents.R
-import ie.app.uetstudents.adapter.adapter_chude
+import ie.app.uetstudents.adapter.*
+import ie.app.uetstudents.ui.API.ApiClient
+import ie.app.uetstudents.ui.Entity.subject.DataSubject.ExamDocumentDto
+import ie.app.uetstudents.ui.Entity.subject.DataSubject.data_subject
+import ie.app.uetstudents.ui.Entity.subject.SubjectDto
+import ie.app.uetstudents.ui.Entity.subject.subject
+import ie.app.uetstudents.ui.tailieu.DetailDocumentExamActivity
+import kotlinx.android.synthetic.main.dialog_listtailieudethi.view.*
+import kotlinx.android.synthetic.main.fragment_c_n_t_t.*
 import kotlinx.android.synthetic.main.fragment_c_n_t_t2.*
 import kotlinx.android.synthetic.main.fragment_ro_bot.*
 import kotlinx.android.synthetic.main.fragment_ro_bot.list_subjects_robot
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class dethi_CNTTFragment : Fragment() , OnClickItem_Subject, OnCLickItem_DataSubject {
 
-/**
- * A simple [Fragment] subclass.
- * Use the [CNTTFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class dethi_CNTTFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private var id_category : Int? = null
+
+    private var page : Int = 1
+    private var page_data : Int = 1
+    private lateinit var viewdialog : View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            id_category = it.getInt("id_category")
         }
     }
 
@@ -45,34 +53,116 @@ class dethi_CNTTFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val listmonhoc = ArrayList<String>()
-        listmonhoc.add("Lập trình hướng đối tượng")
-        listmonhoc.add("Phát triển ứng dụng Web")
-        listmonhoc.add("Toán rời rạc")
-        listmonhoc.add("Điện Quang")
-        //var adapter = adapter_chude(listmonhoc)
-        dethi_list_subjects_cntt.layoutManager = LinearLayoutManager(requireContext())
-        //dethi_list_subjects_cntt.adapter = adapter
+
+        callapi_id_category(id_category!!,page!!)
+
+        dethi_scrollview.setOnScrollChangeListener(object : NestedScrollView.OnScrollChangeListener{
+            override fun onScrollChange(
+                v: NestedScrollView?,
+                scrollX: Int,
+                scrollY: Int,
+                oldScrollX: Int,
+                oldScrollY: Int
+            ) {
+                if (scrollY== v?.getChildAt(0)?.measuredHeight?.minus(v?.measuredHeight))
+                {
+                    page++
+                    dethi_progressbar.visibility = View.GONE
+                    callapi_id_category(id_category!!,page)
+
+                }
+            }
+        })
 
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment CNTTFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance(id_category : Int) =
             dethi_CNTTFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+                    putInt("id_category", id_category)
                 }
             }
+    }
+
+   private fun callapi_id_category( id_category: Int, page : Int)
+    {
+        val call : Call<subject> = ApiClient.getClient.getSubject_category(id_category,page)
+        call.enqueue(object : Callback<subject> {
+            override fun onResponse(call: Call<subject>, response: Response<subject>) {
+                if (response.isSuccessful)
+                {
+                    if (response.body()!! != null)
+                    {
+                        val adapterDocument = adapter_document(response.body()!!.subjectDtoList,this@dethi_CNTTFragment)
+                        dethi_list_subjects_cntt.layoutManager = LinearLayoutManager(context)
+                        dethi_list_subjects_cntt.adapter = adapterDocument
+                        dethi_progressbar.visibility = View.GONE
+                    }
+
+                }
+            }
+
+            override fun onFailure(call: Call<subject>, t: Throwable) {
+                Log.e("Test","Lỗi")
+            }
+        })
+    }
+
+    override fun OnClick(subjectDto: SubjectDto) {
+        Toast.makeText(context,subjectDto.subject_name, Toast.LENGTH_SHORT).show()
+        val DialogBuilder : AlertDialog.Builder = AlertDialog.Builder(requireContext(),R.style.DialogFullScreen)
+
+        viewdialog = LayoutInflater.from(context).inflate(R.layout.dialog_listtailieudethi,null)
+
+        DialogBuilder.setView(viewdialog)
+        val dialog = DialogBuilder.create()
+        dialog.show()
+        callapidatasubject(subjectDto.id,"EXAM",page_data)
+        viewdialog.list_document_scrollview.setOnScrollChangeListener(object : NestedScrollView.OnScrollChangeListener{
+            override fun onScrollChange(
+                v: NestedScrollView?,
+                scrollX: Int,
+                scrollY: Int,
+                oldScrollX: Int,
+                oldScrollY: Int
+            ) {
+                if (scrollY== v?.getChildAt(0)?.measuredHeight?.minus(v?.measuredHeight))
+                {
+                    page_data++
+                    callapidatasubject(subjectDto.id,"EXAM",page_data)
+                }
+            }
+        })
+
+
+    }
+
+    override fun ClickItem(ExamDocument: ExamDocumentDto) {
+        val intent = Intent(activity, DetailDocumentExamActivity::class.java)
+        intent.putExtra("ExamDocument",ExamDocument.link)
+        startActivity(intent)
+    }
+    fun callapidatasubject(id_subject : Int, type : String, page : Int)
+    {
+        val call : Call<data_subject> = ApiClient.getClient.getDataSubjectforid(id_subject,type,page)
+        call.enqueue(object : Callback<data_subject>{
+            override fun onResponse(call: Call<data_subject>, response: Response<data_subject>) {
+                if (response.isSuccessful)
+                {
+                    if (response.body()!! != null)
+                    {
+                        val adapter = adapter_datasubject(response.body()!!.examDocumentDtoList,this@dethi_CNTTFragment)
+                        viewdialog?.list_document?.layoutManager = LinearLayoutManager(context)
+                        viewdialog?.list_document?.adapter = adapter
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<data_subject>, t: Throwable) {
+                Log.e("test","Lỗi")
+            }
+        })
     }
 }

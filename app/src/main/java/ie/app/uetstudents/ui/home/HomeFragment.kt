@@ -46,12 +46,12 @@ class HomeFragment : Fragment() {
           })*/
         listdocumnet.add(document(0, R.drawable.unnamed, "UET logo"))
         listdocumnet.add(document(1, R.drawable.logo__1_, "UET logo ảnh trường"))
-        adapter = adapter_document(listdocumnet)
-        root.home_recyclerview_document.layoutManager = LinearLayoutManager(context)
+      //  adapter = adapter_document(listdocumnet)
+       /* root.home_recyclerview_document.layoutManager = LinearLayoutManager(context)
         root.home_recyclerview_document.adapter = adapter
         root.home_viewflipper.isAutoStart= true
         root.home_viewflipper.flipInterval = 3000
-        root.home_viewflipper.startFlipping()
+        root.home_viewflipper.startFlipping()*/
         return root
     }
 
