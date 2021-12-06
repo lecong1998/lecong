@@ -1,40 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".ui.notifications.NotificationsActivity">
-    <LinearLayout
-        android:background="@color/purple_200"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="horizontal">
-        <ImageButton
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_back"
-            android:background="@color/purple_200"
-            android:id="@+id/back_notification"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Thông Báo"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:paddingLeft="100dp"
-            android:gravity="center_vertical"/>
-    </LinearLayout>
+    android:id="@+id/framlayout_notification"
+    android:background="@color/white"
+    >
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <androidx.recyclerview.widget.RecyclerView
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/notification_scrollview"
+            android:layout_marginTop="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/notification_recyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-        </androidx.recyclerview.widget.RecyclerView>
+                </androidx.recyclerview.widget.RecyclerView>
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
     </LinearLayout>
-</LinearLayout>
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:id="@+id/progress_bar_notifi"
+        android:visibility="gone"/>
+</FrameLayout>

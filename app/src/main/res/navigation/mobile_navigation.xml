@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_uettalk">
+    app:startDestination="@+id/nav_forum">
 
     <fragment
         android:id="@+id/nav_home"
@@ -74,7 +74,7 @@
     <fragment
         android:id="@+id/detailForumFragment"
         android:name="ie.app.uetstudents.ui.diendan.detailForum.DetailForumFragment"
-        android:label="Detail Question"
+        android:label="Bài Viết"
         tools:layout="@layout/fragment_detail_forum" />
     <fragment
         android:id="@+id/writingStatusFragment"
@@ -85,6 +85,25 @@
             android:id="@+id/action_writingStatusFragment_to_nav_uettalk"
             app:destination="@id/nav_uettalk" />
     </fragment>
->
+    <fragment
+        android:id="@+id/action_notification"
+        android:name="ie.app.uetstudents.ui.notifications.notifications_Fragment"
+        android:label="Thông Báo" >
+        <action
+            android:id="@+id/action_action_notification_to_detailForumFragment"
+            app:destination="@id/detailForumFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/action_search"
+        android:name="ie.app.uetstudents.ui.timkiem.Search_Fragment"
+        android:label="Tìm Kiếm" >
+        <action
+            android:id="@+id/action_search_Fragment_to_detailForumFragment"
+            app:destination="@id/detailForumFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/action_profile"
+        android:name="ie.app.uetstudents.ui.profile.Profile_Fragment"
+        android:label="Trang cá nhân" />
 
 </navigation>

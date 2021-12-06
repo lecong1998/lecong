@@ -20,6 +20,7 @@ class adapter_chude(
 
     fun setData(list: List<CategoryDto>){
         this.dataList = list
+        notifyDataSetChanged()
 
     }
 

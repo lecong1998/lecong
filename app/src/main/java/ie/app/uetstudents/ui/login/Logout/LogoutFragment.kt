@@ -11,20 +11,17 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import ie.app.uetstudents.R
 import ie.app.uetstudents.ui.API.ApiClient
-import ie.app.uetstudents.ui.Entity.Account.AccountDto
-import ie.app.uetstudents.ui.Entity.Account.account
-import ie.app.uetstudents.ui.login.LogContract
+import ie.app.uetstudents.ui.Entity.Account.Get.dangky.dangky_account
+import ie.app.uetstudents.ui.Entity.Account.Post.account
+
 import kotlinx.android.synthetic.main.fragment_logout.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.text.SimpleDateFormat
 
 
-class LogoutFragment : Fragment(), LogContract.View {
+class LogoutFragment : Fragment() {
 
-    private lateinit var presenter: LogContract.Presenter
-    private lateinit var account: account
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,18 +38,20 @@ class LogoutFragment : Fragment(), LogContract.View {
 
                 if (register_fragment_edt_username.text.toString().isEmpty()
                     ||register_fragment_edt_password.text.toString().isEmpty()
-                    ||register_fragment_edt_name.text.toString().isEmpty()
-                    ||register_fragment_edt_email.text.toString().isEmpty())
+                    ||register_fragment_edt_confirmpass.text.toString().isEmpty())
                 {
                     Toast.makeText(context,"Thông tin chưa đầy đủ",Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
                 }
-                else
+                 if(register_fragment_edt_password.text.toString().equals(register_fragment_edt_confirmpass.text.toString()))
                 {
                     callApi(register_fragment_edt_username.text.toString(),
-                        register_fragment_edt_password.text.toString(),
-                        register_fragment_edt_name.text.toString(),
-                        register_fragment_edt_email.text.toString())
-
+                        register_fragment_edt_password.text.toString()
+                    )
+                }
+                else{
+                    Toast.makeText(context,"Mật khẩu nhập không khớp!",Toast.LENGTH_LONG).show()
+                     return@setOnClickListener
                 }
 
             }
@@ -63,54 +62,41 @@ class LogoutFragment : Fragment(), LogContract.View {
         }
     }
 
-    private fun callApi(username: String, password: String, fullname: String, email: String) {
+    private fun callApi(username: String, password: String) {
 
-           // val list = ArrayList<AccountDto>()
-            //list.add(AccountDto("anh",1,"111","111",1,"lecng"))
-            //account = account(list,"ok",true)
-            val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
-            presenter.getAccount()
-            account!!.accountDtoList.forEach {
-                if (it.username.equals(register_fragment_edt_username.text.toString()))
+        val call : Call<dangky_account> = ApiClient.getClient.CallsetAccount(account(username,password))
+        call.enqueue(object : Callback<dangky_account>{
+            override fun onResponse(
+                call: Call<dangky_account>,
+                response: Response<dangky_account>
+            ) {
+                if (response.isSuccessful)
                 {
-                    Toast.makeText(context,"Tài khoản đã tồn tại",Toast.LENGTH_SHORT).show()
-                    return
+                    if (response.body()!!.success==true)
+                    {
+                        Toast.makeText(context,response.body()!!.message,Toast.LENGTH_SHORT).show()
+                        this@LogoutFragment.findNavController().navigate(R.id.action_logoutFragment_to_loginFragment)
+                        Log.e("đăng ký","Thành công")
+                        return
+                    }
+                    if(response.body()!!.success==false)
+                    {
+                        Toast.makeText(context,response.body()!!.message,Toast.LENGTH_SHORT).show()
+                        Log.e("đăng ký"," tài khoản đã tồn tại")
+                        return
+                    }
+
+
                 }
             }
 
-            val call : Call<account> =
-                ApiClient.getClient.CallsetAccount(
-                    AccountDto("",
-                        null,
-                        password,
-                        null,
-                        null,
-                        username
-                    )
-                )
-
-            call.enqueue(object : Callback<account>{
-                override fun onResponse(call: Call<account>, response: Response<account>) {
-                    if(response.isSuccessful){
-                        Log.e("Api","Call thành công")
-                    }
-
-                }
-
-                override fun onFailure(call: Call<account>, t: Throwable) {
-                    Log.e("Api","Call thất bại")
-                }
-            })
-
-            this.findNavController().navigate(R.id.action_logoutFragment_to_loginFragment)
-            Toast.makeText(context,"Đăng ký tài khoản thành công",Toast.LENGTH_SHORT).show()
+            override fun onFailure(call: Call<dangky_account>, t: Throwable) {
+                Log.e("đăng ký","Thất bại")
+            }
+        })
 
 
 
-    }
-
-    override fun UpdateViewData(account: account) {
-        this.account = account
     }
 
 }

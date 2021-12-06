@@ -1,17 +1,14 @@
 package ie.app.uetstudents
 
 import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -20,35 +17,33 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.NestedScrollView
-import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken
+import com.google.gson.Gson
+import ie.app.uetstudents.adapter.adapter_notification
 import ie.app.uetstudents.databinding.ActivityMainBinding
-import ie.app.uetstudents.databinding.ActivityMainBinding.inflate
-import ie.app.uetstudents.ui.API.ApiClient
-import ie.app.uetstudents.ui.Entity.Search.PersonDto
-import ie.app.uetstudents.ui.Entity.Search.QuestionDto
-import ie.app.uetstudents.ui.Entity.Search.search_person
-import ie.app.uetstudents.ui.Entity.Search.search_question
-import ie.app.uetstudents.ui.notifications.NotificationsActivity
+import ie.app.uetstudents.ui.Entity.notifications_comment.get.NotificationCommentDto
+import ie.app.uetstudents.ui.notifications.notification_service
+import ie.app.uetstudents.ui.notifications.notifications_Fragment
 import ie.app.uetstudents.ui.profile.ProfileActivity
 import ie.app.uetstudents.ui.timkiem.*
-import kotlinx.android.synthetic.main.searchdialog_fullscreen.*
-import kotlinx.android.synthetic.main.searchdialog_fullscreen.view.*
-import kotlinx.android.synthetic.main.sheetbottom_comment_uettalk.view.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.android.synthetic.main.activity_notifications.*
 
 
 class MainActivity : AppCompatActivity() {
 
+    var mBroadcastAction = "STRING_BROADCAST_ACTION"
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
     private lateinit var  view : View
 
+    private  var username : String = "16020859"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+       // username = intent.getStringExtra("username")
+
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -72,7 +67,8 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-
+        val intent = Intent(this, notification_service::class.java)
+        startService(intent)
 
     }
 
@@ -86,16 +82,19 @@ class MainActivity : AppCompatActivity() {
    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_search -> {
-                val intent = Intent(binding.root.context, SearchActivity::class.java)
-                startActivity(intent)
+
+                val navController = findNavController(R.id.nav_host_fragment_content_main)
+                navController.navigate(R.id.action_search)
             }
             R.id.action_profile -> {
-                val intent = Intent(binding.root.context, ProfileActivity::class.java)
-                startActivity(intent)
+                val navController = findNavController(R.id.nav_host_fragment_content_main)
+                navController.navigate(R.id.action_profile)
             }
             R.id.action_notification -> {
-                val intent = Intent(binding.root.context,NotificationsActivity::class.java)
-                startActivity(intent)
+
+                val navController = findNavController(R.id.nav_host_fragment_content_main)
+                navController.navigate(R.id.action_notification)
+
             }
         }
         return super.onOptionsItemSelected(item)
@@ -104,8 +103,37 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onSupportNavigateUp(): Boolean {
+        val bundle = Bundle()
         val navController = findNavController(R.id.nav_host_fragment_content_main)
+
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
+
+    override fun onStart() {
+        super.onStart()
+
+       // val intentFilter = IntentFilter(mBroadcastAction)
+        //registerReceiver(mbroadcastReceiver,intentFilter)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        //unregisterReceiver(mbroadcastReceiver)
+    }
+
+ /*   val mbroadcastReceiver : BroadcastReceiver = object : BroadcastReceiver(){
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action?.equals(MainActivity().mBroadcastAction)!!)
+            {
+
+                val jsonString : String = intent.getStringExtra("broadcast")
+                val type = object : TypeToken<List<NotificationCommentDto?>?>() {}.type
+                val gson : Gson = Gson()
+                val notifi : List<NotificationCommentDto> = gson.fromJson(jsonString,type)
+
+            }
+        }
+    }*/
+
 
 }

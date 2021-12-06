@@ -1,6 +1,6 @@
 package ie.app.uetstudents.ui.profile
 
-import ie.app.uetstudents.ui.Entity.Question.QuestionDto
+import ie.app.uetstudents.ui.Entity.Question.get.QuestionDto
 
 interface ProfileContract {
     interface View{

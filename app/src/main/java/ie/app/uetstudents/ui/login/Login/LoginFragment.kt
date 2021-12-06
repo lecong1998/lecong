@@ -2,23 +2,28 @@ package ie.app.uetstudents.ui.login.Login
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import ie.app.uetstudents.MainActivity
 import ie.app.uetstudents.R
-import ie.app.uetstudents.ui.Entity.Account.account
-import ie.app.uetstudents.ui.login.LogContract
+import ie.app.uetstudents.ui.API.ApiClient
+import ie.app.uetstudents.ui.Entity.Account.Get.dangnhap.dangnhap_account
+import ie.app.uetstudents.ui.Entity.Account.Get.dangnhap.xacminhdangnhap
+import ie.app.uetstudents.ui.login.SigninActivity
 import kotlinx.android.synthetic.main.fragment_login.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
-class LoginFragment : Fragment(),LogContract.View {
+class LoginFragment : Fragment() {
 
-    private lateinit var presenter: LogContract.Presenter
-    private lateinit var account: account
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -56,27 +61,9 @@ class LoginFragment : Fragment(),LogContract.View {
 
     private fun CallApiAccount(username: String, password: String) {
 
-        presenter.getAccount()
-
-        account!!.accountDtoList.forEach {
-            if (it.username.equals(username))
-            {
-                if (it.password.equals(password))
-                {
-                    val intent = Intent(context,MainActivity::class.java)
-                    intent.putExtra("username",username)
-                    startActivity(intent)
-                }
-                else
-                {
-                    Toast.makeText(context,"Mật khẩu không đúng!",Toast.LENGTH_SHORT).show()
-                }
-                return
-            }
-
-        }
-
-        Toast.makeText(context,"Tài khoản không tồn tại",Toast.LENGTH_LONG).show()
+        val intent = Intent(activity,MainActivity::class.java)
+        intent.putExtra("username",username)
+        startActivity(intent)
 
     }
 
@@ -85,7 +72,4 @@ class LoginFragment : Fragment(),LogContract.View {
         fun newInstance() = LoginFragment()
     }
 
-    override fun UpdateViewData(account: account) {
-        this.account = account
-    }
 }

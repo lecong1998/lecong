@@ -1,20 +1,13 @@
 package ie.app.uetstudents.ui.home
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.*
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
 import ie.app.uetstudents.R
 import ie.app.uetstudents.adapter.adapter_document
 import ie.app.uetstudents.adapter.document
 import ie.app.uetstudents.databinding.FragmentHomeBinding
-import ie.app.uetstudents.ui.timkiem.SearchActivity
-import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.fragment_home.view.*
 
 class HomeFragment : Fragment() {
 

@@ -14,7 +14,7 @@ class adapter_datasubject(var listdata : List<ExamDocumentDto> , var CLickItem :
    inner class ViewHolder(var itemview : View) : RecyclerView.ViewHolder(itemview) {
         fun OnBindata(ExamDocument: ExamDocumentDto)
         {
-            itemview.datasubject_name.text = ExamDocument.id.toString()
+            itemview.datasubject_name.text = ExamDocument.name.toString()
         }
     }
 

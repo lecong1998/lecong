@@ -100,6 +100,7 @@ class CNTTFragment : Fragment() , OnClickItem_Subject,OnCLickItem_DataSubject{
                         list_subjects_cntt.layoutManager = LinearLayoutManager(requireContext())
                         list_subjects_cntt.adapter = adapterDocument
                         tailieu_progressbar.visibility = View.GONE
+                        Log.e("Test_phần_tailieu","Lỗi")
                     }
 
                 }
@@ -159,6 +160,7 @@ class CNTTFragment : Fragment() , OnClickItem_Subject,OnCLickItem_DataSubject{
                         val adapter = adapter_datasubject(response.body()!!.examDocumentDtoList,this@CNTTFragment)
                         viewdialog.list_document.layoutManager = LinearLayoutManager(context)
                         viewdialog.list_document.adapter = adapter
+                        Log.e("Test_lây_list_tailieu","Thành công")
                     }
                 }
             }

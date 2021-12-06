@@ -1,7 +1,8 @@
 package ie.app.uetstudents.ui.diendan.forum_main
 
 import ie.app.uetstudents.Repository.Repository
-import ie.app.uetstudents.ui.Entity.Question.QuestionX
+import ie.app.uetstudents.ui.Entity.Question.get.QuestionX
+import ie.app.uetstudents.ui.Entity.Question.get.question
 
 class forumPresenter(
     private val view : forumContract.View,
@@ -12,7 +13,7 @@ class forumPresenter(
         repository.CallItemQuestion(this,id_type_content,index)
     }
 
-    override fun updateUI(data : QuestionX) {
+    override fun updateUI(data : question) {
         view.updateViewData(data)
     }
 

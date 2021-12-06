@@ -22,8 +22,10 @@ import ie.app.uetstudents.adapter.adapter_forum
 import ie.app.uetstudents.databinding.FragmentForumBinding
 import ie.app.uetstudents.ui.Entity.Category.CategoryDto
 import ie.app.uetstudents.ui.Entity.Category.category
-import ie.app.uetstudents.ui.Entity.Question.QuestionDto
-import ie.app.uetstudents.ui.Entity.Question.QuestionX
+import ie.app.uetstudents.ui.Entity.Question.get.QuestionDto
+import ie.app.uetstudents.ui.Entity.Question.get.QuestionDtoX
+import ie.app.uetstudents.ui.Entity.Question.get.QuestionX
+import ie.app.uetstudents.ui.Entity.Question.get.question
 import ie.app.uetstudents.ui.diendan.category.CategoryContract
 import ie.app.uetstudents.ui.diendan.category.CategoryPresenter
 import kotlinx.android.synthetic.*
@@ -54,8 +56,6 @@ class ForumFragment: Fragment(),ClickItem , forumContract.View,ClickItemCategory
     private var page_forum : Int = 1
 
 
-   // private var adapter : adapter_forum? = null
-   // private var listforum = ArrayList<item_forum>()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -132,7 +132,7 @@ class ForumFragment: Fragment(),ClickItem , forumContract.View,ClickItemCategory
         _binding = null
     }
 
-    override fun clickOnItem(m: QuestionDto) {
+    override fun clickOnItem(m: QuestionDtoX) {
         val bundle = Bundle()
         bundle.putInt("id_question",m.id!!)
         Toast.makeText( context,m.id.toString(), Toast.LENGTH_SHORT).show()
@@ -140,10 +140,10 @@ class ForumFragment: Fragment(),ClickItem , forumContract.View,ClickItemCategory
 
     }
 
-    override fun updateViewData(data : QuestionX) {
+    override fun updateViewData(data : question) {
 
         forum_progressbar.visibility = View.GONE
-        adapter.setData(data.questionDtoList.reversed())
+        adapter.setData(data.questionDtoList)
 
         forum_recycelview.adapter?.notifyDataSetChanged()
     }
