@@ -1,32 +1,36 @@
 package ie.app.uetstudents
 
 import android.annotation.SuppressLint
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import com.google.android.material.navigation.NavigationView
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken
-import com.google.gson.Gson
-import ie.app.uetstudents.adapter.adapter_notification
+import com.google.android.material.navigation.NavigationView
+import ie.app.uetstudents.data.response.Response
 import ie.app.uetstudents.databinding.ActivityMainBinding
-import ie.app.uetstudents.ui.Entity.notifications_comment.get.NotificationCommentDto
+import ie.app.uetstudents.service.FirebaseService
+import ie.app.uetstudents.ui.API.ApiClient
 import ie.app.uetstudents.ui.notifications.notification_service
-import ie.app.uetstudents.ui.notifications.notifications_Fragment
-import ie.app.uetstudents.ui.profile.ProfileActivity
 import ie.app.uetstudents.ui.timkiem.*
 import kotlinx.android.synthetic.main.activity_notifications.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
+import retrofit2.Call
+import retrofit2.Callback
 
 
 class MainActivity : AppCompatActivity() {
@@ -40,12 +44,15 @@ class MainActivity : AppCompatActivity() {
     private  var username : String = "16020859"
     private var id_user : Int? = null
 
+    private var textItemCount : TextView? = null
+
+    var unreadCount = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         username = intent.getStringExtra("username")
         id_user = intent.getIntExtra("id_user",0)
-
 
 
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -114,12 +121,88 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this, notification_service::class.java)
         startService(intent)
 
+        Handler(Looper.getMainLooper()).postDelayed({
+            getUnreadNotification(1)
+        }, 500)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main, menu)
+
+        val menuItem = menu.findItem(R.id.action_notification)
+        val actionView = menuItem.actionView
+        textItemCount = actionView.findViewById<View>(R.id.unread_notification) as TextView
+
+        setupBadge(unreadCount)
+
+        actionView.setOnClickListener { onOptionsItemSelected(menuItem) }
         return true
+    }
+
+    private fun setupBadge(count : Int) {
+
+        if (textItemCount != null) {
+            textItemCount?.isVisible = count != 0
+            textItemCount?.text = "$count"
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(event: String) {
+        if(event == FirebaseService.UPDATE_NOTIFICATION) {
+            getUnreadNotification(1)
+        }
+    }
+
+    private fun getUnreadNotification(userId : Int) {
+        unreadCount = 0
+        setupBadge(unreadCount)
+        val callComment = ApiClient.getClient.getUnreadComment(userId)
+        callComment.enqueue(object : Callback<Response> {
+            override fun onResponse(
+                call: Call<Response>,
+                response: retrofit2.Response<Response>
+            ) {
+                unreadCount += response.body()?.resultQuantity ?: 0
+                setupBadge(unreadCount)
+            }
+
+            override fun onFailure(
+                call: Call<Response>,
+                t: Throwable
+            ) {
+                TODO("Not yet implemented")
+            }
+        })
+
+        val callQuestion = ApiClient.getClient.getUnreadQuestion(userId)
+        callQuestion.enqueue(object : Callback<Response> {
+            override fun onResponse(
+                call: Call<Response>,
+                response: retrofit2.Response<Response>
+            ) {
+                unreadCount += response.body()?.resultQuantity ?: 0
+                setupBadge(unreadCount)
+            }
+
+            override fun onFailure(
+                call: Call<Response>,
+                t: Throwable
+            ) {
+                TODO("Not yet implemented")
+            }
+        })
+    }
+
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        EventBus.getDefault().unregister(this)
     }
 
    @SuppressLint("ResourceAsColor")

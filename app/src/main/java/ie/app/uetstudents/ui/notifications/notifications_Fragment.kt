@@ -1,24 +1,17 @@
 package ie.app.uetstudents.ui.notifications
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
-import android.os.IBinder
 import android.util.Log
 import android.view.*
-import android.widget.Toast
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken
-import com.google.gson.Gson
 import ie.app.uetstudents.R
 import ie.app.uetstudents.Repository.Repository
 import ie.app.uetstudents.adapter.OnClickItem_Notification
 import ie.app.uetstudents.adapter.adapter_notification
+import ie.app.uetstudents.service.FirebaseService.Companion.UPDATE_NOTIFICATION
 import ie.app.uetstudents.ui.API.ApiClient
 import ie.app.uetstudents.ui.Entity.Question.get.QuestionX
 import ie.app.uetstudents.ui.Entity.notifications_comment.get.NotificationCommentDto
@@ -27,19 +20,18 @@ import ie.app.uetstudents.ui.Entity.notifications_question.get.NotificationQuest
 import ie.app.uetstudents.ui.Entity.notifications_question.get.notification_question
 import ie.app.uetstudents.ui.Entity.notifications_question.notification_item
 import kotlinx.android.synthetic.main.activity_notifications.*
-import org.json.JSONArray
-import org.json.JSONException
-import org.json.JSONObject
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.lang.reflect.Type
+
 
 class notifications_Fragment : Fragment() , OnClickItem_Notification,notification_Contract.View{
 
-
-    var list_notification_Question : List<NotificationQuestionDto> = ArrayList()
-    var list_notification_Comment : List<NotificationCommentDto> = ArrayList()
+    var list_notification_Question : ArrayList<NotificationQuestionDto> = ArrayList()
+    var list_notification_Comment : ArrayList<NotificationCommentDto> = ArrayList()
 
     private lateinit var adapterNotification: adapter_notification
     private lateinit var presenter: notification_Contract.Presenter
@@ -85,11 +77,18 @@ class notifications_Fragment : Fragment() , OnClickItem_Notification,notificatio
                 }
             }
         })
-
-
     }
 
-
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(event: String) {
+        if(event == UPDATE_NOTIFICATION) {
+            Log.d("dLog", "notifications_Fragment  onMessageEvent: $event")
+            page = 1
+            adapterNotification.resetList()
+            presenter.getNotificationComment(1,page)
+            presenter.getNotificationQuestion(1,page)
+        }
+    }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
@@ -140,6 +139,14 @@ class notifications_Fragment : Fragment() , OnClickItem_Notification,notificatio
         notification_recyclerview.adapter?.notifyDataSetChanged()
     }
 
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+    }
 
+    override fun onStop() {
+        super.onStop()
+        EventBus.getDefault().unregister(this)
+    }
 }
 

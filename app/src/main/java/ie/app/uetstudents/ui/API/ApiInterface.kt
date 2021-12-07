@@ -1,6 +1,8 @@
 package ie.app.uetstudents.ui.API
 
 
+import ie.app.uetstudents.data.request.RegisterFirebaseTokenRequest
+import ie.app.uetstudents.data.response.Response
 import ie.app.uetstudents.ui.Entity.Account.Get.dangky.dangky_account
 import ie.app.uetstudents.ui.Entity.Account.Get.dangnhap.dangnhap_account
 import ie.app.uetstudents.ui.Entity.Account.Get.dangnhap.xacminhdangnhap
@@ -137,5 +139,12 @@ interface ApiInterface {
     @GET("question/comment/{id_comment}")
     fun getQuestion_of_comment(@Path("id_comment") id_comment: Int) : Call<QuestionX>
 
+    @POST("register_firebase_token")
+    fun registerFirebaseToken(@Body request : RegisterFirebaseTokenRequest) : Call<Response>
 
+    @GET("notification-question/author-account/{userId}/unseen?index=1")
+    fun getUnreadQuestion(@Path("userId") id : Int) : Call<Response>
+
+    @GET("notification-comment/author-account/{userId}/unseen?index=1")
+    fun getUnreadComment(@Path("userId") id : Int) : Call<Response>
 }

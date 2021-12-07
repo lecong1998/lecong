@@ -16,6 +16,12 @@ class adapter_notification( var ClickItem : OnClickItem_Notification)
     : RecyclerView.Adapter<adapter_notification.ViewHolder>(){
 
     private var listnotifi_item : ArrayList<notification_item>? = ArrayList()
+
+    fun resetList() {
+        listnotifi_item?.clear()
+        notifyDataSetChanged()
+    }
+
     fun setData_question(list_notifi_question : List<NotificationQuestionDto>)
     {
         list_notifi_question.forEach {

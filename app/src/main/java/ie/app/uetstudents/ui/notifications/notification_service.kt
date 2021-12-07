@@ -5,32 +5,18 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
 import android.os.IBinder
 import android.util.Log
-import android.widget.Toast
 import androidx.core.app.NotificationCompat
-import androidx.navigation.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.gson.Gson
-import com.google.gson.JsonArray
 import ie.app.uetstudents.MainActivity
 import ie.app.uetstudents.R
-import ie.app.uetstudents.Repository.Repository
-import ie.app.uetstudents.adapter.OnClickItem_Notification
-import ie.app.uetstudents.adapter.adapter_notification
 import ie.app.uetstudents.ui.API.ApiClient
 import ie.app.uetstudents.ui.Entity.notifications_comment.get.NotificationCommentDto
 import ie.app.uetstudents.ui.Entity.notifications_comment.get.get_notifi_comment
 import ie.app.uetstudents.ui.Entity.notifications_question.get.NotificationQuestionDto
-import ie.app.uetstudents.ui.Entity.notifications_question.get.notification_question
-import ie.app.uetstudents.ui.Entity.notifications_question.notification_item
-import ie.app.uetstudents.ui.diendan.detailForum.DetailForumFragment
-import kotlinx.android.synthetic.main.activity_notifications.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.Serializable
 
 class notification_service : Service()  {
 
@@ -120,7 +106,7 @@ class notification_service : Service()  {
         val intent = Intent(this,MainActivity::class.java)
         val bundle = Bundle()
         val pendingIntent : PendingIntent = PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT)
-        val notification : Notification = NotificationCompat.Builder(this,my_notification().CHANNEL_ID)
+        val notification : Notification = NotificationCompat.Builder(this,MyApplication().CHANNEL_ID)
             .setContentTitle("Notification UET Students")
             .setContentText("${notifi.username} Đã thích bình luận của bạn")
             .setSmallIcon(R.drawable.unnamed)

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "133960434684",
+    "project_id": "uet-student-68222",
+    "storage_bucket": "uet-student-68222.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:133960434684:android:0c8dd7c9a1320ea33b2879",
+        "android_client_info": {
+          "package_name": "ie.app.uetstudents"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "133960434684-s7ssobobgv8f7sllg1jms35kturl5cs5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBG2-SeGuWMgIjL0kgA-8t7X1TkaEuAGrI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "133960434684-s7ssobobgv8f7sllg1jms35kturl5cs5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
