@@ -1,6 +1,7 @@
 package ie.app.uetstudents.ui.diendan.forum_main
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -54,6 +55,17 @@ class ForumFragment: Fragment(),ClickItem , forumContract.View,ClickItemCategory
     private lateinit var bottomSheetView : View
 
     private var page_forum : Int = 1
+
+    var id_user : Int? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments.let {
+            id_user = it?.getInt("id_user")
+        }
+        Toast.makeText(context,id_user.toString(),Toast.LENGTH_LONG).show()
+        Log.e("id_user", id_user.toString())
+    }
 
 
     override fun onCreateView(

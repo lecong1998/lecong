@@ -38,11 +38,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var  view : View
 
     private  var username : String = "16020859"
+    private var id_user : Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-       // username = intent.getStringExtra("username")
+        username = intent.getStringExtra("username")
+        id_user = intent.getIntExtra("id_user",0)
+
 
 
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -67,6 +70,47 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+        val bundle = Bundle()
+        bundle.putInt("id_user", id_user!!)
+
+
+  /*      navView.setNavigationItemSelectedListener(object : NavigationView.OnNavigationItemSelectedListener{
+            override fun onNavigationItemSelected(item: MenuItem): Boolean {
+                when(item.itemId)
+                {
+                    R.id.nav_home -> {
+                        navController.navigate(R.id.nav_home,bundle)
+                    }
+                    R.id.nav_notifications -> {
+                        navController.navigate(R.id.nav_notifications,bundle)
+                    }
+                    R.id.nav_document -> {
+                        navController.navigate(R.id.nav_document,bundle)
+                    }
+                    R.id.nav_exam -> {
+                        navController.navigate(R.id.nav_exam,bundle)
+                    }
+                    R.id.nav_news -> {
+                        navController.navigate(R.id.nav_news,bundle)
+                    }
+                    R.id.nav_forum -> {
+                        navController.navigate(R.id.nav_forum,bundle)
+                    }
+                    R.id.nav_uettalk -> {
+                        navController.navigate(R.id.nav_uettalk,bundle)
+                    }
+                    R.id.nav_login -> {
+                        navController.navigate(R.id.nav_login,bundle)
+                    }
+                }
+
+                return true
+            }
+        })
+*/
+
+
+
         val intent = Intent(this, notification_service::class.java)
         startService(intent)
 
@@ -104,12 +148,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         val bundle = Bundle()
+        bundle.putInt("id_user", id_user!!)
         val navController = findNavController(R.id.nav_host_fragment_content_main)
-
-        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+        //navController.navigate(R.id.mobile_navigation,bundle)
+        return navController.navigateUp(appBarConfiguration)|| super.onSupportNavigateUp()
     }
 
-    override fun onStart() {
+  /*  override fun onStart() {
         super.onStart()
 
        // val intentFilter = IntentFilter(mBroadcastAction)
@@ -135,5 +180,5 @@ class MainActivity : AppCompatActivity() {
         }
     }*/
 
-
+*/
 }

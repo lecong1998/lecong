@@ -61,7 +61,9 @@ class LoginFragment : Fragment() {
 
     private fun CallApiAccount(username: String, password: String) {
 
+        var id_user : Int = 1
         val intent = Intent(activity,MainActivity::class.java)
+        intent.putExtra("id_user",id_user)
         intent.putExtra("username",username)
         startActivity(intent)
 

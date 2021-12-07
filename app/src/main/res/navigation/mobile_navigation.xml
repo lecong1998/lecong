@@ -45,6 +45,8 @@
             android:id="@+id/action_nav_forum_to_detailForumFragment"
             app:destination="@id/detailForumFragment" />
 
+
+
     </fragment>
 
     <fragment
@@ -105,5 +107,6 @@
         android:id="@+id/action_profile"
         android:name="ie.app.uetstudents.ui.profile.Profile_Fragment"
         android:label="Trang cá nhân" />
+
 
 </navigation>
