@@ -4,13 +4,14 @@ import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
+import ie.app.uetstudents.utils.PreferenceUtils
 
-class my_notification : Application() {
+class MyApplication : Application() {
 
     public  final val CHANNEL_ID : String = "CHANNEL_1"
     override fun onCreate() {
         super.onCreate()
-
+        PreferenceUtils.init(this)
         createChannelNotification()
     }
 
