@@ -21,7 +21,7 @@ class adapter_itemuettalk(
     var ClickItem: OnClickItem_UetTalk
 ) : RecyclerView.Adapter<adapter_itemuettalk.ViewHolder>()  {
 
-    private var dataList: List<QuestionDtoX> = ArrayList<QuestionDtoX>()
+    private var dataList: List<QuestionDtoX> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_uettalk, parent, false))
