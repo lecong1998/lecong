@@ -41,10 +41,12 @@ interface ApiInterface {
 
 
 /*-----------------------Thêm question-----------------*/
-   @Multipart
-    @POST("question/create")
-    fun setQuestion(@Part image_files : MultipartBody.Part?, @Part("Question") Question : RequestBody ) : Call<question>
+//    @Multipart
+//    @POST("question/create")
+//    fun setQuestion(@Part image_files : MultipartBody.Part?, @Part("Question") Question : RequestBody ) : Call<question>
 
+    @POST("question/create")
+    fun setQuestion(@Body body : RequestBody ) : Call<question>
 
      /*----------------lấy dư liệu question = id question-------------------*/
     @GET("question/id/{id_question}")

@@ -3,62 +3,37 @@ package ie.app.uetstudents.ui.uettalk
 import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
-import android.content.ContentResolver
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
 import android.provider.MediaStore
 import android.util.Log
 import android.view.*
-import android.widget.ImageView
-import android.widget.Toast
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.ActivityResultCallback
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContentResolverCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.Gson
 import ie.app.uetstudents.R
-import ie.app.uetstudents.ui.API.ApiClient
-import kotlinx.android.synthetic.main.fragment_writing_status.*
-import kotlinx.android.synthetic.main.fragment_writing_status.view.*
-import kotlinx.android.synthetic.main.layout_bottomsheet.*
-import kotlinx.android.synthetic.main.layout_bottomsheet.view.*
-import kotlinx.android.synthetic.main.layout_bottomsheet_anh.*
-import kotlinx.android.synthetic.main.layout_bottomsheet_anh.view.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import java.io.IOException
-import java.net.URI
-import kotlin.jvm.internal.Intrinsics
-
-import org.jetbrains.annotations.NotNull
-
-import kotlin.Unit
-import ie.app.uetstudents.MainActivity
-
-import com.gun0912.tedpermission.PermissionListener
-import com.gun0912.tedpermission.normal.TedPermission
-import gun0912.tedbottompicker.TedBottomPicker
 import ie.app.uetstudents.RealPathUtil.RealPathUtil
 import ie.app.uetstudents.adapter.OnclickItem_deleteanh
 import ie.app.uetstudents.adapter.adapter_anhwrite
+import ie.app.uetstudents.ui.API.ApiClient
 import ie.app.uetstudents.ui.Entity.Question.get.question
-import ie.app.uetstudents.ui.Entity.Question.post.*
-import kotlinx.android.synthetic.main.fragment_uettalk.*
+import ie.app.uetstudents.ui.Entity.Question.post.Account
+import ie.app.uetstudents.ui.Entity.Question.post.Category
+import ie.app.uetstudents.ui.Entity.Question.post.QuestionPost
+import ie.app.uetstudents.ui.Entity.Question.post.TypeContent
+import kotlinx.android.synthetic.main.fragment_writing_status.*
+import kotlinx.android.synthetic.main.fragment_writing_status.view.*
+import kotlinx.android.synthetic.main.layout_bottomsheet_anh.view.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.io.File
 
 
@@ -71,8 +46,6 @@ class WritingStatusFragment : Fragment(),OnclickItem_deleteanh {
 
     private var listanh : ArrayList<Uri> = ArrayList()
     private lateinit var adapteranh : adapter_anhwrite
-
-    var uri : Uri? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -126,10 +99,7 @@ class WritingStatusFragment : Fragment(),OnclickItem_deleteanh {
 
         /*------------------Đăng bài viết-----------------------------*/
         update_status.setOnClickListener {
-
-            callApi(edt_status.text.toString(),uri,1)
-            this.findNavController().navigate(R.id.action_writingStatusFragment_to_nav_uettalk)
-
+            callApi(edt_status.text.toString(), listanh,1)
         }
     }
 
@@ -178,7 +148,7 @@ class WritingStatusFragment : Fragment(),OnclickItem_deleteanh {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode== IMG_REQUEST && resultCode == Activity.RESULT_OK && data!= null)
         {
-            uri = data.data!!
+            val uri = data.data!!
             listanh.add(uri!!)
             write_themanh.adapter?.notifyDataSetChanged()
 
@@ -186,48 +156,38 @@ class WritingStatusFragment : Fragment(),OnclickItem_deleteanh {
         }
         if (requestCode== CAMERA_REQUEST && resultCode == Activity.RESULT_OK && data!= null)
         {
-            uri = data.data!!
+            val uri = data.data!!
             listanh.add(uri!!)
             write_themanh.adapter?.notifyDataSetChanged()
         }
 
     }
 
+    private fun callApi(writeContent: String, listUri : List<Uri>, user: Int) {
+        val builder = MultipartBody.Builder()
+        builder.setType(MultipartBody.FORM)
 
-    private fun callApi(writeContent: String,anh: Uri?,user : Int) {
         val category = Category(1)
-        val type_content = TypeContent(2)
-        val account = Account(1)
-        val question = QuestionPost(account,category,writeContent,writeContent,type_content)
-        val gson : Gson = Gson()
-        val question_to_json : String = gson.toJson(question).toString()
-        val requestbodyQuestion : RequestBody = RequestBody.create(MediaType.parse("multipart/form-data"),question_to_json)
+        val typeContent = TypeContent(2)
+        val account = Account(user)
+        val question = QuestionPost(account,category,writeContent,writeContent,typeContent)
+        val gson = Gson()
+        val questionString = gson.toJson(question).toString()
 
-        var multipartbodyfile : MultipartBody.Part? = null
+        builder.addFormDataPart("Question", questionString)
 
-        if(uri != null)
-        {
-            Log.e("uri",uri.toString())
-            var strRealPath = RealPathUtil.getRealPath(requireContext(), uri!!)
-            val file : File = File(strRealPath)
-            val requestbodyFile : RequestBody = RequestBody.create(MediaType.parse("multipart/form-data"),file)
-            // listrequestbody.add(requestbodyFile)
-            multipartbodyfile= MultipartBody.Part.createFormData("image_files",file.name,requestbodyFile)
-
-        }
-        else
-        {
-            multipartbodyfile = null
+        listUri.forEach {
+            val strRealPath = RealPathUtil.getRealPath(requireContext(), it)
+            val file = File(strRealPath)
+            builder.addFormDataPart("image_files", file.name, RequestBody.create(MediaType.parse("multipart/form-data"), file))
         }
 
-
-
-        val call : Call<question> = ApiClient.getClient.setQuestion(multipartbodyfile,requestbodyQuestion)
+        val call : Call<question> = ApiClient.getClient.setQuestion(builder.build())
         call.enqueue(object : Callback<question>{
             override fun onResponse(call: Call<question>, response: Response<question>) {
-                if (response.isSuccessful)
-                {
+                if (response.isSuccessful) {
                     Log.e("Đăng thành công","Đăng thành công")
+                    findNavController().navigate(R.id.action_writingStatusFragment_to_nav_uettalk)
                 }
             }
 
@@ -235,7 +195,6 @@ class WritingStatusFragment : Fragment(),OnclickItem_deleteanh {
                 Log.e("đăng thành công","Thất bại")
             }
         })
-
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
