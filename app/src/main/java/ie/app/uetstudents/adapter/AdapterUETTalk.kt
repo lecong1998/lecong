@@ -7,11 +7,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import ie.app.uetstudents.R
 import ie.app.uetstudents.ui.API.ApiClient
 import ie.app.uetstudents.ui.Entity.Question.get.QuestionDto
 import ie.app.uetstudents.ui.Entity.Question.get.QuestionDtoX
 import ie.app.uetstudents.ui.Entity.like_question.get.like_question
+import kotlinx.android.synthetic.main.fragment_uettalk.*
 import kotlinx.android.synthetic.main.item_uettalk.view.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -19,15 +21,17 @@ import retrofit2.Response
 
 class AdapterUETTalk(
     var ClickItem: OnClickItem_UetTalk
-) : RecyclerView.Adapter<AdapterUETTalk.ViewHolder>()  {
+) : RecyclerView.Adapter<AdapterUETTalk.ViewHolder>() {
 
     private var dataList: List<QuestionDtoX> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_uettalk, parent, false))
+        return ViewHolder(
+            LayoutInflater.from(parent.context).inflate(R.layout.item_uettalk, parent, false)
+        )
     }
 
-    fun setData(list: List<QuestionDtoX>){
+    fun setData(list: List<QuestionDtoX>) {
         this.dataList = list
         notifyDataSetChanged()
     }
@@ -54,8 +58,10 @@ class AdapterUETTalk(
         holder.itemView.setOnClickListener {
             ClickItem.ClickItem_uettalk(dataModel)
         }
-       // callLayluotlikequestion(dataModel,holder)
-       // calllaysolanbinhluanquestion(dataModel,holder)
+
+
+        // callLayluotlikequestion(dataModel,holder)
+        // calllaysolanbinhluanquestion(dataModel,holder)
     }
 
 
@@ -64,38 +70,43 @@ class AdapterUETTalk(
 
         fun bindData(d: QuestionDtoX) {
             itemView.txt_status_itemuettalk.text = d.content
-            val thoigian :String = d.time?.substring(11,16).toString()
-            val ngay : String = d.time?.substring(0,10).toString()
+            val thoigian: String = d.time?.substring(11, 16).toString()
+            val ngay: String = d.time?.substring(0, 10).toString()
             itemView.time_uetttalk_item.setText(thoigian)
             itemView.date_uettalk_item.setText(ngay)
             itemView.listanh_uet_item.adapter = adapter
+
+            val urlAvatar = "${ApiClient.BASE_URL}image${d.accountDto?.avatar}"
+            Glide.with(itemView.context)
+                .load(urlAvatar)
+                .placeholder(R.drawable.img_default_user)
+                .error(R.drawable.img_default_user)
+                .into(itemView.image_uettalk_user)
 
             adapter.updateList(d.imageDtoList)
         }
     }
 
-    fun callLayluotlikequestion(d: QuestionDto, holder: ViewHolder)
-    {
-        val call : Call<like_question> = ApiClient.getClient.getPersonLikeQuestion(d.id!!,1)
-        call.enqueue(object : Callback<like_question>{
+    fun callLayluotlikequestion(d: QuestionDto, holder: ViewHolder) {
+        val call: Call<like_question> = ApiClient.getClient.getPersonLikeQuestion(d.id!!, 1)
+        call.enqueue(object : Callback<like_question> {
             override fun onResponse(call: Call<like_question>, response: Response<like_question>) {
-                if (response.isSuccessful)
-                {
-                    if (response.body()!!.result_quantity!= 0)
-                    {
-                        holder.itemView.numberlike.text = "${response.body()!!.result_quantity} người thích bài viết!"
+                if (response.isSuccessful) {
+                    if (response.body()!!.result_quantity != 0) {
+                        holder.itemView.numberlike.text =
+                            "${response.body()!!.result_quantity} người thích bài viết!"
                     }
                 }
             }
 
             override fun onFailure(call: Call<like_question>, t: Throwable) {
-                Log.e("Test","Lối")
+                Log.e("Test", "Lối")
             }
         })
 
     }
-    fun calllaysolanbinhluanquestion(d : QuestionDto, holder: ViewHolder)
-    {
+
+    fun calllaysolanbinhluanquestion(d: QuestionDto, holder: ViewHolder) {
         /*val call : Call<comment> = ApiClient.getClient.getCommentQuestion(d.id!!,1)
         call.enqueue(object : Callback<comment>{
             override fun onResponse(call: Call<comment>, response: Response<comment>) {
@@ -116,8 +127,8 @@ class AdapterUETTalk(
 
 }
 
-interface OnClickItem_UetTalk{
-    fun ClickItem_like(QuestionDto : QuestionDtoX)
-    fun ClickItem_comment(QuestionDto : QuestionDtoX)
-    fun ClickItem_uettalk(QuestionDto : QuestionDtoX)
+interface OnClickItem_UetTalk {
+    fun ClickItem_like(QuestionDto: QuestionDtoX)
+    fun ClickItem_comment(QuestionDto: QuestionDtoX)
+    fun ClickItem_uettalk(QuestionDto: QuestionDtoX)
 }

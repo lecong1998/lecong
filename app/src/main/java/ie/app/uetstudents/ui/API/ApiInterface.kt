@@ -61,6 +61,9 @@ interface ApiInterface {
     @POST("comment/create")
     fun setCommentQuestion(@Part image_file : MultipartBody.Part?,@Part("Comment") Comment: RequestBody) : Call<Comment>
 
+    @POST("comment/create")
+    fun setCommentQuestion(@Body body : RequestBody ) : Call<Comment>
+
     /*----------------------Thích--------------------------*/
 
     @POST("react-icon-comment/create")

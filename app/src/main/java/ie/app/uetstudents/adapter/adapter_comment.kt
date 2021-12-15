@@ -12,7 +12,6 @@ import ie.app.uetstudents.R
 import ie.app.uetstudents.ui.API.ApiClient
 import ie.app.uetstudents.ui.Entity.Comment.get.CommentDto
 import ie.app.uetstudents.ui.Entity.like.Get.like_comment_get
-import ie.app.uetstudents.ui.Entity.like.Post.like_comment
 import kotlinx.android.synthetic.main.itemcoment.view.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -21,15 +20,17 @@ import retrofit2.Response
 
 class adapter_comment(
     var clickItem: ClickItemCommentLike
-) : RecyclerView.Adapter<adapter_comment.ViewHolder>()  {
+) : RecyclerView.Adapter<adapter_comment.ViewHolder>() {
 
-    private var dataList: List<CommentDto> = ArrayList<CommentDto>()
+    private var dataList: List<CommentDto> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.itemcoment, parent, false))
+        return ViewHolder(
+            LayoutInflater.from(parent.context).inflate(R.layout.itemcoment, parent, false)
+        )
     }
 
-    fun setData(list: List<CommentDto>){
+    fun setData(list: List<CommentDto>) {
         this.dataList = list
         notifyDataSetChanged()
     }
@@ -43,68 +44,65 @@ class adapter_comment(
         val dataModel = dataList.get(position)
         holder.bindData(dataModel)
 
-        CallApilayluotthichcomment(dataModel,holder)
+        CallApilayluotthichcomment(dataModel, holder)
 
         var solanthich = 0
 
         holder.itemView.like_comment.setOnClickListener {
             clickItem.clickOnItem(dataModel)
 
-            solanthich= solanthich+1
-            if (solanthich % 2 == 1)
-            {
+            solanthich = solanthich + 1
+            if (solanthich % 2 == 1) {
                 it.like_comment.setTextColor(
                     R.color.purple_500
                 )
-                it.like_comment.setTypeface(null,Typeface.BOLD)
-            }
-            else
-            {
+                it.like_comment.setTypeface(null, Typeface.BOLD)
+            } else {
                 it.like_comment.setTextColor(
                     R.color.black
                 )
-                it.like_comment.setTypeface(null,Typeface.NORMAL)
+                it.like_comment.setTypeface(null, Typeface.NORMAL)
             }
-            CallApilayluotthichcomment(dataModel,holder)
+            CallApilayluotthichcomment(dataModel, holder)
         }
-
-
     }
-
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bindData(d: CommentDto) {
             itemView.name_comment_account.text = "Lê Công"
-            Glide.with(itemView.context).load(d.image).error(R.drawable._60279747_1127526494354946_6683273208343303265_n).into(itemView.anh_comment)
+            d.image?.let {
+                Glide.with(itemView.context)
+                    .load("${ApiClient.BASE_URL}image${d.image}")
+                    .error(R.drawable.img_default)
+                    .into(itemView.anh_comment)
+            }
             itemView.content_comment.text = d.content
 
-            val time : String= d.time.substring(11,16)+ d.time.substring(0,10)
-            itemView.time_comment.text= time
+            val time: String = d.time?.substring(11, 16) + d.time?.substring(0, 10)
+            itemView.time_comment.text = time
         }
     }
 
-    fun CallApilayluotthichcomment(m: CommentDto,holder: ViewHolder)
-    {
+    fun CallApilayluotthichcomment(m: CommentDto, holder: ViewHolder) {
 
-        val call : Call<like_comment_get> = ApiClient.getClient.getPersonLikeComment(m.id!!,1)
-        call.enqueue(object : Callback<like_comment_get>{
+        val call: Call<like_comment_get> = ApiClient.getClient.getPersonLikeComment(m.id!!, 1)
+        call.enqueue(object : Callback<like_comment_get> {
             override fun onResponse(
                 call: Call<like_comment_get>,
                 response: Response<like_comment_get>
             ) {
-                if (response.isSuccessful)
-                {
-                    if (response.body()!!.result_quantity != 0)
-                    {
-                         val i  = response.body()!!.result_quantity
-                        holder.itemView.soluotlikecomment.text = "Có ${response.body()!!.result_quantity} đã thích bình luận này!"
+                if (response.isSuccessful) {
+                    if (response.body()!!.result_quantity != 0) {
+                        val i = response.body()!!.result_quantity
+                        holder.itemView.soluotlikecomment.text =
+                            "Có ${response.body()!!.result_quantity} đã thích bình luận này!"
 
                     }
                 }
             }
 
             override fun onFailure(call: Call<like_comment_get>, t: Throwable) {
-                Log.e("Test","thất bại")
+                Log.e("Test", "thất bại")
             }
         })
 
@@ -113,6 +111,6 @@ class adapter_comment(
 
 }
 
-interface ClickItemCommentLike{
-    fun clickOnItem(m : CommentDto)
+interface ClickItemCommentLike {
+    fun clickOnItem(m: CommentDto)
 }

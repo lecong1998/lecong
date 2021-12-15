@@ -36,6 +36,15 @@ class LoginFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val user = PreferenceUtils.getUser()
+
+        if(user != null) {
+            val intent = Intent(activity,MainActivity::class.java)
+            intent.putExtra("id_user",user.id)
+            intent.putExtra("username", user.username)
+            startActivity(intent)
+        }
+
         super.onViewCreated(view, savedInstanceState)
 
         login_fragment_btn_login?.setOnClickListener {

@@ -70,9 +70,18 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2418478260869565" />
         <entry key="app/src/main/res/layout/activity_notifications.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_profile.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_signin.xml" value="0.21875" />
+        <entry key="app/src/main/res/layout/anh_detail.xml" value="0.20923913043478262" />
         <entry key="app/src/main/res/layout/app_bar_main.xml" value="0.2418478260869565" />
         <entry key="app/src/main/res/layout/badge.xml" value="0.2418478260869565" />
         <entry key="app/src/main/res/layout/custom_action_bar_item.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/fragment_detail_forum.xml" value="0.16134751773049646" />
+        <entry key="app/src/main/res/layout/fragment_uettalk.xml" value="0.16134751773049646" />
+        <entry key="app/src/main/res/layout/fragment_write.xml" value="0.16134751773049646" />
+        <entry key="app/src/main/res/layout/item_image.xml" value="0.19429347826086957" />
+        <entry key="app/src/main/res/layout/item_uettalk.xml" value="0.21875" />
+        <entry key="app/src/main/res/layout/itemcoment.xml" value="0.18115942028985507" />
+        <entry key="app/src/main/res/menu/activity_main_drawer.xml" value="0.33177083333333335" />
         <entry key="app/src/main/res/menu/main.xml" value="0.25" />
       </map>
     </option>
