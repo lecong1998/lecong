@@ -33,6 +33,7 @@ import ie.app.uetstudents.ui.diendan.detailForum.DetailForumContract
 import ie.app.uetstudents.ui.diendan.detailForum.DetailForumPresenter
 import ie.app.uetstudents.ui.diendan.forum_main.forumContract
 import ie.app.uetstudents.ui.diendan.forum_main.forumPresenter
+import ie.app.uetstudents.utils.PreferenceUtils
 import kotlinx.android.synthetic.main.fragment_uettalk.*
 import kotlinx.android.synthetic.main.fragment_uettalk.view.*
 import kotlinx.android.synthetic.main.layout_bottomsheet.*
@@ -55,7 +56,7 @@ class UETTalkFragment: Fragment() , forumContract.View,OnClickItem_UetTalk,Detai
     private val binding get() = _binding!!
 
     private lateinit var presenter: forumContract.Presenter
-    private lateinit var adapter_uettalk : adapter_itemuettalk
+    private lateinit var adapter_uettalk : AdapterUETTalk
 
     private var bottomSheetDialog : BottomSheetDialog? = null
     private lateinit var adapter_comment_uettalk : adapter_comment
@@ -90,7 +91,7 @@ class UETTalkFragment: Fragment() , forumContract.View,OnClickItem_UetTalk,Detai
 
 
         presenter.getQuestions(2,page_uettalk)
-        adapter_uettalk = adapter_itemuettalk(this)
+        adapter_uettalk = AdapterUETTalk(this)
         root.recyclerview_item_uettalk.layoutManager = LinearLayoutManager(requireContext())
             root.recyclerview_item_uettalk.isNestedScrollingEnabled = false
 
@@ -142,7 +143,7 @@ class UETTalkFragment: Fragment() , forumContract.View,OnClickItem_UetTalk,Detai
     /*-----------------------Click vào btn thích------------------------------------*/
     override fun ClickItem_like(QuestionDto: QuestionDtoX) {
         Toast.makeText(context,"đã thích",Toast.LENGTH_LONG).show()
-        update_notification("LIKE",QuestionDto.id!!,"1")
+        update_notification("LIKE",QuestionDto.id!!,PreferenceUtils.getUser().id.toString())
 
     }
 
@@ -289,7 +290,7 @@ class UETTalkFragment: Fragment() , forumContract.View,OnClickItem_UetTalk,Detai
         else {
 
             val commentpost = comment_post(
-                ie.app.uetstudents.ui.Entity.Comment.post.Account(1),
+                ie.app.uetstudents.ui.Entity.Comment.post.Account(PreferenceUtils.getUser().id),
                 bottomSheetView.edt_comment_uettalk.text.toString(),
                 Question(id_question)
             )
@@ -311,7 +312,7 @@ class UETTalkFragment: Fragment() , forumContract.View,OnClickItem_UetTalk,Detai
                     Toast.makeText(context,"bình luận thành công!",Toast.LENGTH_LONG).show()
                     if (response.isSuccessful)
                     {
-                        update_notification("COMMENT",id_question,"1")
+                        update_notification("COMMENT",id_question,PreferenceUtils.getUser().id.toString())
                     }
                 }
 

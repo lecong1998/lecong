@@ -25,6 +25,7 @@ import ie.app.uetstudents.service.FirebaseService
 import ie.app.uetstudents.ui.API.ApiClient
 import ie.app.uetstudents.ui.notifications.notification_service
 import ie.app.uetstudents.ui.timkiem.*
+import ie.app.uetstudents.utils.PreferenceUtils
 import kotlinx.android.synthetic.main.activity_notifications.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -122,7 +123,7 @@ class MainActivity : AppCompatActivity() {
         startService(intent)
 
         Handler(Looper.getMainLooper()).postDelayed({
-            getUnreadNotification(1)
+            getUnreadNotification(PreferenceUtils.getUser().id)
         }, 500)
     }
 
@@ -151,7 +152,7 @@ class MainActivity : AppCompatActivity() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: String) {
         if(event == FirebaseService.UPDATE_NOTIFICATION) {
-            getUnreadNotification(1)
+            getUnreadNotification(PreferenceUtils.getUser().id)
         }
     }
 

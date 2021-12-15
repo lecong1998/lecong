@@ -7,7 +7,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiClient {
-    var BASE_URL:String="http://10.0.2.2:8081/" //10.0.2.2
+//    var BASE_URL:String="http://10.0.2.2:8081/" //10.0.2.2
+    var BASE_URL:String = "http://34.126.110.103:8080/uetshare/" //10.0.2.2
     val getClient: ApiInterface
         get() {
             val gson = GsonBuilder()

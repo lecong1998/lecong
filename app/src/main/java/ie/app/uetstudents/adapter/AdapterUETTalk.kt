@@ -17,9 +17,9 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class adapter_itemuettalk(
+class AdapterUETTalk(
     var ClickItem: OnClickItem_UetTalk
-) : RecyclerView.Adapter<adapter_itemuettalk.ViewHolder>()  {
+) : RecyclerView.Adapter<AdapterUETTalk.ViewHolder>()  {
 
     private var dataList: List<QuestionDtoX> = ArrayList()
 
@@ -60,13 +60,17 @@ class adapter_itemuettalk(
 
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val adapter = ListImageAdapter(itemView.context)
+
         fun bindData(d: QuestionDtoX) {
             itemView.txt_status_itemuettalk.text = d.content
-           // Glide.with(itemView.context).load(d.image).into(itemView.image_recyclerview_itemuettalk)
             val thoigian :String = d.time?.substring(11,16).toString()
             val ngay : String = d.time?.substring(0,10).toString()
             itemView.time_uetttalk_item.setText(thoigian)
             itemView.date_uettalk_item.setText(ngay)
+            itemView.listanh_uet_item.adapter = adapter
+
+            adapter.updateList(d.imageDtoList)
         }
     }
 

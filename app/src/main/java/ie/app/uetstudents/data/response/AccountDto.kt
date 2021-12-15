@@ -1,4 +1,4 @@
-package ie.app.uetstudents.ui.Entity.Account.Get.dangnhap
+package ie.app.uetstudents.data.response
 
 data class AccountDto(
     val avatar: Any,

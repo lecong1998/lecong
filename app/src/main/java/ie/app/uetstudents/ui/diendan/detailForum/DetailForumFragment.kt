@@ -29,6 +29,7 @@ import ie.app.uetstudents.ui.Entity.like.Post.like_comment
 import ie.app.uetstudents.ui.Entity.like_question.post.like_question
 import ie.app.uetstudents.ui.Entity.notifications_comment.post.post_notifi_comment
 import ie.app.uetstudents.ui.Entity.notifications_question.post.notification_question_post
+import ie.app.uetstudents.utils.PreferenceUtils
 import kotlinx.android.synthetic.main.fragment_detail_forum.*
 import kotlinx.android.synthetic.main.fragment_detail_forum.view.*
 import okhttp3.MediaType
@@ -195,7 +196,7 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
 
        // Toast.makeText(context,"Đã thích",Toast.LENGTH_SHORT).show()
         val idcomment = Comment(m.id!!.toInt())
-        val account = Account(1)
+        val account = Account(PreferenceUtils.getUser().id)
         val likeComment = like_comment(account,idcomment)
         val call : Call<like_comment> = ApiClient.getClient.setLikeComment(likeComment)
         call.enqueue(object : Callback<like_comment>{
@@ -203,7 +204,7 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
 
                 if (response.isSuccessful)
                 {   Log.e("Test_API_Like_Comment","Thành công")
-                    update_notification_comment("LIKE",m.id!!,"1")
+                    update_notification_comment("LIKE",m.id!!,PreferenceUtils.getUser().id.toString())
                 }
             }
 
@@ -281,7 +282,7 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
                 if (response.isSuccessful)
                 {
                     Log.e("đăng comment","Đăng thành công")
-                    update_notification("COMMENT",id_question!!,"1")
+                    update_notification("COMMENT",id_question!!,PreferenceUtils.getUser().id.toString())
 
                 }
             }
@@ -318,7 +319,7 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
             override fun onResponse(call: Call<like_question>, response: Response<like_question>) {
                 if (response.isSuccessful)
                 {
-                    update_notification("LIKE",id_question,"1")
+                    update_notification("LIKE",id_question,PreferenceUtils.getUser().id.toString())
                     Log.e("Test_PostLike","thành công")
                 }
             }
