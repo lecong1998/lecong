@@ -25,6 +25,7 @@ import ie.app.uetstudents.ui.Entity.Question.post.Account
 import ie.app.uetstudents.ui.Entity.Question.post.Category
 import ie.app.uetstudents.ui.Entity.Question.post.QuestionPost
 import ie.app.uetstudents.ui.Entity.Question.post.TypeContent
+import ie.app.uetstudents.utils.PreferenceUtils
 import kotlinx.android.synthetic.main.fragment_writing_status.*
 import kotlinx.android.synthetic.main.fragment_writing_status.view.*
 import kotlinx.android.synthetic.main.layout_bottomsheet_anh.view.*
@@ -99,7 +100,7 @@ class WritingStatusFragment : Fragment(),OnclickItem_deleteanh {
 
         /*------------------Đăng bài viết-----------------------------*/
         update_status.setOnClickListener {
-            callApi(edt_status.text.toString(), listanh,1)
+            callApi(edt_status.text.toString(), listanh, PreferenceUtils.getUser().id)
         }
     }
 

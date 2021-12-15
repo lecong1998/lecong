@@ -17,10 +17,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
             <TextView
                 android:id="@+id/name_comment_account"
                 android:layout_width="match_parent"
@@ -32,14 +34,14 @@
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold" />
+
             <TextView
+                android:id="@+id/time_comment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/time_comment"
-                android:textColor="@color/black"
-                android:paddingLeft="20dp"/>
+                android:paddingLeft="20dp"
+                android:textColor="@color/black" />
         </LinearLayout>
-
 
         <TextView
             android:id="@+id/content_comment"
@@ -51,13 +53,14 @@
             android:paddingBottom="5dp"
             android:text="Nội dung comment"
             android:textColor="@color/black" />
+
         <ImageView
+            android:id="@+id/anh_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxHeight="200dp"
+            android:adjustViewBounds="true"
             android:maxWidth="200dp"
-            android:id="@+id/anh_comment"
-            android:scaleType="fitXY"/>
+            android:maxHeight="200dp" />
 
         <LinearLayout
             android:layout_width="match_parent"

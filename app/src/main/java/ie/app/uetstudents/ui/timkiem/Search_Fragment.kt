@@ -3,7 +3,6 @@ package ie.app.uetstudents.ui.timkiem
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.core.widget.NestedScrollView
@@ -12,17 +11,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import ie.app.uetstudents.R
 import ie.app.uetstudents.Repository.Repository
-import ie.app.uetstudents.ui.API.ApiClient
-import ie.app.uetstudents.ui.Entity.Search.PersonDto
+import ie.app.uetstudents.data.response.AccountDto
 import ie.app.uetstudents.ui.Entity.Search.Question.QuestionDto
-import ie.app.uetstudents.ui.Entity.Search.search_person
 import ie.app.uetstudents.ui.Entity.Search.Question.search_question
-import ie.app.uetstudents.ui.Entity.Search.person.AccountDto
 import ie.app.uetstudents.ui.Entity.Search.person.person
 import kotlinx.android.synthetic.main.searchdialog_fullscreen.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class Search_Fragment: Fragment() ,OnCLickItem_search , OnClickItem_SearchPerson,SearchContract.View{
 

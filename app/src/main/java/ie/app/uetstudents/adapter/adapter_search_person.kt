@@ -6,9 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import ie.app.uetstudents.R
-import ie.app.uetstudents.ui.Entity.Search.PersonDto
-import ie.app.uetstudents.ui.Entity.Search.person.AccountDto
-import ie.app.uetstudents.ui.Entity.Search.person.person
+import ie.app.uetstudents.data.response.AccountDto
 import kotlinx.android.synthetic.main.item_search.view.*
 
 class adapter_search_person(  var CLickItem : OnClickItem_SearchPerson)

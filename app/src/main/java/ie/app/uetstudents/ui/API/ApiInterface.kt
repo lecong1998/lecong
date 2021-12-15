@@ -1,15 +1,14 @@
 package ie.app.uetstudents.ui.API
 
 
+import ie.app.uetstudents.data.request.LoginRequest
 import ie.app.uetstudents.data.request.RegisterFirebaseTokenRequest
 import ie.app.uetstudents.data.response.Response
+import ie.app.uetstudents.data.response.login.LoginResponse
 import ie.app.uetstudents.ui.Entity.Account.Get.dangky.dangky_account
-import ie.app.uetstudents.ui.Entity.Account.Get.dangnhap.dangnhap_account
-import ie.app.uetstudents.ui.Entity.Account.Get.dangnhap.xacminhdangnhap
 import ie.app.uetstudents.ui.Entity.Account.Post.account
 import ie.app.uetstudents.ui.Entity.Category.category
 import ie.app.uetstudents.ui.Entity.Comment.get.Comment
-import ie.app.uetstudents.ui.Entity.Comment.post.comment_post
 import ie.app.uetstudents.ui.Entity.Question.get.QuestionX
 import ie.app.uetstudents.ui.Entity.Question.get.question
 import ie.app.uetstudents.ui.Entity.Search.Question.search_question
@@ -29,6 +28,8 @@ import retrofit2.Call
 import retrofit2.http.*
 
 interface ApiInterface {
+
+
    /*--------------------------Lây danh sách question theo type content---------------------------*/
    @GET("question/type-content/{id_type_content}")
     fun getQuestions(@Path("id_type_content")id_type_content : Int, @Query("index") index : Int): Call<question>
@@ -60,6 +61,9 @@ interface ApiInterface {
     @POST("comment/create")
     fun setCommentQuestion(@Part image_file : MultipartBody.Part?,@Part("Comment") Comment: RequestBody) : Call<Comment>
 
+    @POST("comment/create")
+    fun setCommentQuestion(@Body body : RequestBody ) : Call<Comment>
+
     /*----------------------Thích--------------------------*/
 
     @POST("react-icon-comment/create")
@@ -81,11 +85,16 @@ interface ApiInterface {
     fun CallsetAccount(@Body Account : account) : Call<dangky_account>
 
     //đăng nhập
-    @POST("security")
-    fun CallSigninAccount(@Query("username") username: String,@Query("password") password : String,@Query("remember-me") remember_me : String) : Call<xacminhdangnhap>
+    @POST("login")
+    fun callSigninAccount(@Body request : LoginRequest) : Call<LoginResponse>
 
-    @GET("login-success")
-    fun callloginsuccess() :Call<dangnhap_account>
+//    //đăng nhập
+//    @FormUrlEncoded
+//    @POST("security")
+//    fun callSigninAccount2(@Field("username") username : String, @Field("password") password : String, @Field("remember-me") rememberMe : String) : Call<LoginResponse>
+
+//    @GET("login-success")
+//    fun callloginsuccess() :Call<dangnhap_account>
 
     /*-------------------------Search------------------------------*/
 
