@@ -18,9 +18,9 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class adapter_comment(
+class CommentAdapter(
     var clickItem: ClickItemCommentLike
-) : RecyclerView.Adapter<adapter_comment.ViewHolder>() {
+) : RecyclerView.Adapter<CommentAdapter.ViewHolder>() {
 
     private var dataList: List<CommentDto> = ArrayList()
 

@@ -6,9 +6,7 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
@@ -20,7 +18,7 @@ import ie.app.uetstudents.R
 import ie.app.uetstudents.RealPathUtil.RealPathUtil
 import ie.app.uetstudents.Repository.Repository
 import ie.app.uetstudents.adapter.ClickItemCommentLike
-import ie.app.uetstudents.adapter.adapter_comment
+import ie.app.uetstudents.adapter.CommentAdapter
 import ie.app.uetstudents.adapter.adapter_hienthianh
 import ie.app.uetstudents.ui.API.ApiClient
 import ie.app.uetstudents.ui.Entity.Comment.post.Question
@@ -49,7 +47,7 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
     private val CAMERA_REQUEST: Int = 9999
     private var id_question: Int? = null
 
-    private lateinit var adapter_comment: adapter_comment
+    private lateinit var adapter_comment: CommentAdapter
     private lateinit var presenterDetailForum: DetailForumContract.Presenter
     private var page_comment = 1
 
@@ -124,7 +122,7 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
         /*---------------------update Comment vào layout-----------------------------------*/
         id_question?.let { presenterDetailForum.getDetailComment(it, page_comment) }
 
-        adapter_comment = adapter_comment(this)
+        adapter_comment = CommentAdapter(this)
 
         view.detail_comment_forum_recyclerview.layoutManager = LinearLayoutManager(context)
         view.detail_comment_forum_recyclerview.adapter = adapter_comment

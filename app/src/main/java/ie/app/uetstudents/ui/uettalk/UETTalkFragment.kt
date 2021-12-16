@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import android.view.*
 import android.widget.Toast
@@ -64,7 +63,7 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
     private lateinit var adapter_uettalk: AdapterUETTalk
 
     private var bottomSheetDialog: BottomSheetDialog? = null
-    private lateinit var adapter_comment_uettalk: adapter_comment
+    private lateinit var adapter_comment_uettalk: CommentAdapter
     private lateinit var presenter_uettalk_comment: DetailForumContract.Presenter
 
     private lateinit var bottomSheetView: View
@@ -164,7 +163,7 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
         //presenter_uettalk_comment = DetailForumPresenter(this, Repository(requireContext()))
 
 
-        adapter_comment_uettalk = adapter_comment(this)
+        adapter_comment_uettalk = CommentAdapter(this)
 
 
         bottomSheetDialog = BottomSheetDialog(
@@ -301,18 +300,21 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
             val gson = Gson()
             val commentstr = gson.toJson(commentpost).toString()
 
-            val realpathutil = uri?.let { RealPathUtil.getRealPath(requireContext(), it) }
-            val file = File(realpathutil)
-
             val builder = MultipartBody.Builder()
             builder.setType(MultipartBody.FORM)
             builder.addFormDataPart("Comment", commentstr)
 
-            builder.addFormDataPart(
-                "image_files",
-                file.name,
-                RequestBody.create(MediaType.parse("multipart/form-data"), file)
-            )
+            uri?.let {
+                val realpathutil = uri.let { RealPathUtil.getRealPath(requireContext(), it) }
+                val file = File(realpathutil)
+                builder.addFormDataPart(
+                    "image_files",
+                    file.name,
+                    RequestBody.create(MediaType.parse("multipart/form-data"), file)
+                )
+            }
+
+
 
             val call: Call<ie.app.uetstudents.ui.Entity.Comment.get.Comment> =
                 ApiClient.getClient.setCommentQuestion(builder.build())
