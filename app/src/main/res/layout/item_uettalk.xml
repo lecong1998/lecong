@@ -124,16 +124,34 @@
         android:gravity="center"
         android:orientation="horizontal">
 
-        <Button
+        <LinearLayout
+            android:orientation="horizontal"
             android:id="@+id/like_itemuettlk"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@color/white"
-            android:drawableLeft="@drawable/like_select"
-            android:paddingLeft="30dp"
-            android:paddingRight="30dp"
-            android:text="Thích" />
+            android:paddingLeft="10dp"
+         >
+            <ImageView
+                android:id="@+id/imagelike"
+                android:layout_width="70dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:src="@drawable/ic_baseline_favorite_border_24"/>
+            <TextView
+                android:id="@+id/textlike"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:text="Thích"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:textSize="20sp"
+                android:gravity="center"
+                android:textColor="@color/black"/>
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/comment_itemuettlk"

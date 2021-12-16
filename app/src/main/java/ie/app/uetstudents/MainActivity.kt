@@ -10,6 +10,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
@@ -27,6 +29,7 @@ import ie.app.uetstudents.ui.notifications.notification_service
 import ie.app.uetstudents.ui.timkiem.*
 import ie.app.uetstudents.utils.PreferenceUtils
 import kotlinx.android.synthetic.main.activity_notifications.*
+import kotlinx.android.synthetic.main.app_bar_main.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -78,44 +81,10 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-        val bundle = Bundle()
-        bundle.putInt("id_user", id_user!!)
+            val usernametest = PreferenceUtils.getUser().username
+        Toast.makeText(this,usernametest,Toast.LENGTH_SHORT).show()
+        Log.e("Test_username",usernametest)
 
-
-  /*      navView.setNavigationItemSelectedListener(object : NavigationView.OnNavigationItemSelectedListener{
-            override fun onNavigationItemSelected(item: MenuItem): Boolean {
-                when(item.itemId)
-                {
-                    R.id.nav_home -> {
-                        navController.navigate(R.id.nav_home,bundle)
-                    }
-                    R.id.nav_notifications -> {
-                        navController.navigate(R.id.nav_notifications,bundle)
-                    }
-                    R.id.nav_document -> {
-                        navController.navigate(R.id.nav_document,bundle)
-                    }
-                    R.id.nav_exam -> {
-                        navController.navigate(R.id.nav_exam,bundle)
-                    }
-                    R.id.nav_news -> {
-                        navController.navigate(R.id.nav_news,bundle)
-                    }
-                    R.id.nav_forum -> {
-                        navController.navigate(R.id.nav_forum,bundle)
-                    }
-                    R.id.nav_uettalk -> {
-                        navController.navigate(R.id.nav_uettalk,bundle)
-                    }
-                    R.id.nav_login -> {
-                        navController.navigate(R.id.nav_login,bundle)
-                    }
-                }
-
-                return true
-            }
-        })
-*/
 
 
 

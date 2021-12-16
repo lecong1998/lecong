@@ -70,12 +70,15 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
 
     private var page_comment: Int = 1
     private var page_uettalk: Int = 1
+    var id_user : Int? = null
 
     var uri: Uri? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        id_user = PreferenceUtils.getUser().id
     }
 
     override fun onCreateView(
@@ -91,7 +94,7 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
         presenter_uettalk_comment = DetailForumPresenter(this, Repository(requireContext()))
 
 
-        presenter.getQuestions(2, page_uettalk)
+        presenter.getQuestions(2, page_uettalk,id_user!!)
         adapter_uettalk = AdapterUETTalk(this)
         root.recyclerview_item_uettalk.layoutManager = LinearLayoutManager(requireContext())
         root.recyclerview_item_uettalk.isNestedScrollingEnabled = false
@@ -111,7 +114,7 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
                 if (scrollY == v?.getChildAt(0)?.measuredHeight?.minus(v!!?.measuredHeight) ?: Int) {
                     page_uettalk++
                     root.uet_talk_progressbar.visibility = View.VISIBLE
-                    presenter.getQuestions(2, page_uettalk)
+                    presenter.getQuestions(2, page_uettalk,id_user!!)
                 }
             }
         })
@@ -175,7 +178,7 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
         bottomSheetView.comment_recyclerview_uettalk.layoutManager =
             LinearLayoutManager(context)
 
-        presenter_uettalk_comment.getDetailComment(QuestionDto.id?.toInt()!!, page_comment)
+        presenter_uettalk_comment.getDetailComment(QuestionDto.id?.toInt()!!, page_comment,id_user!!)
         bottomSheetView.comment_recyclerview_uettalk.isNestedScrollingEnabled = false
         bottomSheetView.comment_recyclerview_uettalk.adapter = adapter_comment_uettalk
         bottomSheetView.comment_recyclerview_uettalk.adapter?.notifyDataSetChanged()
@@ -192,7 +195,7 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
                 if (scrollY == v?.getChildAt(0)?.measuredHeight?.minus(v!!?.measuredHeight) ?: Int) {
                     page_comment++
                     bottomSheetView.comment_progressbar.visibility = View.VISIBLE
-                    presenter_uettalk_comment.getDetailComment(QuestionDto.id, page_comment)
+                    presenter_uettalk_comment.getDetailComment(QuestionDto.id, page_comment,id_user!!)
                 }
 
             }
@@ -257,9 +260,6 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
         }
     }
 
-    override fun getDataViewPersonsLikeQuestion(songuoilike: Int) {
-        TODO("Not yet implemented")
-    }
 
     /*--------------------Post Like comment------------------------------*/
     override fun clickOnItem(m: ie.app.uetstudents.ui.Entity.Comment.get.CommentDto) {
@@ -347,7 +347,7 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
             bottomSheetView.comment_progressbar.visibility = View.VISIBLE
 
             val call_get: Call<ie.app.uetstudents.ui.Entity.Comment.get.Comment> =
-                ApiClient.getClient.getCommentQuestion(id_question, page_comment)
+                ApiClient.getClient.getCommentQuestion(id_question, page_comment,id_user!!)
             call_get.enqueue(object : Callback<ie.app.uetstudents.ui.Entity.Comment.get.Comment> {
                 override fun onResponse(
                     call: Call<ie.app.uetstudents.ui.Entity.Comment.get.Comment>,

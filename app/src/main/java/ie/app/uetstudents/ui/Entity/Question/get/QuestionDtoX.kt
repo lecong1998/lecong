@@ -11,5 +11,8 @@ data class QuestionDtoX(
     val time: String,
     val title: String,
     val type_content_id: Int,
-    val accountDto : AccountDto? = null
+    val accountDto : AccountDto? = null,
+    val like_quantity : Int = 0,
+    val comment_quantity: Int = 0,
+    var liked : Boolean = false
 )

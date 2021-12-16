@@ -32,13 +32,13 @@ interface ApiInterface {
 
    /*--------------------------Lây danh sách question theo type content---------------------------*/
    @GET("question/type-content/{id_type_content}")
-    fun getQuestions(@Path("id_type_content")id_type_content : Int, @Query("index") index : Int): Call<question>
+    fun getQuestions(@Path("id_type_content")id_type_content : Int, @Query("index") index : Int,@Query("account_id") account_id : Int): Call<question>
    /*---------------------Lấy danh sách category-----------------------*/
     @GET("category")
     fun getCategory() :Call<category>
 /*---------------------Lấy danh sách question theo category--------------------------*/
     @GET("question/category/{id_category}")
-    fun getQuestion_of_Category(@Path("id_category") id_category : Int, @Query("index") index: Int) : Call<question>
+    fun getQuestion_of_Category(@Path("id_category") id_category : Int, @Query("index") index: Int,@Query("account_id") account_id : Int) : Call<question>
 
 
 /*-----------------------Thêm question-----------------*/
@@ -51,15 +51,12 @@ interface ApiInterface {
 
      /*----------------lấy dư liệu question = id question-------------------*/
     @GET("question/id/{id_question}")
-    fun getDetailQuestion(@Path("id_question") id_question : Int) : Call<question>
+    fun getDetailQuestion(@Path("id_question") id_question : Int,@Query("account_id") account_id: Int) : Call<question>
 
     /*                     Comment                               */
     @GET("comment/question/{id_question}")
-    fun getCommentQuestion(@Path("id_question") id_question: Int, @Query("index") index: Int) : Call<Comment>
+    fun getCommentQuestion(@Path("id_question") id_question: Int, @Query("index") index: Int,@Query("account_id")account_id: Int) : Call<Comment>
 
-    @Multipart
-    @POST("comment/create")
-    fun setCommentQuestion(@Part image_file : MultipartBody.Part?,@Part("Comment") Comment: RequestBody) : Call<Comment>
 
     @POST("comment/create")
     fun setCommentQuestion(@Body body : RequestBody ) : Call<Comment>
@@ -158,4 +155,9 @@ interface ApiInterface {
 
     @GET("notification-comment/author-account/{userId}/unseen?index=1")
     fun getUnreadComment(@Path("userId") id : Int) : Call<Response>
+
+
+    /*-------------------------get user------------------------*/
+    @GET("user-profile/get/{username}")
+    fun getUserProfile(@Path("username") username : String)
 }

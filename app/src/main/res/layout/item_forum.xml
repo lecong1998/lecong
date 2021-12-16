@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:orientation="horizontal"
-    android:background="@drawable/vienvuong"
+    android:background="@drawable/vien"
+    android:layout_marginTop="2dp"
     android:layout_height="wrap_content">
     <ImageView
         android:layout_width="80dp"

@@ -53,6 +53,8 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
 
     private var uri: Uri? = null
 
+    var id_user : Int?= null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,6 +62,8 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
             id_question = it?.getInt("id_question")
         }
         setHasOptionsMenu(true)
+        id_user = PreferenceUtils.getUser().id
+
     }
 
     override fun onCreateView(
@@ -76,29 +80,25 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
 
         presenterDetailForum = DetailForumPresenter(this, Repository(requireContext()))
 
-        id_question?.let { presenterDetailForum.getDetailForum(it) }
+        id_question?.let { presenterDetailForum.getDetailForum(it,PreferenceUtils.getUser().id!!) }
 
         /*-------------------Thích Question---------------------------*/
-        getApiLike(id_question!!, 1)
+
 
         view.btn_like_detail.setOnClickListener {
-            if (view.btn_like_detail.text == "Thích") {
-                view.btn_like_detail.text = "Đã thích"
-                view.btn_like_detail.setTextColor(R.color.purple_500)
-                view.btn_like_detail.setCompoundDrawables(
-                    context?.getDrawable(R.drawable.ic_baseline_favorite_24),
-                    null,
-                    null,
-                    null
-                )
-                PostApiLike(id_question!!, 1)
-                getApiLike(id_question!!, 1)
+            if (view.textlike_detail.text.equals( "Thích")) {
+                view.textlike_detail.text = "Đã thích"
+                view.textlike_detail.setTextColor(R.color.purple_500)
+                view.imagelike_detail.setImageResource(R.drawable.ic_baseline_favorite_24)
+                PostApiLike(id_question!!, id_user!!)
             }
-            if (view.btn_like_detail.text == "Đã thích") {
-                view.btn_like_detail.text = "Thích"
-                view.btn_like_detail.setTextColor(R.color.black)
+            if (view.textlike_detail.text.equals("Đã Thích") ) {
+                view.textlike_detail.text = "Thích"
+                view.textlike_detail.setTextColor(R.color.black)
+                view.imagelike_detail.setImageResource(R.drawable.ic_baseline_favorite_border_24)
+
                 val call: Call<like_question> =
-                    ApiClient.getClient.deletelikeQueston(1, id_question!!)
+                    ApiClient.getClient.deletelikeQueston(id_user!!, id_question!!)
                 call.enqueue(object : Callback<like_question> {
                     override fun onResponse(
                         call: Call<like_question>,
@@ -120,7 +120,7 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
         /*---------------------------------------------------------------*/
 
         /*---------------------update Comment vào layout-----------------------------------*/
-        id_question?.let { presenterDetailForum.getDetailComment(it, page_comment) }
+        id_question?.let { presenterDetailForum.getDetailComment(it, page_comment,id_user!!) }
 
         adapter_comment = CommentAdapter(this)
 
@@ -139,12 +139,12 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
                 if (scrollY == v?.getChildAt(0)?.measuredHeight?.minus(v.measuredHeight)) {
                     page_comment++
                     view.detailforum_progressbar.visibility = View.VISIBLE
-                    id_question?.let { presenterDetailForum.getDetailComment(it, page_comment) }
+                    id_question?.let { presenterDetailForum.getDetailComment(it, page_comment,id_user!!) }
 
                 }
                 if (scrollY == oldScrollY.plus(v?.getChildAt(0)?.measuredHeight!!)) {
                     view.detailforum_progressbar.visibility = View.VISIBLE
-                    id_question?.let { presenterDetailForum.getDetailComment(it, 1) }
+                    id_question?.let { presenterDetailForum.getDetailComment(it, 1,id_user!!) }
                 }
             }
         })
@@ -174,7 +174,7 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
                 CallApiComment(edt_detail_forum.text.toString(), PreferenceUtils.getUser().id, id_question!!, uri)
                 edt_detail_forum.text.clear()
                 chuacocomment.text = ""
-                presenterDetailForum.getDetailComment(id_question!!, page_comment)
+                presenterDetailForum.getDetailComment(id_question!!, page_comment,id_user!!)
                 view.detail_comment_forum_recyclerview.adapter = adapter_comment
                 detailforum_progressbar.visibility = View.GONE
                 view.detail_comment_forum_recyclerview.scrollToPosition(0)
@@ -226,6 +226,18 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
         val ngay: String = data.time?.substring(0, 10).toString()
         time_detail_forum.setText(thoigian)
         date_detail_forum.setText(ngay)
+        soluotbinhluan_detail.text = "${data.comment_quantity} bình luận"
+        soluotlike_detail.text = "${data.like_quantity} Người thích"
+        if (data.liked == false)
+        {
+            imagelike_detail.setImageResource(R.drawable.ic_baseline_favorite_border_24)
+            textlike_detail.text= "Thích"
+        }
+        else
+        {
+            imagelike_detail.setImageResource(R.drawable.ic_baseline_favorite_24)
+            textlike_detail.text = "Đã Thích"
+        }
         var listlink: ArrayList<String> = ArrayList()
         if (data.imageDtoList.isNotEmpty()) {
             data.imageDtoList.forEach {
@@ -241,10 +253,7 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
 
     /*----------------Lấy Thông tin commnet---------------------------*/
     override fun getDataViewComment(datacomment: ie.app.uetstudents.ui.Entity.Comment.get.Comment) {
-        if (datacomment.result_quantity != 0) {
-            val soluotbinhluan = datacomment.result_quantity?.toInt()
-            soluotbinhluan_detail.text = "Có $soluotbinhluan bình luận!"
-        }
+
         adapter_comment.setData(datacomment.commentDtoList)
         adapter_comment.notifyDataSetChanged()
         if (datacomment.commentDtoList.isEmpty()) {
@@ -287,7 +296,7 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
                     update_notification(
                         "COMMENT",
                         id_question!!,
-                        PreferenceUtils.getUser().id.toString()
+                        PreferenceUtils.getUser().username.toString()
                     )
 
                 }
@@ -327,7 +336,7 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
                     update_notification(
                         "LIKE",
                         id_question,
-                        PreferenceUtils.getUser().id.toString()
+                        PreferenceUtils.getUser().username.toString()
                     )
                     Log.e("Test_PostLike", "thành công")
                 }
@@ -340,15 +349,7 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
     }
 
     /*-------------------------Lấy số người thích bài viết-----------------------------*/
-    fun getApiLike(id_question: Int, page: Int) {
-        presenterDetailForum.getPersonlikeQuestion(id_question, page)
-    }
 
-    override fun getDataViewPersonsLikeQuestion(songuoilike: Int) {
-        if (songuoilike > 0) {
-            soluotlike_detail.text = "Có $songuoilike Người thích bài viết!"
-        }
-    }
 
     /*---------------------------update notification question-------------------------------------------*/
     fun update_notification(type_action: String, id_question: Int, username: String) {
@@ -363,6 +364,7 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
 
     /*-----------------------------update notification comment-----------------------------------------------*/
     fun update_notification_comment(type: String, id_comment: Int, username: String) {
+
         val notifiItem = post_notifi_comment(
             type,
             "",

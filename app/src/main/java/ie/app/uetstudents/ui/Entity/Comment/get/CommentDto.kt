@@ -6,5 +6,8 @@ data class CommentDto(
     val id: Int? = null,
     val image: String? = null,
     val question_id: Int? = null,
-    val time: String? = null
+    val time: String? = null,
+    val like_quantity : Int = 0,
+    val sub_comment_quantity : Int = 0,
+    val liked : Boolean = false
 )

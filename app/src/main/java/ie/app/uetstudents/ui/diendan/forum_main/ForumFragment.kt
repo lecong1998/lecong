@@ -29,6 +29,7 @@ import ie.app.uetstudents.ui.Entity.Question.get.QuestionX
 import ie.app.uetstudents.ui.Entity.Question.get.question
 import ie.app.uetstudents.ui.diendan.category.CategoryContract
 import ie.app.uetstudents.ui.diendan.category.CategoryPresenter
+import ie.app.uetstudents.utils.PreferenceUtils
 import kotlinx.android.synthetic.*
 import kotlinx.android.synthetic.main.fragment_forum.*
 import kotlinx.android.synthetic.main.fragment_forum.view.*
@@ -60,9 +61,7 @@ class ForumFragment: Fragment(),ClickItem , forumContract.View,ClickItemCategory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments.let {
-            id_user = it?.getInt("id_user")
-        }
+        id_user = PreferenceUtils.getUser().id
         Toast.makeText(context,id_user.toString(),Toast.LENGTH_LONG).show()
         Log.e("id_user", id_user.toString())
     }
@@ -83,7 +82,7 @@ class ForumFragment: Fragment(),ClickItem , forumContract.View,ClickItemCategory
        adapter = adapter_forum(this)
        presenter = forumPresenter(this, Repository(requireContext()))
 
-       presenter.getQuestions(1,page_forum)
+       presenter.getQuestions(1,page_forum,id_user!!)
        root.forum_recycelview?.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
        root.forum_recycelview.adapter = adapter
 
@@ -130,7 +129,7 @@ class ForumFragment: Fragment(),ClickItem , forumContract.View,ClickItemCategory
                 {
                     page_forum++;
                     forum_progressbar.visibility = View.VISIBLE
-                    presenter.getQuestions(1,page_forum)
+                    presenter.getQuestions(1,page_forum,id_user!!)
                     //presenterCategory.getCategorys()
                 }
             }
@@ -167,11 +166,11 @@ class ForumFragment: Fragment(),ClickItem , forumContract.View,ClickItemCategory
         adapter = adapter_forum(this)
         presenter = forumPresenter(this, Repository(requireContext()))
         if(m.category != "Tất cả") {
-            presenter.getQuestions_of_Category(m.id,page_forum)
+            presenter.getQuestions_of_Category(m.id,page_forum,id_user!!)
 
         } else
         {
-            presenter.getQuestions(1,page_forum)
+            presenter.getQuestions(1,page_forum,id_user!!)
         }
 
         forum_recycelview.adapter?.notifyDataSetChanged()

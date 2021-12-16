@@ -36,6 +36,8 @@ class LoginFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+       // PreferenceUtils.clearAll()
+       // PreferenceUtils.remove(KEY_PREFERENCE_USER);
         val user = PreferenceUtils.getUser()
 
         if(user != null) {
@@ -44,6 +46,8 @@ class LoginFragment : Fragment() {
             intent.putExtra("username", user.username)
             startActivity(intent)
         }
+
+
 
         super.onViewCreated(view, savedInstanceState)
 

@@ -26,13 +26,13 @@ import retrofit2.Response
 
 class Repository(
 val context: Context) {
-    fun CallItemQuestion(presenter : forumContract.Presenter,id_type_content : Int, index: Int)
+    fun CallItemQuestion(presenter : forumContract.Presenter,id_type_content : Int, index: Int, account_id : Int)
     {
         var dataList: List<QuestionDto> = ArrayList<QuestionDto>()
 
         var data : question
         val call: Call<question> =
-            ApiClient.getClient.getQuestions(id_type_content,index)
+            ApiClient.getClient.getQuestions(id_type_content,index,account_id)
         call.enqueue(object : Callback<question> {
             override fun onResponse(
                 call: Call<question>?,
@@ -74,10 +74,10 @@ val context: Context) {
         })
     }
 
-    fun CallQuestions_Category(presenter: forumContract.Presenter,id_category: Int, index: Int)
+    fun CallQuestions_Category(presenter: forumContract.Presenter,id_category: Int, index: Int,account_id: Int)
     {
         var data : question
-        val call : Call<question> = ApiClient.getClient.getQuestion_of_Category(id_category,index)
+        val call : Call<question> = ApiClient.getClient.getQuestion_of_Category(id_category,index,account_id)
         call.enqueue(object : Callback<question>{
             override fun onResponse(call: Call<question>, response: Response<question>) {
                 if(response.isSuccessful)
@@ -94,10 +94,10 @@ val context: Context) {
         })
     }
 
-    fun CallQuestionDetail(presenter: DetailForumContract.Presenter,id:Int)
+    fun CallQuestionDetail(presenter: DetailForumContract.Presenter,id:Int,account_id: Int)
     {
         var data : QuestionDtoX
-        val call: Call<question> = ApiClient.getClient.getDetailQuestion(id)
+        val call: Call<question> = ApiClient.getClient.getDetailQuestion(id,account_id)
         call.enqueue(object : Callback<question>{
             override fun onResponse(call: Call<question>, response: Response<question>) {
                 if (response.isSuccessful)
@@ -115,11 +115,11 @@ val context: Context) {
         })
     }
     /*-----------------Lấy bình luận của câu hỏi----------------------------------*/
-    fun CallCommentQuestion(presenter: DetailForumContract.Presenter,id:Int,index: Int)
+    fun CallCommentQuestion(presenter: DetailForumContract.Presenter,id:Int,index: Int,account_id: Int)
     {
 
         var datacomment : Comment
-        val call: Call<Comment> = ApiClient.getClient.getCommentQuestion(id,index)
+        val call: Call<Comment> = ApiClient.getClient.getCommentQuestion(id,index,account_id)
         call.enqueue(object : Callback<Comment>{
             override fun onResponse(call: Call<Comment>, response: Response<Comment>) {
                 if (response.isSuccessful)
@@ -291,7 +291,7 @@ val context: Context) {
                     if (response.body()!!.result_quantity != 0)
                     {
                        personslike = response.body()!!.result_quantity
-                        presenter.getDataUIpersonlike(personslike)
+
                     }
                 }
                 Log.e("test_get_person_like question","Số lượt thích lấy thành công")

@@ -92,6 +92,9 @@ dependencies {
     //noinspection GradleCompatible
     implementation 'com.android.support:design:22.2.1'
 
+    //pdf
+    implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'
+
 
 
     // firebase

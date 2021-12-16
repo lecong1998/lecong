@@ -6,32 +6,46 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ui.tailieu.DetailDocumentExamActivity">
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/purple_200"
         android:orientation="horizontal">
+
         <ImageButton
+            android:id="@+id/back_document_exam"
             android:layout_width="50dp"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_back"
+            android:layout_alignParentStart="true"
             android:background="@color/purple_200"
-            android:id="@+id/back_document_exam"/>
+            android:src="@drawable/ic_back" />
         <ProgressBar
+            android:layout_marginRight="10dp"
+            android:layout_toRightOf="@id/back_document_exam"
             android:id="@+id/progress_bar"
             android:indeterminate="true"
             android:visibility="visible"
             android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-    </LinearLayout>
+        <ImageButton
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@color/purple_200"
+            android:src="@drawable/ic_downward"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:id="@+id/download"/>
+    </RelativeLayout>
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <WebView
-                android:id="@+id/webView"
+            <com.github.barteksc.pdfviewer.PDFView
+                android:id="@+id/idPDFView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent" />
         </FrameLayout>
 
 </LinearLayout>
