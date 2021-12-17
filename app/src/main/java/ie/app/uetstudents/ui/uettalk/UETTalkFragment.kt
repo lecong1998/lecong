@@ -308,7 +308,7 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
                 val realpathutil = uri.let { RealPathUtil.getRealPath(requireContext(), it) }
                 val file = File(realpathutil)
                 builder.addFormDataPart(
-                    "image_files",
+                    "image_file",
                     file.name,
                     RequestBody.create(MediaType.parse("multipart/form-data"), file)
                 )
