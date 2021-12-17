@@ -22,6 +22,7 @@ import ie.app.uetstudents.ui.Entity.notifications_question.get.notification_ques
 import ie.app.uetstudents.ui.Entity.notifications_question.post.notification_question_post
 import ie.app.uetstudents.ui.Entity.subject.DataSubject.data_subject
 import ie.app.uetstudents.ui.Entity.subject.subject
+import ie.app.uetstudents.ui.Entity.userProfile.get.userprofile
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -104,7 +105,7 @@ interface ApiInterface {
 
     /*-------------------------lấy danh sách Question theo id account-------------------------------*/ // chua call
     @GET("question/account/{account_id}")
-    fun getQuestion_of_account(@Path("account_id") account_id : Int, @Query("index") index : Int) : Call<QuestionX>
+    fun getQuestion_of_account(@Path("account_id") account_id : Int, @Query("index") index : Int,@Query("account_id") accountid: Int) : Call<question>
     /*---------------------------Thông Báo--------------------------------------------*/
 
 
@@ -158,6 +159,6 @@ interface ApiInterface {
 
 
     /*-------------------------get user------------------------*/
-    @GET("user-profile/get/{username}")
-    fun getUserProfile(@Path("username") username : String)
+    @GET("user-profile/get/{id_user}")
+    fun getUserProfile(@Path("id_user") id_user : Int) : Call<userprofile>
 }

@@ -31,6 +31,7 @@ import ie.app.uetstudents.ui.Entity.Question.get.question
 import ie.app.uetstudents.ui.Entity.like.Post.Account
 import ie.app.uetstudents.ui.Entity.like.Post.Comment
 import ie.app.uetstudents.ui.Entity.like.Post.like_comment
+import ie.app.uetstudents.ui.Entity.like_question.post.like_question
 import ie.app.uetstudents.ui.Entity.notifications_comment.post.post_notifi_comment
 import ie.app.uetstudents.ui.Entity.notifications_question.post.notification_question_post
 import ie.app.uetstudents.ui.diendan.detailForum.DetailForumContract
@@ -156,8 +157,17 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
 
     /*-----------------------Click vào btn thích------------------------------------*/
     override fun ClickItem_like(QuestionDto: QuestionDtoX) {
-        Toast.makeText(context, "đã thích", Toast.LENGTH_LONG).show()
-        update_notification("LIKE", QuestionDto.id!!, PreferenceUtils.getUser().id.toString())
+        if(QuestionDto.liked == false)
+        {
+            QuestionDto.liked = true
+            PostApiLike(QuestionDto.id,id_user!!)
+            update_notification("LIKE", QuestionDto.id!!, PreferenceUtils.getUser().username)
+        }else
+        {
+            QuestionDto.liked=false
+            deleteLikeQuestion(id_user!!,QuestionDto.id)
+        }
+
 
     }
 
@@ -273,7 +283,7 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
                         "LIKE",
                         "",
                         ie.app.uetstudents.ui.Entity.notifications_comment.post.Comment(m.id),
-                        "1"
+                        PreferenceUtils.getUser().username
                     )
                     presenter_uettalk_comment.setNotificationComment(notifi_item)
                 }
@@ -328,7 +338,7 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
                         update_notification(
                             "COMMENT",
                             id_question,
-                            PreferenceUtils.getUser().id.toString()
+                            PreferenceUtils.getUser().username
                         )
                     }
                 }
@@ -388,5 +398,50 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
         intent.action = Intent.ACTION_GET_CONTENT
         //mActivityResultLauncher.launch(Intent.createChooser(intent,"select picture"))
         startActivityForResult(Intent.createChooser(intent, "select picture"), CAMERA_REQUEST)
+    }
+
+    /*-----------------Post like lên server-------------------*/
+    fun PostApiLike(id_question: Int, id_account: Int) {
+        val account = ie.app.uetstudents.ui.Entity.like_question.post.Account(id_account)
+        val question = ie.app.uetstudents.ui.Entity.like_question.post.Question(id_question)
+        val likeQuestion = like_question(account, question)
+        val call: Call<like_question> = ApiClient.getClient.postlikequestion(likeQuestion)
+        call.enqueue(object : Callback<like_question> {
+            override fun onResponse(call: Call<like_question>, response: Response<like_question>) {
+                if (response.isSuccessful) {
+                    update_notification(
+                        "LIKE",
+                        id_question,
+                        PreferenceUtils.getUser().username.toString()
+                    )
+                    Log.e("Test_PostLike", "thành công")
+                }
+            }
+
+            override fun onFailure(call: Call<like_question>, t: Throwable) {
+                Log.e("Test_postlike", "thất Bại")
+            }
+        })
+    }
+
+    /*-------------------Delete like----------------------------*/
+    fun deleteLikeQuestion(account_id: Int,id_question: Int)
+    {
+        val call: Call<like_question> =
+            ApiClient.getClient.deletelikeQueston(account_id, id_question)
+        call.enqueue(object : Callback<like_question> {
+            override fun onResponse(
+                call: Call<like_question>,
+                response: Response<like_question>
+            ) {
+                if (response.isSuccessful) {
+                    Log.e("Test_bỏ_like", "Thành CÔng")
+                }
+            }
+
+            override fun onFailure(call: Call<like_question>, t: Throwable) {
+                Log.e("Test_bỏ_like", "Thất bại")
+            }
+        })
     }
 }

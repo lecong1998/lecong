@@ -55,6 +55,9 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
     private var uri: Uri? = null
 
     var id_user : Int?= null
+     var soluotthich : Int? = null
+    var soluotbinhluan : Int? = null
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -93,12 +96,20 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
                 view.imagelike_detail.setImageResource(R.drawable.ic_baseline_favorite_24)
                 PostApiLike(id_question!!, id_user!!)
                 presenterDetailForum.getDetailForum(id_question!!,id_user!!)
+                soluotthich = soluotthich!! + 1
+                soluotlike_detail.text = "$soluotthich Người thích"
 
             }
-            if (view.textlike_detail.text.equals("Đã Thích") ) {
+            else if (view.textlike_detail.text.equals("Đã Thích") ) {
                 view.textlike_detail.text = "Thích"
                 view.textlike_detail.setTextColor(R.color.black)
                 view.imagelike_detail.setImageResource(R.drawable.ic_baseline_favorite_border_24)
+                soluotthich = soluotthich!! -1
+
+                if (soluotthich!! >0)
+                {
+                    soluotlike_detail.text = "$soluotthich Người thích"
+                }
 
                 val call: Call<like_question> =
                     ApiClient.getClient.deletelikeQueston(id_user!!, id_question!!)
@@ -157,8 +168,6 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
 
         view.camera_comment.setOnClickListener {
 
-//            val cameraIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-//            startActivityForResult(cameraIntent, CAMERA_REQUEST)
             if (activity?.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                 openGallery()
             } else {
@@ -178,6 +187,11 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
                 CallApiComment(edt_detail_forum.text.toString(), PreferenceUtils.getUser().id, id_question!!, uri)
                 edt_detail_forum.text.clear()
                 chuacocomment.text = ""
+                soluotbinhluan = soluotbinhluan!! +1
+                if (soluotbinhluan!!>0)
+                {
+                    soluotbinhluan_detail.text = "$soluotbinhluan Bình luận"
+                }
               //  adapter_comment.dataList.add(CommentDto(id_user!!,edt_detail_forum.text.toString(),null,"",id_question!!,java.time.LocalDateTime.now().toString(),0,0,false))
                 //presenterDetailForum.getDetailComment(id_question!!, page_comment,id_user!!)
                 val call : Call<ie.app.uetstudents.ui.Entity.Comment.get.Comment> = ApiClient.getClient.getCommentQuestion(
@@ -254,8 +268,17 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
         val ngay: String = data.time?.substring(0, 10).toString()
         time_detail_forum.setText(thoigian)
         date_detail_forum.setText(ngay)
-        soluotbinhluan_detail.text = "${data.comment_quantity} bình luận"
-        soluotlike_detail.text = "${data.like_quantity} Người thích"
+        soluotbinhluan = data.comment_quantity
+        soluotthich = data.like_quantity
+        if(data.comment_quantity != 0)
+        {
+            soluotbinhluan_detail.text = "${data.comment_quantity} bình luận"
+        }
+        if (data.like_quantity > 0)
+        {
+            soluotlike_detail.text = "${data.like_quantity} Người thích"
+        }
+
         if (data.liked == false)
         {
             imagelike_detail.setImageResource(R.drawable.ic_baseline_favorite_border_24)

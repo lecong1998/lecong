@@ -86,6 +86,7 @@ class AdapterUETTalk(
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val adapter = ListImageAdapter(itemView.context)
 
+        @SuppressLint("ResourceAsColor")
         fun bindData(d: QuestionDtoX) {
             itemView.txt_status_itemuettalk.text = d.content
             val thoigian: String = d.time?.substring(11, 16).toString()
@@ -114,9 +115,13 @@ class AdapterUETTalk(
             if (d.liked == false)
             {
                 itemView.imagelike.setImageResource(R.drawable.ic_baseline_favorite_border_24)
+                itemView.textlike.text="Thích"
+                itemView.textlike.setTextColor(R.color.black)
             }else
             {
                 itemView.imagelike.setImageResource(R.drawable.ic_baseline_favorite_24)
+                itemView.textlike.text="Đã Thích"
+                itemView.textlike.setTextColor(R.color.purple_500)
             }
 
         }

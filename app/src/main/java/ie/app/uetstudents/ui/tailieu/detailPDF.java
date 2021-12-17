@@ -9,6 +9,7 @@ import android.os.Environment;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -31,7 +32,7 @@ public class detailPDF extends AppCompatActivity {
 
     PDFView pdfView;
     ImageButton imageButton;
-    ProgressBar progressBar;
+    TextView tentailieu;
     ImageButton download;
 
     URL url = null;
@@ -45,7 +46,7 @@ public class detailPDF extends AppCompatActivity {
         setContentView(R.layout.activity_detail_document_exam);
         pdfView = findViewById(R.id.idPDFView);
         imageButton = findViewById(R.id.back_document_exam);
-        progressBar = findViewById(R.id.progress_bar);
+        tentailieu = findViewById(R.id.tentailieu);
         download = findViewById(R.id.download);
 
         /*---------------------------------------------*/
@@ -60,6 +61,7 @@ public class detailPDF extends AppCompatActivity {
         }
 
         filename = link.substring(link.lastIndexOf("/")+1);
+        tentailieu.setText(filename);
 
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,7 +87,7 @@ public class detailPDF extends AppCompatActivity {
 
 
         new RetrivePDFfromUrl().execute(pdfurl1);
-        progressBar.setVisibility(View.GONE);
+
     }
 
     private class RetrivePDFfromUrl extends AsyncTask<String, Void, InputStream> {

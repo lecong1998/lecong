@@ -15,10 +15,12 @@ import ie.app.uetstudents.ui.Entity.notifications_comment.get.get_notifi_comment
 import ie.app.uetstudents.ui.Entity.notifications_comment.post.post_notifi_comment
 import ie.app.uetstudents.ui.Entity.notifications_question.get.notification_question
 import ie.app.uetstudents.ui.Entity.notifications_question.post.notification_question_post
+import ie.app.uetstudents.ui.Entity.userProfile.get.userprofile
 import ie.app.uetstudents.ui.diendan.category.CategoryContract
 import ie.app.uetstudents.ui.diendan.detailForum.DetailForumContract
 import ie.app.uetstudents.ui.diendan.forum_main.forumContract
 import ie.app.uetstudents.ui.notifications.notification_Contract
+import ie.app.uetstudents.ui.profile.ProfileContract
 import ie.app.uetstudents.ui.timkiem.SearchContract
 import retrofit2.Call
 import retrofit2.Callback
@@ -302,6 +304,49 @@ val context: Context) {
                 t: Throwable
             ) {
                 Log.e("test_get_person_like question","thất bại")
+            }
+        })
+    }
+
+    /*------------------------Lấy danh sách bài viết ---------------------------*/
+
+    fun GetQuestion_accountid (presenter: ProfileContract.Presenter,index: Int,account_id: Int)
+    {
+        var question : question
+        val call : Call<question> = ApiClient.getClient.getQuestion_of_account(account_id,index,account_id)
+        call.enqueue(object  : Callback<question>{
+            override fun onResponse(call: Call<question>, response: Response<question>) {
+                if (response.isSuccessful)
+                {
+                    question = response.body()!!
+                    presenter.UpdateUIQuestionProfile(question)
+                    Log.e("Api_callQuestionAccount","Thành công")
+                }
+
+            }
+
+            override fun onFailure(call: Call<question>, t: Throwable) {
+                Log.e("Api_callQuestionAccount","Thất bại")
+            }
+        })
+    }
+    /*-----------------------Lấy thông tin account------------------------------*/
+
+    fun getInformationAccount(presenter: ProfileContract.Presenter,account_id: Int)
+    {
+
+        val call : Call<userprofile> = ApiClient.getClient.getUserProfile(account_id)
+        call.enqueue(object : Callback<userprofile> {
+            override fun onResponse(call: Call<userprofile>, response: Response<userprofile>) {
+                if (response.isSuccessful)
+                {
+                    presenter.UpdateUIUserinformation(response.body()!!)
+                    Log.e("Test_call_userProfile","Thành công")
+                }
+            }
+
+            override fun onFailure(call: Call<userprofile>, t: Throwable) {
+                Log.e("Test_call_userProfile","Thất bại")
             }
         })
     }
