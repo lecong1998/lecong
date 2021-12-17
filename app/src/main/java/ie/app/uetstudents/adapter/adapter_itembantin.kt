@@ -5,15 +5,22 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ie.app.uetstudents.R
+import ie.app.uetstudents.ui.Entity.Question.get.QuestionDto
+import ie.app.uetstudents.ui.Entity.Question.get.QuestionDtoX
+import ie.app.uetstudents.ui.Entity.Question.get.question
 import kotlinx.android.synthetic.main.item_news.view.*
 
-class adapter_itembantin(var listitem: ArrayList<itembantin>): RecyclerView.Adapter<adapter_itembantin.viewholder>() {
+class adapter_itembantin(
+    var listitem: ArrayList<QuestionDtoX>,
+    var Onclick : OnclickItem_NotificationUet
+    ): RecyclerView.Adapter<adapter_itembantin.viewholder>() {
     inner class viewholder(var itemview : View): RecyclerView.ViewHolder(itemview) {
-        fun onBindata(itembantin: itembantin)
+        fun onBindata(itembantin: QuestionDtoX)
         {
-            itemview.item_news_image.setImageResource(R.drawable.hinh_nen_trang_10_263x263)
-            itemview.item_news_txtname.text = itembantin.name
-            itemview.item_news_txttime.text= itembantin.time
+            itemview.item_news_image.setImageResource(R.drawable.mau_thong_bao_chung_moi_va_chuan_nhat)
+            itemview.item_news_txtname.text = itembantin.title
+            val time: String = itembantin.time?.substring(11, 16)+ " " + itembantin.time?.substring(0, 10)
+            itemview.item_news_txttime.text= time
         }
     }
 
@@ -24,10 +31,17 @@ class adapter_itembantin(var listitem: ArrayList<itembantin>): RecyclerView.Adap
     }
 
     override fun onBindViewHolder(holder: viewholder, position: Int) {
-        return holder.onBindata(listitem.get(position))
+        val dataModel = listitem.get(position)
+         holder.onBindata(dataModel)
+        holder.itemview.setOnClickListener {
+            Onclick.OnclickItem(dataModel)
+        }
     }
 
     override fun getItemCount(): Int {
         return listitem.size
     }
+}
+interface OnclickItem_NotificationUet{
+    fun OnclickItem(itembantin: QuestionDtoX)
 }

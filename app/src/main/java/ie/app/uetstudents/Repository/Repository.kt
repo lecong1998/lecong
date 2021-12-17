@@ -21,6 +21,8 @@ import ie.app.uetstudents.ui.diendan.detailForum.DetailForumContract
 import ie.app.uetstudents.ui.diendan.forum_main.forumContract
 import ie.app.uetstudents.ui.notifications.notification_Contract
 import ie.app.uetstudents.ui.profile.ProfileContract
+import ie.app.uetstudents.ui.thongbao.NotificationUetContract
+import ie.app.uetstudents.ui.thongbao.detail.DetailContract
 import ie.app.uetstudents.ui.timkiem.SearchContract
 import retrofit2.Call
 import retrofit2.Callback
@@ -349,5 +351,48 @@ val context: Context) {
                 Log.e("Test_call_userProfile","Thất bại")
             }
         })
+    }
+
+    /*------------------------------Get notification UET-------------------------------*/
+
+    fun getNotificationUet(presenter: NotificationUetContract.Presenter,index: Int,type_content_id: Int,account_id: Int)
+    {
+        var question : question
+        val call : Call<question> = ApiClient.getClient.getQuestions(type_content_id,index,account_id)
+        call.enqueue(object : Callback<question>{
+            override fun onResponse(call: Call<question>, response: Response<question>) {
+                if (response.isSuccessful)
+                {
+                    question = response.body()!!
+                    presenter.UpdateUIItem(question)
+                    Log.e("test_notificationUet","Thành công")
+                }
+            }
+
+            override fun onFailure(call: Call<question>, t: Throwable) {
+                Log.e("test_notificationUet","Thất bại")
+            }
+        })
+    }
+    /*---------------------------Get NotificationDetail---------------------------------------------------*/
+    fun getDetaiNotifiUet(presenter : DetailContract.Presenter,id_question: Int,account_id: Int)
+    {
+        var questionDtoX : QuestionDtoX
+        val call : Call<question> = ApiClient.getClient.getDetailQuestion(id_question, account_id)
+        call.enqueue(object : Callback<question>{
+            override fun onResponse(call: Call<question>, response: Response<question>) {
+                if (response.isSuccessful)
+                {
+                    Log.e("Test","thanh cong")
+                    questionDtoX = response.body()!!.questionDtoList[0]
+                    presenter.UpdateUiDetail(questionDtoX)
+                }
+            }
+
+            override fun onFailure(call: Call<question>, t: Throwable) {
+                Log.e("Test","that bai")
+            }
+        })
+
     }
 }
