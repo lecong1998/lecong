@@ -280,7 +280,7 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
         uri?.let {
             val strRealPath = RealPathUtil.getRealPath(requireContext(), uri)
             val file = File(strRealPath)
-            builder.addFormDataPart("image_files", file.name, RequestBody.create(MediaType.parse("multipart/form-data"), file))
+            builder.addFormDataPart("image_file", file.name, RequestBody.create(MediaType.parse("multipart/form-data"), file))
             this.uri = null
         }
 
