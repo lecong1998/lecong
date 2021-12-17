@@ -11,6 +11,8 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.*
+import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,6 +28,7 @@ import ie.app.uetstudents.ui.Entity.Question.post.Account
 import ie.app.uetstudents.ui.Entity.Question.post.Category
 import ie.app.uetstudents.ui.Entity.Question.post.QuestionPost
 import ie.app.uetstudents.ui.Entity.Question.post.TypeContent
+import ie.app.uetstudents.utils.PreferenceUtils
 import kotlinx.android.synthetic.main.fragment_write.*
 import kotlinx.android.synthetic.main.fragment_write.view.*
 import kotlinx.android.synthetic.main.layout_bottomsheet_anh.view.*
@@ -41,7 +44,7 @@ import java.io.File
 class WriteFragment : Fragment(), OnclickItem_deleteanh {
 
 
-    var select_nganhid: Int = 1
+    var select_nganhid: Int = 0
     private val MY_REQUEST: Int = 1111
     private val IMG_REQUEST: Int = 1000
     private val CAMERA_REQUEST: Int = 100
@@ -51,10 +54,12 @@ class WriteFragment : Fragment(), OnclickItem_deleteanh {
 //    private var uri : Uri? = null
 
     private var database: QuestionDto? = null
+    var id_user : Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        id_user = PreferenceUtils.getUser().id
     }
 
     override fun onCreateView(
@@ -68,7 +73,9 @@ class WriteFragment : Fragment(), OnclickItem_deleteanh {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        when (radio_group.checkedRadioButtonId) {
+
+
+       /* when (radio_group.checkedRadioButtonId) {
             R.id.select_cntt -> {
                 select_nganhid = 1
             }
@@ -115,7 +122,98 @@ class WriteFragment : Fragment(), OnclickItem_deleteanh {
                 select_nganhid = 15
             }
 
+        } */
+
+        select_chude.setOnClickListener {
+            val popupmenu : PopupMenu = PopupMenu(context,select_chude,Gravity.CENTER_VERTICAL)
+            popupmenu.menuInflater.inflate(R.menu.chude_select,popupmenu.menu)
+            popupmenu.setOnMenuItemClickListener {
+                when(it.itemId)
+                {
+                    R.id.write_cntt ->
+                    {
+                        select_nganhid = 1
+                        Toast.makeText(context,it.title.toString(),Toast.LENGTH_SHORT).show()
+                        popupmenu.dismiss()
+                    }
+                    R.id.write_khmt -> {
+                        select_nganhid = 2
+                        Toast.makeText(context,it.title.toString(),Toast.LENGTH_SHORT).show()
+                        popupmenu.dismiss()
+                    }
+                    R.id.write_httt -> {
+                        select_nganhid = 3
+                        Toast.makeText(context,it.title.toString(),Toast.LENGTH_SHORT).show()
+                        popupmenu.dismiss()
+                    }
+                    R.id.write_cnktdttt -> {
+                        select_nganhid = 4
+                        Toast.makeText(context,it.title.toString(),Toast.LENGTH_SHORT).show()
+                        popupmenu.dismiss()
+                    }
+                    R.id.write_vlkt -> {
+                        select_nganhid = 5
+                        Toast.makeText(context,it.title.toString(),Toast.LENGTH_SHORT).show()
+                        popupmenu.dismiss()
+                    }
+                    R.id.write_ktnl -> {
+                        select_nganhid = 6
+                        Toast.makeText(context,it.title.toString(),Toast.LENGTH_SHORT).show()
+                        popupmenu.dismiss()
+                    }
+                    R.id.write_cokt -> {
+                        select_nganhid = 7
+                        Toast.makeText(context,it.title.toString(),Toast.LENGTH_SHORT).show()
+                        popupmenu.dismiss()
+                    }
+                    R.id.write_cnktcdt -> {
+                        select_nganhid = 8
+                        Toast.makeText(context,it.title.toString(),Toast.LENGTH_SHORT).show()
+                        popupmenu.dismiss()
+                    }
+                    R.id.write_mmttt -> {
+                        select_nganhid = 9
+                        Toast.makeText(context,it.title.toString(),Toast.LENGTH_SHORT).show()
+                        popupmenu.dismiss()
+                    }
+                    R.id.write_ktmt -> {
+                        select_nganhid = 10
+                        Toast.makeText(context,it.title.toString(),Toast.LENGTH_SHORT).show()
+                        popupmenu.dismiss()
+                    }
+                    R.id.write_cnktxdgt -> {
+                        select_nganhid = 11
+                        Toast.makeText(context,it.title.toString(),Toast.LENGTH_SHORT).show()
+                        popupmenu.dismiss()
+                    }
+                    R.id.write_cnhkvt -> {
+                        select_nganhid = 12
+                        Toast.makeText(context,it.title.toString(),Toast.LENGTH_SHORT).show()
+                        popupmenu.dismiss()
+                    }
+                    R.id.write_ktrb -> {
+                        select_nganhid = 13
+                        Toast.makeText(context,it.title.toString(),Toast.LENGTH_SHORT).show()
+                        popupmenu.dismiss()
+                    }
+                    R.id.write_cnnn -> {
+                        select_nganhid = 14
+                        Toast.makeText(context,it.title.toString(),Toast.LENGTH_SHORT).show()
+                        popupmenu.dismiss()
+                    }
+                    R.id.write_ktdktdh -> {
+                        select_nganhid = 15
+                        Toast.makeText(context,it.title.toString(),Toast.LENGTH_SHORT).show()
+                        popupmenu.dismiss()
+                    }
+                }
+                true
+            }
+            popupmenu.show()
         }
+
+
+
         /*-----------------thêm ảnh---------------------------------*/
         view.write_camera.setOnClickListener {
 
@@ -155,13 +253,21 @@ class WriteFragment : Fragment(), OnclickItem_deleteanh {
 
         /*---------------------đăng--------------------------*/
         chuyentrang?.setOnClickListener {
-            callApi(
-                edtxt_status.text.toString(),
-                write_title.text.toString(),
-                select_nganhid,
-                listanh,
-                1
-            )
+            if (write_title.text.isEmpty() || edtxt_status.text.isEmpty()|| select_nganhid == 0)
+            {
+                Toast.makeText(context,"Bạn chưa cập nhật thông tin đầy đủ",Toast.LENGTH_SHORT).show()
+            }else
+            {
+                callApi(
+                    edtxt_status.text.toString(),
+                    write_title.text.toString(),
+                    select_nganhid,
+                    listanh,
+                    id_user!!
+                )
+            }
+
+
         }
     }
 
@@ -175,10 +281,10 @@ class WriteFragment : Fragment(), OnclickItem_deleteanh {
         val builder = MultipartBody.Builder()
         builder.setType(MultipartBody.FORM)
 
-        val category = Category(1)
+        val category = Category(selectNganh)
         val typeContent = TypeContent(1)
         val account = Account(user)
-        val question = QuestionPost(account, category, writeContent, writeContent, typeContent)
+        val question = QuestionPost(account, category, writeContent, title, typeContent)
         val gson = Gson()
         val questionString = gson.toJson(question).toString()
         builder.addFormDataPart("Question", questionString)

@@ -15,7 +15,7 @@ interface SearchContract {
         fun UpdateUIperson(person: person)
 
         /*---------------Question-------------------*/
-        fun getQuestions(page: Int,text: String,type_content_id : Int)
+        fun getQuestions(page: Int,text: String,type_content_id : Int,account_id : Int)
         fun UpdateUIQuestion(searchQuestion: search_question)
     }
 }

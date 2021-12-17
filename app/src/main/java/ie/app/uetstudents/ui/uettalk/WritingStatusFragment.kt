@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -100,7 +101,15 @@ class WritingStatusFragment : Fragment(),OnclickItem_deleteanh {
 
         /*------------------Đăng bài viết-----------------------------*/
         update_status.setOnClickListener {
-            callApi(edt_status.text.toString(), listanh, PreferenceUtils.getUser().id)
+            if (edt_status.text.isEmpty()&& listanh.isEmpty())
+            {
+                Toast.makeText(context,"Bạn chưa nhập nội dung đăng",Toast.LENGTH_SHORT).show()
+            }
+            else
+            {
+                callApi(edt_status.text.toString(), listanh, PreferenceUtils.getUser().id)
+            }
+
         }
     }
 

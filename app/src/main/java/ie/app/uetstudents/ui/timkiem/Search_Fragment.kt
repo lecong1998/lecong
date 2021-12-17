@@ -15,6 +15,7 @@ import ie.app.uetstudents.data.response.AccountDto
 import ie.app.uetstudents.ui.Entity.Search.Question.QuestionDto
 import ie.app.uetstudents.ui.Entity.Search.Question.search_question
 import ie.app.uetstudents.ui.Entity.Search.person.person
+import ie.app.uetstudents.utils.PreferenceUtils
 import kotlinx.android.synthetic.main.searchdialog_fullscreen.*
 
 class Search_Fragment: Fragment() ,OnCLickItem_search , OnClickItem_SearchPerson,SearchContract.View{
@@ -26,10 +27,12 @@ class Search_Fragment: Fragment() ,OnCLickItem_search , OnClickItem_SearchPerson
     private lateinit var adapter_person: adapter_search_person
     private lateinit var adapter_question : adapter_search
 
+    var id_user : Int ?= null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        id_user = PreferenceUtils.getUser().id
     }
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -141,7 +144,7 @@ class Search_Fragment: Fragment() ,OnCLickItem_search , OnClickItem_SearchPerson
         if(type_content_id == 1 ||type_content_id == 2)
         {
             adapter_question = adapter_search(this)
-            presenter.getQuestions(page,textsearch,type_content_id)
+            presenter.getQuestions(page,textsearch,type_content_id,id_user!!)
             search_recyclerview.layoutManager = LinearLayoutManager(context)
             search_recyclerview.adapter = adapter_question
 

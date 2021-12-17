@@ -206,10 +206,10 @@ val context: Context) {
     }
     /*-------------------------------Search_Question------------------------------------*/
 
-    fun callQuestionSearch(presenter: SearchContract.Presenter,page: Int,text: String,type_content_id : Int)
+    fun callQuestionSearch(presenter: SearchContract.Presenter,page: Int,text: String,type_content_id : Int, account_id: Int)
     {
         var searchQuestion : search_question
-        val call: Call<search_question> = ApiClient.getClient.getQuestionSearch(page,text,type_content_id)
+        val call: Call<search_question> = ApiClient.getClient.getQuestionSearch(page,text,type_content_id,account_id)
         call.enqueue(object : Callback<search_question>{
             override fun onResponse(
                 call: Call<search_question>,

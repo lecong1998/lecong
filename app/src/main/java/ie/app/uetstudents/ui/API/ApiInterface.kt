@@ -96,7 +96,7 @@ interface ApiInterface {
     /*-------------------------Search------------------------------*/
 
     @GET("question/search")
-    fun getQuestionSearch(@Query("index") index: Int,@Query("text") text : String,@Query("type_content_id") type_content_id : Int) : Call<search_question>
+    fun getQuestionSearch(@Query("index") index: Int,@Query("text") text : String,@Query("type_content_id") type_content_id : Int,@Query("account_id")account_id: Int) : Call<search_question>
 
 
     @GET("account/search")

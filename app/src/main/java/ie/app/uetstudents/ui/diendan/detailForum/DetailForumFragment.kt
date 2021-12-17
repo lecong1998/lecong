@@ -92,6 +92,8 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
                 view.textlike_detail.setTextColor(R.color.purple_500)
                 view.imagelike_detail.setImageResource(R.drawable.ic_baseline_favorite_24)
                 PostApiLike(id_question!!, id_user!!)
+                presenterDetailForum.getDetailForum(id_question!!,id_user!!)
+
             }
             if (view.textlike_detail.text.equals("Đã Thích") ) {
                 view.textlike_detail.text = "Thích"
@@ -114,6 +116,7 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
                         Log.e("Test_bỏ_like", "Thất bại")
                     }
                 })
+                presenterDetailForum.getDetailForum(id_question!!,id_user!!)
             }
 
 
@@ -175,11 +178,34 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
                 CallApiComment(edt_detail_forum.text.toString(), PreferenceUtils.getUser().id, id_question!!, uri)
                 edt_detail_forum.text.clear()
                 chuacocomment.text = ""
-                adapter_comment.dataList.add(CommentDto(id_user!!,edt_detail_forum.text.toString(),null,"",id_question!!,java.time.LocalDateTime.now().toString(),0,0,false))
+              //  adapter_comment.dataList.add(CommentDto(id_user!!,edt_detail_forum.text.toString(),null,"",id_question!!,java.time.LocalDateTime.now().toString(),0,0,false))
                 //presenterDetailForum.getDetailComment(id_question!!, page_comment,id_user!!)
-                view.detail_comment_forum_recyclerview.adapter?.notifyDataSetChanged()
-                view.detail_comment_forum_recyclerview.adapter = adapter_comment
-                detailforum_progressbar.visibility = View.GONE
+                val call : Call<ie.app.uetstudents.ui.Entity.Comment.get.Comment> = ApiClient.getClient.getCommentQuestion(
+                    id_question!!,page_comment,id_user!!
+                )
+                call.enqueue(object : Callback<ie.app.uetstudents.ui.Entity.Comment.get.Comment>{
+                    override fun onResponse(
+                        call: Call<ie.app.uetstudents.ui.Entity.Comment.get.Comment>,
+                        response: Response<ie.app.uetstudents.ui.Entity.Comment.get.Comment>
+                    ) {
+                        if (response.isSuccessful)
+                        {
+                            adapter_comment.setData(response.body()!!.commentDtoList as ArrayList<CommentDto>)
+                            view.detail_comment_forum_recyclerview.adapter?.notifyDataSetChanged()
+                            view.detail_comment_forum_recyclerview.adapter = adapter_comment
+                            detailforum_progressbar.visibility = View.GONE
+                            Log.e("Test_call_lai_comment","Thành công")
+                        }
+                    }
+
+                    override fun onFailure(
+                        call: Call<ie.app.uetstudents.ui.Entity.Comment.get.Comment>,
+                        t: Throwable
+                    ) {
+                        Log.e("Test_call_lai_comment","Thất bại")
+                    }
+                })
+
             }
 
         }
@@ -301,7 +327,6 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
                         PreferenceUtils.getUser().username.toString()
                     )
 
-
                 }
             }
 
@@ -312,6 +337,7 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
                 Log.e("Đăng comment", "Thất bại")
             }
         })
+
 
 
     }

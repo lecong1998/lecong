@@ -18,8 +18,8 @@ class SearchPresenter(
     }
 
     /*------------------Question---------------------------*/
-    override fun getQuestions(page: Int, text: String, type_content_id: Int) {
-        repository.callQuestionSearch(this,page,text, type_content_id)
+    override fun getQuestions(page: Int, text: String, type_content_id: Int,account_id : Int) {
+        repository.callQuestionSearch(this,page,text, type_content_id,account_id)
     }
 
     override fun UpdateUIQuestion(searchQuestion: search_question) {
