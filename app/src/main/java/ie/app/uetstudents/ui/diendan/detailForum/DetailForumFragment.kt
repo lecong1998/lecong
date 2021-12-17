@@ -21,6 +21,7 @@ import ie.app.uetstudents.adapter.ClickItemCommentLike
 import ie.app.uetstudents.adapter.CommentAdapter
 import ie.app.uetstudents.adapter.adapter_hienthianh
 import ie.app.uetstudents.ui.API.ApiClient
+import ie.app.uetstudents.ui.Entity.Comment.get.CommentDto
 import ie.app.uetstudents.ui.Entity.Comment.post.Question
 import ie.app.uetstudents.ui.Entity.Comment.post.comment_post
 import ie.app.uetstudents.ui.Entity.Question.get.QuestionDtoX
@@ -174,10 +175,11 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
                 CallApiComment(edt_detail_forum.text.toString(), PreferenceUtils.getUser().id, id_question!!, uri)
                 edt_detail_forum.text.clear()
                 chuacocomment.text = ""
-                presenterDetailForum.getDetailComment(id_question!!, page_comment,id_user!!)
+                adapter_comment.dataList.add(CommentDto(id_user!!,edt_detail_forum.text.toString(),null,"",id_question!!,java.time.LocalDateTime.now().toString(),0,0,false))
+                //presenterDetailForum.getDetailComment(id_question!!, page_comment,id_user!!)
+                view.detail_comment_forum_recyclerview.adapter?.notifyDataSetChanged()
                 view.detail_comment_forum_recyclerview.adapter = adapter_comment
                 detailforum_progressbar.visibility = View.GONE
-                view.detail_comment_forum_recyclerview.scrollToPosition(0)
             }
 
         }
@@ -254,7 +256,7 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
     /*----------------Lấy Thông tin commnet---------------------------*/
     override fun getDataViewComment(datacomment: ie.app.uetstudents.ui.Entity.Comment.get.Comment) {
 
-        adapter_comment.setData(datacomment.commentDtoList)
+        adapter_comment.setData(datacomment.commentDtoList as ArrayList<CommentDto>)
         adapter_comment.notifyDataSetChanged()
         if (datacomment.commentDtoList.isEmpty()) {
             chuacocomment.text = "Chưa có bình luận nào"
@@ -298,6 +300,7 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
                         id_question!!,
                         PreferenceUtils.getUser().username.toString()
                     )
+
 
                 }
             }

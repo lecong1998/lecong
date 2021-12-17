@@ -23,6 +23,7 @@ import ie.app.uetstudents.adapter.*
 import ie.app.uetstudents.databinding.FragmentUettalkBinding
 import ie.app.uetstudents.ui.API.ApiClient
 import ie.app.uetstudents.ui.API.ApiClient.BASE_URL
+import ie.app.uetstudents.ui.Entity.Comment.get.CommentDto
 import ie.app.uetstudents.ui.Entity.Comment.post.Question
 import ie.app.uetstudents.ui.Entity.Comment.post.comment_post
 import ie.app.uetstudents.ui.Entity.Question.get.QuestionDtoX
@@ -214,9 +215,7 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
 
         bottomSheetView.btn_update_comment_uettalk.setOnClickListener {
 
-            if (uri == null) {
-                Toast.makeText(context, "uri đang trống", Toast.LENGTH_LONG).show()
-            }
+
             Log.e("uri", uri.toString())
             xulybtncommemt(QuestionDto.id, uri)
         }
@@ -254,7 +253,7 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
             Toast.makeText(context, "trống", Toast.LENGTH_LONG).show()
             bottomSheetView.txt_comment_chuacobinhluan.text = "Chưa có bình luận nào!"
         } else {
-            adapter_comment_uettalk.setData(datacomment.commentDtoList)
+            adapter_comment_uettalk.setData(datacomment.commentDtoList as ArrayList<CommentDto>)
             Toast.makeText(context, "đã có dữ liệu", Toast.LENGTH_LONG).show()
             bottomSheetView.comment_recyclerview_uettalk.adapter?.notifyDataSetChanged()
         }
@@ -354,7 +353,7 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
                     response: Response<ie.app.uetstudents.ui.Entity.Comment.get.Comment>
                 ) {
                     if (response.isSuccessful) {
-                        adapter_comment_uettalk.setData(response.body()?.commentDtoList!!)
+                        adapter_comment_uettalk.setData(response.body()?.commentDtoList!! as ArrayList<CommentDto>)
                         bottomSheetView.comment_recyclerview_uettalk?.adapter?.notifyDataSetChanged()
                         bottomSheetView.comment_progressbar.visibility = View.GONE
                     }

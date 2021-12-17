@@ -5,7 +5,7 @@
     android:background="@drawable/vien"
     android:layout_marginTop="2dp"
     android:layout_height="wrap_content">
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:src="@drawable/unnamed"

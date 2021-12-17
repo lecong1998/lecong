@@ -22,7 +22,7 @@ class CommentAdapter(
     var clickItem: ClickItemCommentLike
 ) : RecyclerView.Adapter<CommentAdapter.ViewHolder>() {
 
-    private var dataList: List<CommentDto> = ArrayList()
+     var dataList: ArrayList<CommentDto> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -30,7 +30,7 @@ class CommentAdapter(
         )
     }
 
-    fun setData(list: List<CommentDto>) {
+    fun setData(list: ArrayList<CommentDto>) {
         this.dataList = list
         notifyDataSetChanged()
     }
@@ -44,7 +44,7 @@ class CommentAdapter(
         val dataModel = dataList.get(position)
         holder.bindData(dataModel)
 
-        CallApilayluotthichcomment(dataModel, holder)
+
 
         var solanthich = 0
 
@@ -63,7 +63,6 @@ class CommentAdapter(
                 )
                 it.like_comment.setTypeface(null, Typeface.NORMAL)
             }
-            CallApilayluotthichcomment(dataModel, holder)
         }
     }
 
@@ -78,35 +77,11 @@ class CommentAdapter(
             }
             itemView.content_comment.text = d.content
 
-            val time: String = d.time?.substring(11, 16) + d.time?.substring(0, 10)
+            val time: String = d.time?.substring(11, 16)+ " " + d.time?.substring(0, 10)
             itemView.time_comment.text = time
         }
     }
 
-    fun CallApilayluotthichcomment(m: CommentDto, holder: ViewHolder) {
-
-        val call: Call<like_comment_get> = ApiClient.getClient.getPersonLikeComment(m.id!!, 1)
-        call.enqueue(object : Callback<like_comment_get> {
-            override fun onResponse(
-                call: Call<like_comment_get>,
-                response: Response<like_comment_get>
-            ) {
-                if (response.isSuccessful) {
-                    if (response.body()!!.result_quantity != 0) {
-                        val i = response.body()!!.result_quantity
-                        holder.itemView.soluotlikecomment.text =
-                            "Có ${response.body()!!.result_quantity} đã thích bình luận này!"
-
-                    }
-                }
-            }
-
-            override fun onFailure(call: Call<like_comment_get>, t: Throwable) {
-                Log.e("Test", "thất bại")
-            }
-        })
-
-    }
 
 
 }
