@@ -63,11 +63,28 @@ class Profile_Fragment: Fragment(),ProfileContract.View, OnClickItem_UetTalk, Cl
 
     private var page_comment: Int = 1
     private var page_uettalk: Int = 1
+    var id_user_other : Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         id_user = PreferenceUtils.getUser().id
+
+            arguments.let {
+                if (it?.isEmpty== false)
+                {
+                    id_user_other = it?.getInt("id_user") as Int
+                }
+
+            }
+
+
+        if(id_user_other != null)
+        {
+            id_user = id_user_other
+            id_user_other = null
+        }
+
     }
 
     override fun onCreateView(
@@ -109,7 +126,7 @@ class Profile_Fragment: Fragment(),ProfileContract.View, OnClickItem_UetTalk, Cl
         Mssv.text = userprofile.mssv
         username.text = userprofile.fullname
         if (userprofile.avatar != null) {
-            Glide.with(requireActivity()).load(userprofile.avatar)
+            Glide.with(requireActivity()).load(ApiClient.BASE_URL+"image"+userprofile.avatar)
                 .error(R.drawable.img_default_user).into(profile_image_account)
         }else
         {

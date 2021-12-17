@@ -81,13 +81,6 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-            val usernametest = PreferenceUtils.getUser().username
-        Toast.makeText(this,usernametest,Toast.LENGTH_SHORT).show()
-        Log.e("Test_username",usernametest)
-
-
-
-
         val intent = Intent(this, notification_service::class.java)
         startService(intent)
 

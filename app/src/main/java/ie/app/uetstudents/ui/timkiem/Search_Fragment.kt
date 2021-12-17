@@ -187,5 +187,8 @@ class Search_Fragment: Fragment() ,OnCLickItem_search , OnClickItem_SearchPerson
 
     override fun ClickItem(AccountDto: AccountDto) {
         Toast.makeText(context,AccountDto.username,Toast.LENGTH_SHORT).show()
+        val bundle : Bundle = Bundle()
+        bundle.putInt("id_user",AccountDto.id)
+        this.findNavController().navigate(R.id.action_action_search_to_action_profile,bundle)
     }
 }

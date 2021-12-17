@@ -102,6 +102,9 @@
         <action
             android:id="@+id/action_search_Fragment_to_detailForumFragment"
             app:destination="@id/detailForumFragment" />
+        <action
+            android:id="@+id/action_action_search_to_action_profile"
+            app:destination="@id/action_profile" />
     </fragment>
     <fragment
         android:id="@+id/action_profile"
