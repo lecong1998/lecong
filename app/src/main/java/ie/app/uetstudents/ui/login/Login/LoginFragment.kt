@@ -86,7 +86,7 @@ class LoginFragment : Fragment() {
 
                     val token = PreferenceUtils.getString(KEY_DATA_FCM, "")
                     if(token != "") {
-                        val request = RegisterFirebaseTokenRequest(token, PreferenceUtils.getUser().id.toString())
+                        val request = RegisterFirebaseTokenRequest(token, PreferenceUtils.getUser().username.toString())
                         val callFirebase = ApiClient.getClient.registerFirebaseToken(request)
                         callFirebase.enqueue(object : Callback<ie.app.uetstudents.data.response.Response>{
                             override fun onResponse(
@@ -117,11 +117,6 @@ class LoginFragment : Fragment() {
             }
 
         })
-
-
-
-
-
     }
 
     companion object {

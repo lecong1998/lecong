@@ -27,7 +27,9 @@ import ie.app.uetstudents.service.FirebaseService
 import ie.app.uetstudents.ui.API.ApiClient
 import ie.app.uetstudents.ui.notifications.notification_service
 import ie.app.uetstudents.ui.timkiem.*
+import ie.app.uetstudents.utils.Constants.KEY_PREFERENCE_USER
 import ie.app.uetstudents.utils.PreferenceUtils
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_notifications.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import org.greenrobot.eventbus.EventBus
@@ -86,6 +88,17 @@ class MainActivity : AppCompatActivity() {
         Handler(Looper.getMainLooper()).postDelayed({
             getUnreadNotification(PreferenceUtils.getUser().id)
         }, 500)
+
+        nav_view.setNavigationItemSelectedListener {
+            when(it.itemId) {
+                R.id.nav_login -> {
+                    PreferenceUtils.remove(KEY_PREFERENCE_USER)
+                }
+            }
+            drawer_layout.close()
+            navController.navigate(it.itemId)
+            true
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

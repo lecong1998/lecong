@@ -146,6 +146,7 @@ class ForumFragment: Fragment(),ClickItem , forumContract.View,ClickItemCategory
     override fun clickOnItem(m: QuestionDtoX) {
         val bundle = Bundle()
         bundle.putInt("id_question",m.id!!)
+        bundle.putString("owner_username",m.accountDto?.username ?: "")
         Toast.makeText( context,m.id.toString(), Toast.LENGTH_SHORT).show()
         this.findNavController().navigate(R.id.action_nav_forum_to_detailForumFragment,bundle)
 
