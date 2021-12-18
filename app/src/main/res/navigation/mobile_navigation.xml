@@ -118,6 +118,9 @@
         <action
             android:id="@+id/action_action_profile_to_detailForumFragment"
             app:destination="@id/detailForumFragment" />
+        <action
+            android:id="@+id/action_action_profile_to_changeFragment"
+            app:destination="@id/changeFragment" />
     </fragment>
     <fragment
         android:id="@+id/detailNotiFragment"
@@ -126,7 +129,11 @@
         tools:layout="@layout/fragment_detail_notifi" >
 
     </fragment>
-
+    <fragment
+        android:id="@+id/changeFragment"
+        android:name="ie.app.uetstudents.ui.profile.change.changeFragment"
+        android:label="Thay đổi thông tin"
+        tools:layout="@layout/fragment_change" />
 
 
 </navigation>

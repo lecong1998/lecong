@@ -1,5 +1,7 @@
 package ie.app.uetstudents.ui.Entity.userProfile.get
 
+import java.io.Serializable
+
 data class userprofile(
     val department: Any?,
     val email: String?,
@@ -7,4 +9,4 @@ data class userprofile(
     val id: Int,
     val mssv: String?,
     val avatar : String?
-)
+): Serializable

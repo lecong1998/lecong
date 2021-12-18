@@ -125,12 +125,20 @@ class Profile_Fragment: Fragment(),ProfileContract.View, OnClickItem_UetTalk, Cl
     override fun UpdateViewDataUser(userprofile: userprofile) {
         Mssv.text = userprofile.mssv
         username.text = userprofile.fullname
+        email.text = userprofile.email
+        khoa.text = userprofile.department.toString()
         if (userprofile.avatar != null) {
             Glide.with(requireActivity()).load(ApiClient.BASE_URL+"image"+userprofile.avatar)
                 .error(R.drawable.img_default_user).into(profile_image_account)
         }else
         {
             profile_image_account.setImageResource(R.drawable.img_default_user)
+        }
+
+        thaydoithongtin.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putSerializable("user",userprofile)
+            this.findNavController().navigate(R.id.action_action_profile_to_changeFragment,bundle)
         }
     }
 

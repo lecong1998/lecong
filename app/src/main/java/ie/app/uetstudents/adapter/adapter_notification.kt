@@ -71,11 +71,7 @@ class adapter_notification( var ClickItem : OnClickItem_Notification)
             if(n.seen == false)
             {
                 itemview.item_notification_txtcontent.setTypeface(Typeface.DEFAULT,Typeface.BOLD)
-                itemview.mau_notification.setBackgroundColor(R.color.maunotifi)
-            }else
-            {
-                itemview.item_notification_txtcontent.setTypeface(Typeface.DEFAULT,Typeface.NORMAL)
-                itemview.mau_notification.setBackgroundColor(R.color.white)
+                itemview.mau_notification.setBackgroundResource(R.drawable.vienxanh)
             }
 
         }
