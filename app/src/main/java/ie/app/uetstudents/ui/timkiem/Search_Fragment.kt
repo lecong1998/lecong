@@ -171,6 +171,7 @@ class Search_Fragment: Fragment() ,OnCLickItem_search , OnClickItem_SearchPerson
     override fun Onclick(Questiontdo: QuestionDto) {
         val bundle = Bundle()
         bundle.putInt("id_question",Questiontdo.id)
+        bundle.putString("owner_username",Questiontdo.accountDto?.username ?: "")
         this.findNavController().navigate(R.id.action_search_Fragment_to_detailForumFragment,bundle)
     }
 

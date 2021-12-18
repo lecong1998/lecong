@@ -48,6 +48,7 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
 
     private val CAMERA_REQUEST: Int = 9999
     private var id_question: Int? = null
+    private var owner_username : String? = null
 
     private lateinit var adapter_comment: CommentAdapter
     private lateinit var presenterDetailForum: DetailForumContract.Presenter
@@ -65,6 +66,7 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
         super.onCreate(savedInstanceState)
         arguments.let {
             id_question = it?.getInt("id_question")
+            owner_username = it?.getString("owner_username")
         }
         setHasOptionsMenu(true)
         id_user = PreferenceUtils.getUser().id
@@ -359,7 +361,8 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
                     update_notification(
                         "COMMENT",
                         id_question!!,
-                        PreferenceUtils.getUser().username.toString()
+                        PreferenceUtils.getUser().username.toString(),
+                        owner_username ?: ""
                     )
 
                 }
@@ -400,7 +403,8 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
                     update_notification(
                         "LIKE",
                         id_question,
-                        PreferenceUtils.getUser().username.toString()
+                        PreferenceUtils.getUser().username.toString(),
+                        owner_username ?: ""
                     )
                     Log.e("Test_PostLike", "thành công")
                 }
@@ -416,14 +420,15 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
 
 
     /*---------------------------update notification question-------------------------------------------*/
-    fun update_notification(type_action: String, id_question: Int, username: String) {
+    fun update_notification(type_action: String, id_question: Int, username: String, owner_username : String) {
         if (PreferenceUtils.getUser().avatar != null)
         {
             val notifi_item = notification_question_post(
                 type_action,
                 PreferenceUtils.getUser().avatar.toString(),
                 ie.app.uetstudents.ui.Entity.notifications_question.post.Question(id_question),
-                username
+                username,
+                owner_username
             )
             presenterDetailForum.setNotificationQuestion(notifi_item)
         }
@@ -433,7 +438,8 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
                 type_action,
                 null,
                 ie.app.uetstudents.ui.Entity.notifications_question.post.Question(id_question),
-                username
+                username,
+                owner_username
             )
             presenterDetailForum.setNotificationQuestion(notifi_item)
         }

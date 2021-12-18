@@ -131,6 +131,7 @@ class notifications_Fragment : Fragment() , OnClickItem_Notification,notificatio
                         val id_question = response.body()!!.questionDtoList[0].id
                         val bundle = Bundle()
                         bundle.putInt("id_question",id_question!!)
+
                         this@notifications_Fragment.findNavController().navigate(R.id.action_action_notification_to_detailForumFragment,bundle)
                         Log.e("Test_tucommentdenQuestion","Thành công")
                         if (n.seen== false)

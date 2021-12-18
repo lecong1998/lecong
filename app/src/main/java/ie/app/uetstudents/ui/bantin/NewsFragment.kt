@@ -97,6 +97,7 @@ class NewsFragment : Fragment(), NotificationUetContract.View ,OnclickItem_Notif
     override fun OnclickItem(itembantin: QuestionDtoX) {
         val bundle = Bundle()
         bundle.putInt("id_question",itembantin.id)
+        bundle.putString("owner_username",itembantin.accountDto?.username ?: "")
         this.findNavController().navigate(R.id.action_nav_news_to_detailNotifiFragment,bundle)
     }
 }

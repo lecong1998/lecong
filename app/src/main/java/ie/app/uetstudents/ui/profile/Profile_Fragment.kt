@@ -138,8 +138,8 @@ class Profile_Fragment: Fragment(),ProfileContract.View, OnClickItem_UetTalk, Cl
         if(QuestionDto.liked == false)
         {
             QuestionDto.liked = true
-            PostApiLike(QuestionDto.id,id_user!!)
-            update_notification("LIKE", QuestionDto.id!!, PreferenceUtils.getUser().username!!)
+            PostApiLike(QuestionDto.id, QuestionDto.accountDto?.username ?: "" ,id_user!!)
+            update_notification("LIKE", QuestionDto.id!!, PreferenceUtils.getUser().username!!, QuestionDto.accountDto?.username ?: "")
         }else
         {
             QuestionDto.liked=false
@@ -198,7 +198,7 @@ class Profile_Fragment: Fragment(),ProfileContract.View, OnClickItem_UetTalk, Cl
 
 
             Log.e("uri", uri.toString())
-            xulybtncommemt(QuestionDto.id, uri)
+            xulybtncommemt(QuestionDto.id, QuestionDto.accountDto?.username ?: "", uri )
         }
 
         bottomSheetDialog!!.setContentView(bottomSheetView)
@@ -247,13 +247,14 @@ class Profile_Fragment: Fragment(),ProfileContract.View, OnClickItem_UetTalk, Cl
     override fun ClickItem_uettalk(QuestionDto: QuestionDtoX) {
         val bundle = Bundle()
         bundle.putInt("id_question", QuestionDto.id!!)
+        bundle.putString("owner_username",QuestionDto.accountDto?.username ?: "")
         Toast.makeText(context, QuestionDto.id.toString(), Toast.LENGTH_SHORT).show()
         this.findNavController().navigate(R.id.action_action_profile_to_detailForumFragment, bundle)
     }
 
 
     /*-----------------Post like lên server-------------------*/
-    fun PostApiLike(id_question: Int, id_account: Int) {
+    fun PostApiLike(id_question: Int, owner_username: String , id_account: Int) {
         val account = ie.app.uetstudents.ui.Entity.like_question.post.Account(id_account)
         val question = ie.app.uetstudents.ui.Entity.like_question.post.Question(id_question)
         val likeQuestion = like_question(account, question)
@@ -264,7 +265,8 @@ class Profile_Fragment: Fragment(),ProfileContract.View, OnClickItem_UetTalk, Cl
                     update_notification(
                         "LIKE",
                         id_question,
-                        PreferenceUtils.getUser().username.toString()
+                        PreferenceUtils.getUser().username.toString(),
+                        owner_username
                     )
                     Log.e("Test_PostLike", "thành công")
                 }
@@ -296,12 +298,13 @@ class Profile_Fragment: Fragment(),ProfileContract.View, OnClickItem_UetTalk, Cl
             }
         })
     }
-    fun update_notification(type_action: String, id_question: Int, username: String) {
+    fun update_notification(type_action: String, id_question: Int, username: String, owner_username : String) {
         val notifi_item = notification_question_post(
             type_action,
             "",
             Question(id_question),
-            username
+            username,
+            owner_username
         )
         Repository(requireContext()).updateNotifi_Question(notifi_item)
     }
@@ -332,7 +335,7 @@ class Profile_Fragment: Fragment(),ProfileContract.View, OnClickItem_UetTalk, Cl
     }
 
     /*-------------------------------------------------*/
-    fun xulybtncommemt(id_question: Int, uri: Uri?) {
+    fun xulybtncommemt(id_question: Int, owner_username: String, uri: Uri?) {
         if (bottomSheetView.edt_comment_uettalk.text.isEmpty()) {
             Toast.makeText(context, "Bạn Chưa nhập bình luận!", Toast.LENGTH_LONG).show()
         } else {
@@ -373,7 +376,8 @@ class Profile_Fragment: Fragment(),ProfileContract.View, OnClickItem_UetTalk, Cl
                         update_notification(
                             "COMMENT",
                             id_question,
-                            PreferenceUtils.getUser().username!!
+                            PreferenceUtils.getUser().username!!,
+                            owner_username
                         )
                     }
                 }

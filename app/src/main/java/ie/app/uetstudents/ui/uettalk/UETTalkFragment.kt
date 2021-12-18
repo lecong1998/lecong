@@ -160,8 +160,8 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
         if(QuestionDto.liked == false)
         {
             QuestionDto.liked = true
-            PostApiLike(QuestionDto.id,id_user!!)
-            update_notification("LIKE", QuestionDto.id!!, PreferenceUtils.getUser().username.toString())
+            PostApiLike(QuestionDto.id, QuestionDto.accountDto?.username ?: "", id_user!!)
+            update_notification("LIKE", QuestionDto.id!!, PreferenceUtils.getUser().username.toString(), QuestionDto.accountDto?.username ?: "")
         }else
         {
             QuestionDto.liked=false
@@ -227,7 +227,7 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
 
 
             Log.e("uri", uri.toString())
-            xulybtncommemt(QuestionDto.id, uri)
+            xulybtncommemt(QuestionDto.id, QuestionDto.accountDto?.username ?: "" , uri)
         }
 
         bottomSheetDialog!!.setContentView(bottomSheetView)
@@ -297,7 +297,7 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
     }
 
     /*--------------------------------Xử lý khi click btn đăng binh luận-----------------------------------------*/
-    fun xulybtncommemt(id_question: Int, uri: Uri?) {
+    fun xulybtncommemt(id_question: Int, owner_username: String , uri: Uri?) {
         if (bottomSheetView.edt_comment_uettalk.text.isEmpty()) {
             Toast.makeText(context, "Bạn Chưa nhập bình luận!", Toast.LENGTH_LONG).show()
         } else {
@@ -338,7 +338,8 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
                         update_notification(
                             "COMMENT",
                             id_question,
-                            PreferenceUtils.getUser().username.toString()
+                            PreferenceUtils.getUser().username.toString(),
+                            owner_username
                         )
                     }
                 }
@@ -382,14 +383,15 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
 
     /*---------------------------Update thông báo Question---------------------------------*/
 
-    fun update_notification(type_action: String, id_question: Int, username: String) {
+    fun update_notification(type_action: String, id_question: Int, username: String, owner_username : String) {
         if (PreferenceUtils.getUser().avatar != null)
         {
             val notifi_item = notification_question_post(
                 type_action,
                 PreferenceUtils.getUser().avatar.toString(),
                 ie.app.uetstudents.ui.Entity.notifications_question.post.Question(id_question),
-                username
+                username,
+                owner_username
             )
             presenter_uettalk_comment.setNotificationQuestion(notifi_item)
         }else
@@ -398,7 +400,8 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
                 type_action,
                 null,
                 ie.app.uetstudents.ui.Entity.notifications_question.post.Question(id_question),
-                username
+                username,
+                owner_username
             )
             presenter_uettalk_comment.setNotificationQuestion(notifi_item)
         }
@@ -414,7 +417,7 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
     }
 
     /*-----------------Post like lên server-------------------*/
-    fun PostApiLike(id_question: Int, id_account: Int) {
+    fun PostApiLike(id_question: Int, owner_username: String,  id_account: Int) {
         val account = ie.app.uetstudents.ui.Entity.like_question.post.Account(id_account)
         val question = ie.app.uetstudents.ui.Entity.like_question.post.Question(id_question)
         val likeQuestion = like_question(account, question)
@@ -425,7 +428,8 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
                     update_notification(
                         "LIKE",
                         id_question,
-                        PreferenceUtils.getUser().username.toString()
+                        PreferenceUtils.getUser().username.toString(),
+                        owner_username
                     )
                     Log.e("Test_PostLike", "thành công")
                 }
