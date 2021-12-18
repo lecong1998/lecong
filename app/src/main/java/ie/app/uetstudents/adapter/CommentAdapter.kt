@@ -68,7 +68,12 @@ class CommentAdapter(
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bindData(d: CommentDto) {
-            itemView.name_comment_account.text = "Lê Công"
+            itemView.name_comment_account.text = d.accountDto?.username
+
+            Glide.with(itemView.context)
+                .load("${ApiClient.BASE_URL}image${d.accountDto?.avatar}")
+                .error(R.drawable.img_default)
+                .into(itemView.image_comment_account)
             d.image?.let {
                 Glide.with(itemView.context)
                     .load("${ApiClient.BASE_URL}image${d.image}")

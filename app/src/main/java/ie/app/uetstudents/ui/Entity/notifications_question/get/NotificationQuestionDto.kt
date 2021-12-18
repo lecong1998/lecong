@@ -11,5 +11,6 @@ data class NotificationQuestionDto(
     @SerializedName("question_id")
     val notification_item_id: Int,
     val seen: Boolean?,
-    val username: String
+    val username: String,
+    val time : String
 ):Serializable

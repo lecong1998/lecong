@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import android.widget.Toast
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import ie.app.uetstudents.R
 import ie.app.uetstudents.RealPathUtil.RealPathUtil
@@ -89,49 +90,7 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
         /*-------------------Thích Question---------------------------*/
 
 
-        view.btn_like_detail.setOnClickListener {
-            if (view.textlike_detail.text.equals( "Thích")) {
-                view.textlike_detail.text = "Đã thích"
-                view.textlike_detail.setTextColor(R.color.purple_500)
-                view.imagelike_detail.setImageResource(R.drawable.ic_baseline_favorite_24)
-                PostApiLike(id_question!!, id_user!!)
-                presenterDetailForum.getDetailForum(id_question!!,id_user!!)
-                soluotthich = soluotthich!! + 1
-                soluotlike_detail.text = "$soluotthich Người thích"
 
-            }
-            else if (view.textlike_detail.text.equals("Đã Thích") ) {
-                view.textlike_detail.text = "Thích"
-                view.textlike_detail.setTextColor(R.color.black)
-                view.imagelike_detail.setImageResource(R.drawable.ic_baseline_favorite_border_24)
-                soluotthich = soluotthich!! -1
-
-                if (soluotthich!! >0)
-                {
-                    soluotlike_detail.text = "$soluotthich Người thích"
-                }
-
-                val call: Call<like_question> =
-                    ApiClient.getClient.deletelikeQueston(id_user!!, id_question!!)
-                call.enqueue(object : Callback<like_question> {
-                    override fun onResponse(
-                        call: Call<like_question>,
-                        response: Response<like_question>
-                    ) {
-                        if (response.isSuccessful) {
-                            Log.e("Test_bỏ_like", "Thành CÔng")
-                        }
-                    }
-
-                    override fun onFailure(call: Call<like_question>, t: Throwable) {
-                        Log.e("Test_bỏ_like", "Thất bại")
-                    }
-                })
-                presenterDetailForum.getDetailForum(id_question!!,id_user!!)
-            }
-
-
-        }
         /*---------------------------------------------------------------*/
 
         /*---------------------update Comment vào layout-----------------------------------*/
@@ -249,7 +208,7 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
                     update_notification_comment(
                         "LIKE",
                         m.id!!,
-                        PreferenceUtils.getUser().id.toString()
+                        PreferenceUtils.getUser().username.toString()
                     )
                 }
             }
@@ -261,15 +220,25 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
     }
 
     /*-----------------------Lấy thông tin nội dung Question-----------------------*/
+    @SuppressLint("ResourceAsColor")
     override fun getDataView(data: QuestionDtoX) {
         txtcontent_forum.text = data.content.toString()
         //Log.e("data", data.content.toString())
+        val urlAvatar = "${ApiClient.BASE_URL}image${data.accountDto?.avatar}"
+        Glide.with(requireActivity())
+            .load(urlAvatar)
+            .placeholder(R.drawable.img_default_user)
+            .error(R.drawable.img_default_user)
+            .into(image_detail_forum)
+
+        txt_name_detail_forum.text = data.accountDto?.username
         val thoigian: String = data.time?.substring(11, 16).toString()
         val ngay: String = data.time?.substring(0, 10).toString()
         time_detail_forum.setText(thoigian)
         date_detail_forum.setText(ngay)
         soluotbinhluan = data.comment_quantity
         soluotthich = data.like_quantity
+        var liked : Boolean = data.liked
         if(data.comment_quantity != 0)
         {
             soluotbinhluan_detail.text = "${data.comment_quantity} bình luận"
@@ -279,7 +248,7 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
             soluotlike_detail.text = "${data.like_quantity} Người thích"
         }
 
-        if (data.liked == false)
+        if (liked == false)
         {
             imagelike_detail.setImageResource(R.drawable.ic_baseline_favorite_border_24)
             textlike_detail.text= "Thích"
@@ -300,6 +269,49 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         detail_listanh.adapter = adapterhienthi
 
+        btn_like_detail.setOnClickListener {
+            if (liked == false) {
+                textlike_detail.text = "Đã thích"
+                textlike_detail.setTextColor(R.color.purple_500)
+                imagelike_detail.setImageResource(R.drawable.ic_baseline_favorite_24)
+                PostApiLike(id_question!!, id_user!!)
+                presenterDetailForum.getDetailForum(id_question!!,id_user!!)
+                soluotthich = soluotthich!! + 1
+                soluotlike_detail.text = "$soluotthich Người thích"
+                liked = true
+            }
+            else if (liked== true ) {
+                textlike_detail.text = "Thích"
+                textlike_detail.setTextColor(R.color.black)
+                imagelike_detail.setImageResource(R.drawable.ic_baseline_favorite_border_24)
+                soluotthich = soluotthich!! -1
+                liked = false
+                if (soluotthich!! >0)
+                {
+                    soluotlike_detail.text = "$soluotthich Người thích"
+                }
+
+                val call: Call<like_question> =
+                    ApiClient.getClient.deletelikeQueston(id_user!!, id_question!!)
+                call.enqueue(object : Callback<like_question> {
+                    override fun onResponse(
+                        call: Call<like_question>,
+                        response: Response<like_question>
+                    ) {
+                        if (response.isSuccessful) {
+                            Log.e("Test_bỏ_like", "Thành CÔng")
+                        }
+                    }
+
+                    override fun onFailure(call: Call<like_question>, t: Throwable) {
+                        Log.e("Test_bỏ_like", "Thất bại")
+                    }
+                })
+              //  presenterDetailForum.getDetailForum(id_question!!,id_user!!)
+            }
+
+
+        }
     }
 
     /*----------------Lấy Thông tin commnet---------------------------*/
@@ -405,25 +417,52 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
 
     /*---------------------------update notification question-------------------------------------------*/
     fun update_notification(type_action: String, id_question: Int, username: String) {
-        val notifi_item = notification_question_post(
-            type_action,
-            "",
-            ie.app.uetstudents.ui.Entity.notifications_question.post.Question(id_question),
-            username
-        )
-        presenterDetailForum.setNotificationQuestion(notifi_item)
+        if (PreferenceUtils.getUser().avatar != null)
+        {
+            val notifi_item = notification_question_post(
+                type_action,
+                PreferenceUtils.getUser().avatar.toString(),
+                ie.app.uetstudents.ui.Entity.notifications_question.post.Question(id_question),
+                username
+            )
+            presenterDetailForum.setNotificationQuestion(notifi_item)
+        }
+        else
+        {
+            val notifi_item = notification_question_post(
+                type_action,
+                null,
+                ie.app.uetstudents.ui.Entity.notifications_question.post.Question(id_question),
+                username
+            )
+            presenterDetailForum.setNotificationQuestion(notifi_item)
+        }
+
     }
 
     /*-----------------------------update notification comment-----------------------------------------------*/
     fun update_notification_comment(type: String, id_comment: Int, username: String) {
 
-        val notifiItem = post_notifi_comment(
-            type,
-            "",
-            ie.app.uetstudents.ui.Entity.notifications_comment.post.Comment(id_comment),
-            username
-        )
-        presenterDetailForum.setNotificationComment(notifiItem)
+        if (PreferenceUtils.getUser().avatar != null)
+        {
+            val notifiItem = post_notifi_comment(
+                type,
+                PreferenceUtils.getUser().avatar.toString(),
+                ie.app.uetstudents.ui.Entity.notifications_comment.post.Comment(id_comment),
+                username
+            )
+            presenterDetailForum.setNotificationComment(notifiItem)
+        }else
+        {
+            val notifiItem = post_notifi_comment(
+                type,
+                null,
+                ie.app.uetstudents.ui.Entity.notifications_comment.post.Comment(id_comment),
+                username
+            )
+            presenterDetailForum.setNotificationComment(notifiItem)
+        }
+
     }
 
     private fun openGallery() {

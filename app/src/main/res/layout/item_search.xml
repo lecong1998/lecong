@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:background="@drawable/vienvuongtrang"
     android:layout_marginTop="5dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
     android:layout_height="70dp">
     <de.hdodenhof.circleimageview.CircleImageView
         android:layout_width="70dp"

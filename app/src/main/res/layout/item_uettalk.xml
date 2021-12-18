@@ -15,12 +15,11 @@
         android:layout_height="60dp"
         android:orientation="horizontal">
 
-        <com.makeramen.roundedimageview.RoundedImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/image_uettalk_user"
             android:layout_width="60dp"
             android:layout_height="match_parent"
-            tools:src="@drawable/_60279747_1127526494354946_6683273208343303265_n"
-            app:riv_corner_radius="30dp" />
+            tools:src="@drawable/_60279747_1127526494354946_6683273208343303265_n" />
 
         <LinearLayout
             android:layout_width="match_parent"

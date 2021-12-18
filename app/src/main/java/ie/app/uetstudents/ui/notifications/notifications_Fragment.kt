@@ -132,11 +132,13 @@ class notifications_Fragment : Fragment() , OnClickItem_Notification,notificatio
     override fun updateViewNotification_question(notification_question: notification_question) {
         adapterNotification.setData_question(notification_question.notificationQuestionDtoList)
         notification_recyclerview.adapter?.notifyDataSetChanged()
+       adapterNotification.listnotifi_item?.sortedByDescending { notificationItem: notification_item -> notificationItem.time   }
     }
 
     override fun updateViewNotification_comment(notification_comment: get_notifi_comment) {
         adapterNotification.setdata_comment(notification_comment.notificationCommentDtoList)
         notification_recyclerview.adapter?.notifyDataSetChanged()
+        adapterNotification.listnotifi_item?.sortedByDescending { notificationItem: notification_item -> notificationItem.time }
     }
 
     override fun onStart() {

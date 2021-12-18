@@ -94,7 +94,7 @@ class AdapterUETTalk(
             itemView.time_uetttalk_item.setText(thoigian)
             itemView.date_uettalk_item.setText(ngay)
             itemView.listanh_uet_item.adapter = adapter
-
+            itemView.name_uettalk_user.text = d.accountDto?.username
             val urlAvatar = "${ApiClient.BASE_URL}image${d.accountDto?.avatar}"
             Glide.with(itemView.context)
                 .load(urlAvatar)

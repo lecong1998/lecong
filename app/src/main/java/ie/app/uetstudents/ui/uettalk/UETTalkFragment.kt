@@ -161,7 +161,7 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
         {
             QuestionDto.liked = true
             PostApiLike(QuestionDto.id,id_user!!)
-            update_notification("LIKE", QuestionDto.id!!, PreferenceUtils.getUser().username)
+            update_notification("LIKE", QuestionDto.id!!, PreferenceUtils.getUser().username.toString())
         }else
         {
             QuestionDto.liked=false
@@ -283,7 +283,7 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
                         "LIKE",
                         "",
                         ie.app.uetstudents.ui.Entity.notifications_comment.post.Comment(m.id),
-                        PreferenceUtils.getUser().username
+                        PreferenceUtils.getUser().username.toString()
                     )
                     presenter_uettalk_comment.setNotificationComment(notifi_item)
                 }
@@ -338,7 +338,7 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
                         update_notification(
                             "COMMENT",
                             id_question,
-                            PreferenceUtils.getUser().username
+                            PreferenceUtils.getUser().username.toString()
                         )
                     }
                 }
@@ -383,13 +383,26 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
     /*---------------------------Update thông báo Question---------------------------------*/
 
     fun update_notification(type_action: String, id_question: Int, username: String) {
-        val notifi_item = notification_question_post(
-            type_action,
-            "",
-            ie.app.uetstudents.ui.Entity.notifications_question.post.Question(id_question),
-            username
-        )
-        presenter_uettalk_comment.setNotificationQuestion(notifi_item)
+        if (PreferenceUtils.getUser().avatar != null)
+        {
+            val notifi_item = notification_question_post(
+                type_action,
+                PreferenceUtils.getUser().avatar.toString(),
+                ie.app.uetstudents.ui.Entity.notifications_question.post.Question(id_question),
+                username
+            )
+            presenter_uettalk_comment.setNotificationQuestion(notifi_item)
+        }else
+        {
+            val notifi_item = notification_question_post(
+                type_action,
+                null,
+                ie.app.uetstudents.ui.Entity.notifications_question.post.Question(id_question),
+                username
+            )
+            presenter_uettalk_comment.setNotificationQuestion(notifi_item)
+        }
+
     }
 
     fun openGallery() {

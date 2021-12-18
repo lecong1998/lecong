@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import ie.app.uetstudents.R
+import ie.app.uetstudents.ui.API.ApiClient
 import ie.app.uetstudents.ui.Entity.notifications_comment.get.NotificationCommentDto
 import ie.app.uetstudents.ui.Entity.notifications_comment.get.get_notifi_comment
 import ie.app.uetstudents.ui.Entity.notifications_question.get.NotificationQuestionDto
@@ -15,7 +16,7 @@ import kotlinx.android.synthetic.main.item_notification.view.*
 class adapter_notification( var ClickItem : OnClickItem_Notification)
     : RecyclerView.Adapter<adapter_notification.ViewHolder>(){
 
-    private var listnotifi_item : ArrayList<notification_item>? = ArrayList()
+     var listnotifi_item : ArrayList<notification_item>? = ArrayList()
 
     fun resetList() {
         listnotifi_item?.clear()
@@ -25,7 +26,7 @@ class adapter_notification( var ClickItem : OnClickItem_Notification)
     fun setData_question(list_notifi_question : List<NotificationQuestionDto>)
     {
         list_notifi_question.forEach {
-            val notifi_item = notification_item(it.action_type,it.avatar,it.id,it.notification_item_id+1000,it.seen,it.username)
+            val notifi_item = notification_item(it.action_type,it.avatar,it.id,it.notification_item_id+1000,it.seen,it.username,it.time)
             listnotifi_item?.add(notifi_item)
         }
         notifyDataSetChanged()
@@ -33,7 +34,7 @@ class adapter_notification( var ClickItem : OnClickItem_Notification)
     fun setdata_comment(list_notifi_comment : List<NotificationCommentDto>)
     {
         list_notifi_comment.forEach {
-            val notifi_item = notification_item(it.action_type,it.avatar,it.id,it.notification_item_id,it.seen,it.username)
+            val notifi_item = notification_item(it.action_type,it.avatar,it.id,it.notification_item_id,it.seen,it.username,it.time!!)
             listnotifi_item?.add(notifi_item)
         }
         notifyDataSetChanged()
@@ -43,7 +44,7 @@ class adapter_notification( var ClickItem : OnClickItem_Notification)
     inner class ViewHolder(var itemview : View) : RecyclerView.ViewHolder(itemview) {
         fun OnBinData(n : notification_item)
         {
-            Glide.with(itemView.context).load(n.avatar).error(R.drawable._60279747_1127526494354946_6683273208343303265_n).into(itemview.item_notification_image)
+            Glide.with(itemView.context).load(ApiClient.BASE_URL+ "image"+n.avatar).error(R.drawable._60279747_1127526494354946_6683273208343303265_n).into(itemview.item_notification_image)
             if (n.action_type == "LIKE")
             {
                 if(n.notification_item_id>=1000)
@@ -60,6 +61,9 @@ class adapter_notification( var ClickItem : OnClickItem_Notification)
             {
                 itemview.item_notification_txtcontent.text = "${n.username} đã Bình luận Bài Viết của bạn!"
             }
+            val time: String = n.time?.substring(11, 16)+ " " + n.time?.substring(0, 10)
+            itemview.item_notification_time.text = time
+
         }
 
     }

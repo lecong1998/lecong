@@ -139,7 +139,7 @@ class Profile_Fragment: Fragment(),ProfileContract.View, OnClickItem_UetTalk, Cl
         {
             QuestionDto.liked = true
             PostApiLike(QuestionDto.id,id_user!!)
-            update_notification("LIKE", QuestionDto.id!!, PreferenceUtils.getUser().username)
+            update_notification("LIKE", QuestionDto.id!!, PreferenceUtils.getUser().username!!)
         }else
         {
             QuestionDto.liked=false
@@ -318,7 +318,7 @@ class Profile_Fragment: Fragment(),ProfileContract.View, OnClickItem_UetTalk, Cl
                         "LIKE",
                         "",
                         ie.app.uetstudents.ui.Entity.notifications_comment.post.Comment(m.id),
-                        PreferenceUtils.getUser().username
+                        PreferenceUtils.getUser().username!!
                     )
                     Repository(requireContext()).updateNotifi_Comment(notifi_item)
                 }
@@ -373,7 +373,7 @@ class Profile_Fragment: Fragment(),ProfileContract.View, OnClickItem_UetTalk, Cl
                         update_notification(
                             "COMMENT",
                             id_question,
-                            PreferenceUtils.getUser().username
+                            PreferenceUtils.getUser().username!!
                         )
                     }
                 }

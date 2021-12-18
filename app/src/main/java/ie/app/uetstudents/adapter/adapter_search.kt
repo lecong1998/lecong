@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import ie.app.uetstudents.R
+import ie.app.uetstudents.ui.API.ApiClient
 import ie.app.uetstudents.ui.Entity.Search.Question.QuestionDto
 import kotlinx.android.synthetic.main.item_search.view.*
 
@@ -24,7 +25,11 @@ class adapter_search ( var ClickItem : OnCLickItem_search)
     inner class Viewholder(var itemview : View) : RecyclerView.ViewHolder(itemview) {
         fun onBinData(Questiontdo: QuestionDto)
         {
-            Glide.with(itemView.context).load(Questiontdo.image).into(itemview.item_search_image)
+            Glide.with(itemView.context)
+                .load(ApiClient.BASE_URL + "image"+Questiontdo.accountDto?.avatar)
+                .placeholder(R.drawable.img_default_user)
+                .error(R.drawable.img_default_user)
+                .into(itemview.item_search_image)
             itemview.item_search_content.text = Questiontdo.title
         }
     }

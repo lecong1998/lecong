@@ -1,10 +1,10 @@
 package ie.app.uetstudents.data.response
 
 data class AccountDto(
-    val avatar: Any,
-    val email: Any,
+    val avatar: String?,
+    val email: String?,
     val id: Int,
-    val password: Any,
+    val password: String?,
     val time: Any,
-    val username: String
+    val username: String?
 )
