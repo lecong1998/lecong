@@ -18,8 +18,12 @@ import ie.app.uetstudents.ui.Entity.like.Post.like_comment
 import ie.app.uetstudents.ui.Entity.like_question.post.like_question
 import ie.app.uetstudents.ui.Entity.notifications_comment.get.get_notifi_comment
 import ie.app.uetstudents.ui.Entity.notifications_comment.post.post_notifi_comment
+import ie.app.uetstudents.ui.Entity.notifications_comment.put.request.comment_id_put
+import ie.app.uetstudents.ui.Entity.notifications_comment.put.response.comment_notifi_put
 import ie.app.uetstudents.ui.Entity.notifications_question.get.notification_question
 import ie.app.uetstudents.ui.Entity.notifications_question.post.notification_question_post
+import ie.app.uetstudents.ui.Entity.notifications_question.put.request.question_id_put
+import ie.app.uetstudents.ui.Entity.notifications_question.put.respont.question_notifi_put
 import ie.app.uetstudents.ui.Entity.subject.DataSubject.data_subject
 import ie.app.uetstudents.ui.Entity.subject.subject
 import ie.app.uetstudents.ui.Entity.userProfile.get.userprofile
@@ -123,6 +127,14 @@ interface ApiInterface {
     fun setNotification_comment(@Body postnotifi_comment : post_notifi_comment) : Call<post_notifi_comment>
 
     /*----------------------put đã xem thông báo------------------------*/
+    //question
+    @PUT("notification-question/seen")
+    fun putseenNotifi(@Body question_id : question_id_put) : Call<question_notifi_put>
+
+    // comment
+    @PUT("notification-comment/seen")
+    fun putseenNotifi_comment(@Body comment_id_put : comment_id_put) : Call<comment_notifi_put>
+
 
 
     /*--------------------------------Lây danh sách những ngươi đã like comment-----------------------------------------------*/

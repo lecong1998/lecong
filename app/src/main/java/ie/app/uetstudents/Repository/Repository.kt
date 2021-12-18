@@ -13,8 +13,12 @@ import ie.app.uetstudents.ui.Entity.Search.Question.search_question
 import ie.app.uetstudents.ui.Entity.Search.person.person
 import ie.app.uetstudents.ui.Entity.notifications_comment.get.get_notifi_comment
 import ie.app.uetstudents.ui.Entity.notifications_comment.post.post_notifi_comment
+import ie.app.uetstudents.ui.Entity.notifications_comment.put.request.comment_id_put
+import ie.app.uetstudents.ui.Entity.notifications_comment.put.response.comment_notifi_put
 import ie.app.uetstudents.ui.Entity.notifications_question.get.notification_question
 import ie.app.uetstudents.ui.Entity.notifications_question.post.notification_question_post
+import ie.app.uetstudents.ui.Entity.notifications_question.put.request.question_id_put
+import ie.app.uetstudents.ui.Entity.notifications_question.put.respont.question_notifi_put
 import ie.app.uetstudents.ui.Entity.userProfile.get.userprofile
 import ie.app.uetstudents.ui.diendan.category.CategoryContract
 import ie.app.uetstudents.ui.diendan.detailForum.DetailForumContract
@@ -166,6 +170,29 @@ val context: Context) {
             }
         })
     }
+
+
+    fun putseenNotifiQuestion (questionIdPut: question_id_put)
+    {
+        val call : Call<question_notifi_put> = ApiClient.getClient.putseenNotifi(questionIdPut)
+        call.enqueue(object : Callback<question_notifi_put>{
+            override fun onResponse(
+                call: Call<question_notifi_put>,
+                response: Response<question_notifi_put>
+            ) {
+                if (response.isSuccessful)
+                {
+                    Log.e("Put seen notifi","Thành công")
+                }
+            }
+
+            override fun onFailure(call: Call<question_notifi_put>, t: Throwable) {
+                Log.e("Put seen notifi","Thất bại")
+            }
+        })
+    }
+
+    /*--------------------------------notification comment-------------------------------------*/
     fun callNotificationComment(presenter: notification_Contract.Presenter,id_account: Int,page: Int)
     {
         var data_notifi_comment : get_notifi_comment
@@ -184,6 +211,26 @@ val context: Context) {
 
             override fun onFailure(call: Call<get_notifi_comment>, t: Throwable) {
                 Log.e("Test","Thất Bại")
+            }
+        })
+    }
+
+    fun putSeenNotifi_comment(commentIdPut: comment_id_put)
+    {
+        val call : Call<comment_notifi_put> = ApiClient.getClient.putseenNotifi_comment(commentIdPut)
+        call.enqueue(object : Callback<comment_notifi_put>{
+            override fun onResponse(
+                call: Call<comment_notifi_put>,
+                response: Response<comment_notifi_put>
+            ) {
+                if (response.isSuccessful)
+                {
+                    Log.e("seen comment _ notifi","Thành công")
+                }
+            }
+
+            override fun onFailure(call: Call<comment_notifi_put>, t: Throwable) {
+                Log.e("seen comment _ notifi","Thất bại")
             }
         })
     }

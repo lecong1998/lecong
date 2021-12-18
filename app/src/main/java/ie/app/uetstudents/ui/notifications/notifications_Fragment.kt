@@ -16,9 +16,12 @@ import ie.app.uetstudents.ui.API.ApiClient
 import ie.app.uetstudents.ui.Entity.Question.get.QuestionX
 import ie.app.uetstudents.ui.Entity.notifications_comment.get.NotificationCommentDto
 import ie.app.uetstudents.ui.Entity.notifications_comment.get.get_notifi_comment
+import ie.app.uetstudents.ui.Entity.notifications_comment.put.request.comment_id_put
 import ie.app.uetstudents.ui.Entity.notifications_question.get.NotificationQuestionDto
 import ie.app.uetstudents.ui.Entity.notifications_question.get.notification_question
 import ie.app.uetstudents.ui.Entity.notifications_question.notification_item
+import ie.app.uetstudents.ui.Entity.notifications_question.put.request.question_id_put
+import ie.app.uetstudents.utils.PreferenceUtils
 import kotlinx.android.synthetic.main.activity_notifications.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -37,10 +40,13 @@ class notifications_Fragment : Fragment() , OnClickItem_Notification,notificatio
     private lateinit var presenter: notification_Contract.Presenter
     private var page : Int = 1
 
+    var id_user : Int? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        id_user= PreferenceUtils.getUser().id
     }
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,8 +59,8 @@ class notifications_Fragment : Fragment() , OnClickItem_Notification,notificatio
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter = notificationPresenter(this, Repository(requireContext()))
-        presenter.getNotificationComment(1,page)
-        presenter.getNotificationQuestion(1,page)
+        presenter.getNotificationComment(id_user!!,page)
+        presenter.getNotificationQuestion(id_user!!,page)
 
         adapterNotification = adapter_notification(this)
         notification_recyclerview.layoutManager = LinearLayoutManager(context)
@@ -71,9 +77,11 @@ class notifications_Fragment : Fragment() , OnClickItem_Notification,notificatio
                 {
                     progress_bar_notifi.visibility = View.VISIBLE
                     page++
-                    presenter.getNotificationQuestion(1,page)
-                    presenter.getNotificationComment(1,page)
+                    presenter.getNotificationQuestion(id_user!!,page)
+                    presenter.getNotificationComment(id_user!!,page)
                     progress_bar_notifi.visibility = View.GONE
+                    adapterNotification.listnotifi_item?.sortedByDescending { notificationItem: notification_item -> notificationItem.time   }
+                    adapterNotification?.notifyDataSetChanged()
                 }
             }
         })
@@ -85,8 +93,8 @@ class notifications_Fragment : Fragment() , OnClickItem_Notification,notificatio
             Log.d("dLog", "notifications_Fragment  onMessageEvent: $event")
             page = 1
             adapterNotification.resetList()
-            presenter.getNotificationComment(1,page)
-            presenter.getNotificationQuestion(1,page)
+            presenter.getNotificationComment(id_user!!,page)
+            presenter.getNotificationQuestion(id_user!!,page)
         }
     }
 
@@ -106,6 +114,12 @@ class notifications_Fragment : Fragment() , OnClickItem_Notification,notificatio
             val bundle = Bundle()
             bundle.putInt("id_question",n.notification_item_id.minus(1000))
             this.findNavController().navigate(R.id.action_action_notification_to_detailForumFragment,bundle)
+            if (n.seen==false)
+            {
+                    Repository(requireContext()).putseenNotifiQuestion(
+                        question_id_put(n.id)
+                    )
+            }
         }
         if (n.notification_item_id<1000)
         {
@@ -119,6 +133,12 @@ class notifications_Fragment : Fragment() , OnClickItem_Notification,notificatio
                         bundle.putInt("id_question",id_question!!)
                         this@notifications_Fragment.findNavController().navigate(R.id.action_action_notification_to_detailForumFragment,bundle)
                         Log.e("Test_tucommentdenQuestion","Thành công")
+                        if (n.seen== false)
+                        {
+                            Repository(requireContext()).putSeenNotifi_comment(
+                                comment_id_put(n.id)
+                            )
+                        }
                     }
                 }
 
@@ -130,15 +150,30 @@ class notifications_Fragment : Fragment() , OnClickItem_Notification,notificatio
     }
 
     override fun updateViewNotification_question(notification_question: notification_question) {
-        adapterNotification.setData_question(notification_question.notificationQuestionDtoList)
-        notification_recyclerview.adapter?.notifyDataSetChanged()
+        var list_notifi : ArrayList<NotificationQuestionDto> = ArrayList<NotificationQuestionDto>()
+        notification_question.notificationQuestionDtoList.forEach {
+            if (it.username != PreferenceUtils.getUser().username)
+            {
+                list_notifi.add(it)
+            }
+        }
+        adapterNotification.setData_question(list_notifi)
+
        adapterNotification.listnotifi_item?.sortedByDescending { notificationItem: notification_item -> notificationItem.time   }
+        notification_recyclerview.adapter?.notifyDataSetChanged()
     }
 
     override fun updateViewNotification_comment(notification_comment: get_notifi_comment) {
-        adapterNotification.setdata_comment(notification_comment.notificationCommentDtoList)
-        notification_recyclerview.adapter?.notifyDataSetChanged()
+        var list_notifi : ArrayList<NotificationCommentDto> = ArrayList()
+        notification_comment.notificationCommentDtoList.forEach {
+            if (it.username != PreferenceUtils.getUser().username)
+            {
+                list_notifi.add(it)
+            }
+        }
+        adapterNotification.setdata_comment(list_notifi)
         adapterNotification.listnotifi_item?.sortedByDescending { notificationItem: notification_item -> notificationItem.time }
+        notification_recyclerview.adapter?.notifyDataSetChanged()
     }
 
     override fun onStart() {

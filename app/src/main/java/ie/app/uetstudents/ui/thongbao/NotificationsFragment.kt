@@ -99,5 +99,6 @@ class NotificationsFragment: Fragment() ,NotificationUetContract.View,OnclickIte
         val bundle = Bundle()
         bundle.putInt("id_question",itembantin.id)
         this.findNavController().navigate(R.id.action_nav_notifications_to_detailNotifiFragment,bundle)
+
     }
 }
