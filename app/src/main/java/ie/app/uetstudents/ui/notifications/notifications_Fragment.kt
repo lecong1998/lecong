@@ -186,5 +186,10 @@ class notifications_Fragment : Fragment() , OnClickItem_Notification,notificatio
         super.onStop()
         EventBus.getDefault().unregister(this)
     }
+
+    override fun onDestroyView() {
+        EventBus.getDefault().post(UPDATE_NOTIFICATION)
+        super.onDestroyView()
+    }
 }
 
