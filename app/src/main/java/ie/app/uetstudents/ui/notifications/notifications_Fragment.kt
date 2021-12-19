@@ -65,7 +65,7 @@ class notifications_Fragment : Fragment() , OnClickItem_Notification,notificatio
         adapterNotification = adapter_notification(this)
         notification_recyclerview.layoutManager = LinearLayoutManager(context)
         notification_recyclerview.adapter = adapterNotification
-        notification_scrollview.setOnScrollChangeListener(object : NestedScrollView.OnScrollChangeListener{
+      notification_scrollview.setOnScrollChangeListener(object : NestedScrollView.OnScrollChangeListener{
             override fun onScrollChange(
                 v: NestedScrollView?,
                 scrollX: Int,
@@ -121,7 +121,7 @@ class notifications_Fragment : Fragment() , OnClickItem_Notification,notificatio
                     )
             }
         }
-        if (n.notification_item_id<1000)
+        else if (n.notification_item_id<1000)
         {
             val call : Call<QuestionX> = ApiClient.getClient.getQuestion_of_comment(n.notification_item_id)
             call.enqueue(object : Callback<QuestionX>{

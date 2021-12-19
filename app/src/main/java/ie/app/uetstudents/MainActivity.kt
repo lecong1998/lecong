@@ -211,32 +211,4 @@ class MainActivity : AppCompatActivity() {
         //navController.navigate(R.id.mobile_navigation,bundle)
         return navController.navigateUp(appBarConfiguration)|| super.onSupportNavigateUp()
     }
-
-  /*  override fun onStart() {
-        super.onStart()
-
-       // val intentFilter = IntentFilter(mBroadcastAction)
-        //registerReceiver(mbroadcastReceiver,intentFilter)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        //unregisterReceiver(mbroadcastReceiver)
-    }
-
- /*   val mbroadcastReceiver : BroadcastReceiver = object : BroadcastReceiver(){
-        override fun onReceive(context: Context?, intent: Intent?) {
-            if (intent?.action?.equals(MainActivity().mBroadcastAction)!!)
-            {
-
-                val jsonString : String = intent.getStringExtra("broadcast")
-                val type = object : TypeToken<List<NotificationCommentDto?>?>() {}.type
-                val gson : Gson = Gson()
-                val notifi : List<NotificationCommentDto> = gson.fromJson(jsonString,type)
-
-            }
-        }
-    }*/
-
-*/
 }

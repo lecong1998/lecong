@@ -1,6 +1,7 @@
 package ie.app.uetstudents.ui.profile
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -122,11 +123,28 @@ class Profile_Fragment: Fragment(),ProfileContract.View, OnClickItem_UetTalk, Cl
         profile_list_question.adapter?.notifyDataSetChanged()
     }
 
+    @SuppressLint("ResourceAsColor")
     override fun UpdateViewDataUser(userprofile: userprofile) {
         Mssv.text = userprofile.mssv
         username.text = userprofile.fullname
-        email.text = userprofile.email
-        khoa.text = userprofile.department.toString()
+        if(userprofile.email!= null)
+        {
+            email.text = userprofile.email
+        }
+        else
+        {
+            email.text = "Chưa cập nhật!"
+            email.setTextColor(R.color.teal_700)
+        }
+        if (userprofile.department != null)
+        {
+            khoa.text = userprofile.department.toString()
+        }else
+        {
+            khoa.text = "Chưa cập nhật!"
+            khoa.setTextColor(R.color.teal_700)
+        }
+
         if (userprofile.avatar != null) {
             Glide.with(requireActivity()).load(ApiClient.BASE_URL+"image"+userprofile.avatar)
                 .error(R.drawable.img_default_user).into(profile_image_account)
