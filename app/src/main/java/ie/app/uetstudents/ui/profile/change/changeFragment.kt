@@ -2,10 +2,8 @@ package ie.app.uetstudents.ui.profile.change
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import ie.app.uetstudents.R
 import kotlinx.android.synthetic.main.change.view.*
 import kotlinx.android.synthetic.main.fragment_change.*
@@ -14,7 +12,7 @@ class changeFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -64,4 +62,14 @@ class changeFragment : Fragment() {
         dialog_password.show()
 
     }
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        super.onPrepareOptionsMenu(menu)
+        val item: MenuItem = menu.findItem(R.id.action_search)
+        val item2: MenuItem = menu.findItem(R.id.action_profile)
+        val item3: MenuItem = menu.findItem(R.id.action_notification)
+        item.isVisible = false
+        item2.isVisible = false
+        item3.isVisible = false
+    }
+
 }

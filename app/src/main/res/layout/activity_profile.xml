@@ -43,7 +43,6 @@
                         <TextView
                             android:layout_width="120dp"
                             android:layout_height="match_parent"
-                            android:layout_marginTop="4dp"
                             android:text="MSSV:"
                             android:paddingLeft="20dp"
                             android:textColor="@color/black"
@@ -66,7 +65,6 @@
                         <TextView
                             android:layout_width="120dp"
                             android:layout_height="match_parent"
-                            android:layout_marginTop="4dp"
                             android:text="Username:"
                             android:paddingLeft="20dp"
                             android:textColor="@color/black"
@@ -75,7 +73,7 @@
                             />
                         <TextView
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:text=""
                             android:id="@+id/username"
                             android:textColor="@color/black"
@@ -89,7 +87,6 @@
                         <TextView
                             android:layout_width="120dp"
                             android:layout_height="match_parent"
-                            android:layout_marginTop="4dp"
                             android:text="Email:"
                             android:paddingLeft="20dp"
                             android:textColor="@color/black"
@@ -98,7 +95,7 @@
                             />
                         <TextView
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:text=""
                             android:id="@+id/email"
                             android:textColor="@color/black"
@@ -113,7 +110,6 @@
                         <TextView
                             android:layout_width="120dp"
                             android:layout_height="match_parent"
-                            android:layout_marginTop="4dp"
                             android:text="Khóa:"
                             android:paddingLeft="20dp"
                             android:textColor="@color/black"
@@ -122,7 +118,7 @@
                             />
                         <TextView
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:text=""
                             android:id="@+id/khoa"
                             android:textColor="@color/black"
@@ -145,19 +141,11 @@
                     android:orientation="horizontal"
                     android:layout_gravity="bottom">
 
-                    <Button
-                        android:id="@+id/ketban"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginRight="10dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/vien_button"
-                        android:text="Kết Bạn"
-                        android:textColor="@color/white"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
+
 
                     <Button
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
                         android:id="@+id/thaydoithongtin"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
