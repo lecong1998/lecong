@@ -4,6 +4,8 @@ import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import ie.app.uetstudents.ui.API.ApiClient
+import ie.app.uetstudents.ui.Entity.Account.Put.request.password_put
+import ie.app.uetstudents.ui.Entity.Account.Put.response.password_response
 import ie.app.uetstudents.ui.Entity.Category.category
 import ie.app.uetstudents.ui.Entity.Comment.get.Comment
 import ie.app.uetstudents.ui.Entity.Question.get.QuestionDto
@@ -20,6 +22,10 @@ import ie.app.uetstudents.ui.Entity.notifications_question.post.notification_que
 import ie.app.uetstudents.ui.Entity.notifications_question.put.request.question_id_put
 import ie.app.uetstudents.ui.Entity.notifications_question.put.respont.question_notifi_put
 import ie.app.uetstudents.ui.Entity.userProfile.get.userprofile
+import ie.app.uetstudents.ui.Entity.userProfile.post.email.request.email_request
+import ie.app.uetstudents.ui.Entity.userProfile.post.khoa.request.khoa_request
+import ie.app.uetstudents.ui.Entity.userProfile.post.mssv.request.mssv_request
+import ie.app.uetstudents.ui.Entity.userProfile.post.response.update_user_response
 import ie.app.uetstudents.ui.diendan.category.CategoryContract
 import ie.app.uetstudents.ui.diendan.detailForum.DetailForumContract
 import ie.app.uetstudents.ui.diendan.forum_main.forumContract
@@ -359,16 +365,16 @@ val context: Context) {
 
     /*------------------------Lấy danh sách bài viết ---------------------------*/
 
-    fun GetQuestion_accountid (presenter: ProfileContract.Presenter,index: Int,account_id: Int)
+    fun GetQuestion_accountid (presenter: ProfileContract.Presenter,index: Int,account_id: Int,type_content_id: Int)
     {
         var question : question
-        val call : Call<question> = ApiClient.getClient.getQuestion_of_account(account_id,index,account_id)
+        val call : Call<question> = ApiClient.getClient.getQuestion_of_account_type_content(account_id,index,account_id,type_content_id)
         call.enqueue(object  : Callback<question>{
             override fun onResponse(call: Call<question>, response: Response<question>) {
                 if (response.isSuccessful)
                 {
                     question = response.body()!!
-                    presenter.UpdateUIQuestionProfile(question)
+                    presenter.UpdateUIQuestionProfile(question,type_content_id)
                     Log.e("Api_callQuestionAccount","Thành công")
                 }
 
@@ -442,4 +448,93 @@ val context: Context) {
         })
 
     }
+
+    /*--------------------------------------------------------*/
+    fun change_email_user(emailRequest: email_request)
+    {
+            val call: Call<update_user_response> = ApiClient.getClient.update_user_email(emailRequest)
+        call.enqueue(object : Callback<update_user_response>{
+            override fun onResponse(
+                call: Call<update_user_response>,
+                response: Response<update_user_response>
+            ) {
+                if (response.isSuccessful)
+                {
+                    Toast.makeText(context,response.body()!!.message,Toast.LENGTH_SHORT).show()
+                    Log.e("Update email","Thành công")
+                }
+            }
+
+            override fun onFailure(call: Call<update_user_response>, t: Throwable) {
+                Log.e("Update email","Thất bại")
+            }
+        })
+    }
+    /*--------------------------------------------------------*/
+    fun change_khoa_user(khoaRequest: khoa_request)
+    {
+        val call: Call<update_user_response> = ApiClient.getClient.update_user_khoa(khoaRequest)
+        call.enqueue(object : Callback<update_user_response>{
+            override fun onResponse(
+                call: Call<update_user_response>,
+                response: Response<update_user_response>
+            ) {
+                if (response.isSuccessful)
+                {
+                    Toast.makeText(context,response.body()!!.message,Toast.LENGTH_SHORT).show()
+                    Log.e("Update khoa","Thành công")
+                }
+            }
+
+            override fun onFailure(call: Call<update_user_response>, t: Throwable) {
+                Log.e("Update khoa","Thất bại")
+            }
+        })
+    }
+
+    /*--------------------------------------------------------*/
+
+    fun change_mssv_user(mssvRequest: mssv_request)
+    {
+        val call: Call<update_user_response> = ApiClient.getClient.update_user_mssv(mssvRequest)
+        call.enqueue(object : Callback<update_user_response>{
+            override fun onResponse(
+                call: Call<update_user_response>,
+                response: Response<update_user_response>
+            ) {
+                if (response.isSuccessful)
+                {
+                    Toast.makeText(context,response.body()!!.message,Toast.LENGTH_SHORT).show()
+                    Log.e("Update mssv","Thành công")
+                }
+            }
+
+            override fun onFailure(call: Call<update_user_response>, t: Throwable) {
+                Log.e("Update mssv","Thất bại")
+            }
+        })
+    }
+
+    /*---------------------------------------------------------*/
+    fun change_password(put_password : password_put)
+    {
+        val call: Call<password_response> = ApiClient.getClient.change_password(put_password)
+        call.enqueue(object : Callback<password_response>{
+            override fun onResponse(
+                call: Call<password_response>,
+                response: Response<password_response>
+            ) {
+                if (response.isSuccessful)
+                {
+                    Toast.makeText(context,response.body()!!.message,Toast.LENGTH_SHORT).show()
+                    Log.e("Update mật khẩu","Thành công")
+                }
+            }
+
+            override fun onFailure(call: Call<password_response>, t: Throwable) {
+                Log.e("Update mật khẩu","Thất bại")
+            }
+        })
+    }
+
 }

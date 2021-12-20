@@ -65,6 +65,8 @@ class notifications_Fragment : Fragment() , OnClickItem_Notification,notificatio
         adapterNotification = adapter_notification(this)
         notification_recyclerview.layoutManager = LinearLayoutManager(context)
         notification_recyclerview.adapter = adapterNotification
+        adapterNotification.listnotifi_item?.sortedByDescending { notificationItem: notification_item -> notificationItem.time   }
+        adapterNotification?.notifyDataSetChanged()
       notification_scrollview.setOnScrollChangeListener(object : NestedScrollView.OnScrollChangeListener{
             override fun onScrollChange(
                 v: NestedScrollView?,
@@ -123,7 +125,7 @@ class notifications_Fragment : Fragment() , OnClickItem_Notification,notificatio
         }
         else if (n.notification_item_id<1000)
         {
-            val call : Call<QuestionX> = ApiClient.getClient.getQuestion_of_comment(n.notification_item_id)
+            val call : Call<QuestionX> = ApiClient.getClient.getQuestion_of_comment(n.notification_item_id,id_user!!)
             call.enqueue(object : Callback<QuestionX>{
                 override fun onResponse(call: Call<QuestionX>, response: Response<QuestionX>) {
                     if (response.isSuccessful)
@@ -151,28 +153,13 @@ class notifications_Fragment : Fragment() , OnClickItem_Notification,notificatio
     }
 
     override fun updateViewNotification_question(notification_question: notification_question) {
-        var list_notifi : ArrayList<NotificationQuestionDto> = ArrayList<NotificationQuestionDto>()
-        notification_question.notificationQuestionDtoList.forEach {
-            if (it.username != PreferenceUtils.getUser().username)
-            {
-                list_notifi.add(it)
-            }
-        }
-        adapterNotification.setData_question(list_notifi)
-
+        adapterNotification.setData_question(notification_question.notificationQuestionDtoList)
        adapterNotification.listnotifi_item?.sortedByDescending { notificationItem: notification_item -> notificationItem.time   }
         notification_recyclerview.adapter?.notifyDataSetChanged()
     }
 
     override fun updateViewNotification_comment(notification_comment: get_notifi_comment) {
-        var list_notifi : ArrayList<NotificationCommentDto> = ArrayList()
-        notification_comment.notificationCommentDtoList.forEach {
-            if (it.username != PreferenceUtils.getUser().username)
-            {
-                list_notifi.add(it)
-            }
-        }
-        adapterNotification.setdata_comment(list_notifi)
+        adapterNotification.setdata_comment(notification_comment.notificationCommentDtoList)
         adapterNotification.listnotifi_item?.sortedByDescending { notificationItem: notification_item -> notificationItem.time }
         notification_recyclerview.adapter?.notifyDataSetChanged()
     }

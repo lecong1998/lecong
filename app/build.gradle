@@ -104,4 +104,12 @@ dependencies {
 
     // eventbus
     implementation 'org.greenrobot:eventbus:3.2.0'
+
+    //
+    implementation 'com.google.android.material:material:1.1.0'
+
+  
+
+    //
+    implementation 'net.gotev:uploadservice:2.1'
 }

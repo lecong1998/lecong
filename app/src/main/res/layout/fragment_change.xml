@@ -14,26 +14,27 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         >
+
         <TextView
             android:id="@+id/title_username"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="Username"
             android:gravity="center_vertical"
             android:padding="10dp"
-            android:textSize="18sp"
-            android:textStyle="bold"
+            android:text="MSSV"
             android:textColor="@color/black"
-          />
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
         <TextView
 
-            android:id="@+id/id_username"
+            android:id="@+id/id_mssv"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_toLeftOf="@id/image_1"
             android:layout_toRightOf="@id/title_username"
             android:gravity="center_vertical|right"
-            android:text="Tên username"
+            android:text="mssv"
             android:textColor="@color/black"
             android:textSize="20sp" />
         <ImageView
@@ -65,17 +66,18 @@
             android:textStyle="bold"
             android:textColor="@color/black"
             android:gravity="center_vertical"/>
+
         <TextView
 
+            android:id="@+id/id_email"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/id_email"
-            android:text="email"
-            android:layout_toRightOf="@id/title_email"
             android:layout_toLeftOf="@id/image_2"
-            android:textColor="@color/black"
+            android:layout_toRightOf="@id/title_email"
             android:gravity="center_vertical|right"
-            android:textSize="20sp"/>
+            android:text="email"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
         <ImageView
             android:layout_alignParentRight="true"
             android:id="@+id/image_2"

@@ -7,6 +7,8 @@ import ie.app.uetstudents.data.response.Response
 import ie.app.uetstudents.data.response.login.LoginResponse
 import ie.app.uetstudents.ui.Entity.Account.Get.dangky.dangky_account
 import ie.app.uetstudents.ui.Entity.Account.Post.account
+import ie.app.uetstudents.ui.Entity.Account.Put.request.password_put
+import ie.app.uetstudents.ui.Entity.Account.Put.response.password_response
 import ie.app.uetstudents.ui.Entity.Category.category
 import ie.app.uetstudents.ui.Entity.Comment.get.Comment
 import ie.app.uetstudents.ui.Entity.Question.get.QuestionX
@@ -27,6 +29,10 @@ import ie.app.uetstudents.ui.Entity.notifications_question.put.respont.question_
 import ie.app.uetstudents.ui.Entity.subject.DataSubject.data_subject
 import ie.app.uetstudents.ui.Entity.subject.subject
 import ie.app.uetstudents.ui.Entity.userProfile.get.userprofile
+import ie.app.uetstudents.ui.Entity.userProfile.post.email.request.email_request
+import ie.app.uetstudents.ui.Entity.userProfile.post.khoa.request.khoa_request
+import ie.app.uetstudents.ui.Entity.userProfile.post.mssv.request.mssv_request
+import ie.app.uetstudents.ui.Entity.userProfile.post.response.update_user_response
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -110,6 +116,10 @@ interface ApiInterface {
     /*-------------------------lấy danh sách Question theo id account-------------------------------*/ // chua call
     @GET("question/account/{account_id}")
     fun getQuestion_of_account(@Path("account_id") account_id : Int, @Query("index") index : Int,@Query("account_id") accountid: Int) : Call<question>
+
+
+    @GET("question/account/{account_id}")
+    fun getQuestion_of_account_type_content(@Path("account_id") account_id : Int, @Query("index") index : Int,@Query("account_id") accountid: Int,@Query("type_content_id") type_content_id: Int) : Call<question>
     /*---------------------------Thông Báo--------------------------------------------*/
 
 
@@ -158,7 +168,7 @@ interface ApiInterface {
     /*---------------------------------------------------------------------*/
 
     @GET("question/comment/{id_comment}")
-    fun getQuestion_of_comment(@Path("id_comment") id_comment: Int) : Call<QuestionX>
+    fun getQuestion_of_comment(@Path("id_comment") id_comment: Int,@Query("account_id") account_id: Int ) : Call<QuestionX>
 
     @POST("register_firebase_token")
     fun registerFirebaseToken(@Body request : RegisterFirebaseTokenRequest) : Call<Response>
@@ -173,4 +183,18 @@ interface ApiInterface {
     /*-------------------------get user------------------------*/
     @GET("user-profile/get/{id_user}")
     fun getUserProfile(@Path("id_user") id_user : Int) : Call<userprofile>
+
+    /*------------------------Thay đổi mật khẩu------------------------*/
+    @POST("change-password")
+    fun change_password(@Body put_password : password_put) : Call<password_response>
+
+    /*--------------------------Thay đổi thông tin-----------------------------*/
+    @POST("user-profile/update")
+    fun update_user_email(@Body emailRequest: email_request) :Call<update_user_response>
+
+    @POST("user-profile/update")
+    fun update_user_khoa(@Body khoaRequest: khoa_request) : Call<update_user_response>
+
+    @POST("user-profile/update")
+    fun update_user_mssv(@Body mssvRequest: mssv_request) : Call<update_user_response>
 }

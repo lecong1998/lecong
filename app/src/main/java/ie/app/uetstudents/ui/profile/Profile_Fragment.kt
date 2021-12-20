@@ -20,10 +20,7 @@ import com.google.gson.Gson
 import ie.app.uetstudents.R
 import ie.app.uetstudents.RealPathUtil.RealPathUtil
 import ie.app.uetstudents.Repository.Repository
-import ie.app.uetstudents.adapter.AdapterUETTalk
-import ie.app.uetstudents.adapter.ClickItemCommentLike
-import ie.app.uetstudents.adapter.CommentAdapter
-import ie.app.uetstudents.adapter.OnClickItem_UetTalk
+import ie.app.uetstudents.adapter.*
 import ie.app.uetstudents.ui.API.ApiClient
 import ie.app.uetstudents.ui.Entity.Comment.get.Comment
 import ie.app.uetstudents.ui.Entity.Comment.get.CommentDto
@@ -50,11 +47,13 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
 
-class Profile_Fragment: Fragment(),ProfileContract.View, OnClickItem_UetTalk, ClickItemCommentLike {
+class Profile_Fragment: Fragment(),ProfileContract.View, OnClickItem_UetTalk, ClickItemCommentLike ,ClickItem{
 
     var id_user : Int? = null
     private lateinit var presenter_profile : ProfileContract.Presenter
     private lateinit var adapterUETTalk: AdapterUETTalk
+
+    private lateinit var adapter: adapter_forum
     private val CAMERA_REQUEST: Int = 222
     var uri: Uri? = null
 
@@ -65,6 +64,8 @@ class Profile_Fragment: Fragment(),ProfileContract.View, OnClickItem_UetTalk, Cl
     private var page_comment: Int = 1
     private var page_uettalk: Int = 1
     var id_user_other : Int? = null
+
+    private var type_content_id : Int = 2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,11 +101,51 @@ class Profile_Fragment: Fragment(),ProfileContract.View, OnClickItem_UetTalk, Cl
         super.onViewCreated(view, savedInstanceState)
 
         presenter_profile = ProfilePresenter(this, Repository(requireContext()))
+        /*----------------------------------------*/
+
+        /*--------------------------uet--------------------------------*/
+
+
+        presenter_profile.getQuestionProfile(page_uettalk,id_user!!,type_content_id)
+        adapter = adapter_forum(this)
         adapterUETTalk = AdapterUETTalk(this)
-        presenter_profile.getQuestionProfile(page_uettalk,id_user!!)
         presenter_profile.getUserInformation(id_user!!)
-        profile_list_question.layoutManager = LinearLayoutManager(context)
-        profile_list_question.adapter= adapterUETTalk
+
+        profile_uettalk.setOnClickListener {
+            type_content_id = 2
+            Toast.makeText(context,"Đã chọn thể loại Bài viết UETTalk",Toast.LENGTH_SHORT).show()
+            profile_forum.isChecked = false
+            adapterUETTalk.notifyDataSetChanged()
+            presenter_profile.getQuestionProfile(page_uettalk,id_user!!,type_content_id)
+            profile_list_question.adapter?.notifyDataSetChanged()
+
+
+        }
+        profile_forum.setOnClickListener {
+            type_content_id = 1
+            Toast.makeText(context,"Đã chọn thể loại Bài viết diễn đàn",Toast.LENGTH_SHORT).show()
+            profile_uettalk.isChecked = false
+            adapter.notifyDataSetChanged()
+            presenter_profile.getQuestionProfile(page_uettalk,id_user!!,type_content_id)
+            profile_list_question.adapter?.notifyDataSetChanged()
+        }
+
+        profile_scrollview.setOnScrollChangeListener(object : NestedScrollView.OnScrollChangeListener{
+            override fun onScrollChange(
+                v: NestedScrollView?,
+                scrollX: Int,
+                scrollY: Int,
+                oldScrollX: Int,
+                oldScrollY: Int
+            ) {
+                if (scrollY==v?.getChildAt(0)?.measuredHeight?.minus(v?.measuredHeight))
+                {
+                    page_uettalk++
+                    presenter_profile.getQuestionProfile(page_uettalk,id_user!!,type_content_id)
+                }
+            }
+        })
+
 
 
     }
@@ -118,8 +159,22 @@ class Profile_Fragment: Fragment(),ProfileContract.View, OnClickItem_UetTalk, Cl
         item3.setVisible(false)
     }
 
-    override fun UpdateViewDataQuestionProfile(question: question) {
-        adapterUETTalk.setData(question.questionDtoList)
+    override fun UpdateViewDataQuestionProfile(question: question,type_content_id : Int) {
+        if (type_content_id==2)
+        {
+            adapterUETTalk.setData(question.questionDtoList)
+            profile_list_question.layoutManager = LinearLayoutManager(context)
+            profile_list_question.adapter= adapterUETTalk
+            profile_list_question.adapter?.notifyDataSetChanged()
+        }
+        if (type_content_id==1)
+        {
+            adapter.setData(question.questionDtoList)
+            profile_list_question.layoutManager = LinearLayoutManager(context)
+            profile_list_question.adapter= adapter
+            profile_list_question.adapter?.notifyDataSetChanged()
+        }
+
         profile_list_question.adapter?.notifyDataSetChanged()
     }
 
@@ -443,5 +498,13 @@ class Profile_Fragment: Fragment(),ProfileContract.View, OnClickItem_UetTalk, Cl
             })
             bottomSheetView.recyclerview_item_uettalk?.scrollToPosition(0)
         }
+    }
+
+    override fun clickOnItem(m: QuestionDtoX) {
+        val bundle = Bundle()
+        bundle.putInt("id_question",m.id!!)
+        bundle.putString("owner_username",m.accountDto?.username ?: "")
+        Toast.makeText( context,m.id.toString(), Toast.LENGTH_SHORT).show()
+        this.findNavController().navigate(R.id.action_action_profile_to_detailForumFragment, bundle)
     }
 }

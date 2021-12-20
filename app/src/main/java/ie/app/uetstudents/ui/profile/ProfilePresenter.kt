@@ -9,12 +9,12 @@ class ProfilePresenter (
     private val View : ProfileContract.View,
     private val Repository : Repository
         ) : ProfileContract.Presenter{
-    override fun getQuestionProfile(index: Int, account_id: Int) {
-        Repository.GetQuestion_accountid(this,index,account_id)
+    override fun getQuestionProfile(index: Int, account_id: Int,type_content_id : Int) {
+        Repository.GetQuestion_accountid(this,index,account_id,type_content_id)
     }
 
-    override fun UpdateUIQuestionProfile(question: question) {
-        View.UpdateViewDataQuestionProfile(question)
+    override fun UpdateUIQuestionProfile(question: question,type_content_id: Int) {
+        View.UpdateViewDataQuestionProfile(question,type_content_id)
     }
 
     override fun getUserInformation(account_id: Int) {

@@ -1,5 +1,6 @@
 package ie.app.uetstudents.ui.diendan.Write
 
+
 import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
@@ -8,7 +9,6 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import android.view.*
 import android.widget.PopupMenu
@@ -39,6 +39,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
+import java.io.InputStream
 
 
 class WriteFragment : Fragment(), OnclickItem_deleteanh {
@@ -48,10 +49,14 @@ class WriteFragment : Fragment(), OnclickItem_deleteanh {
     private val MY_REQUEST: Int = 1111
     private val IMG_REQUEST: Int = 1000
     private val CAMERA_REQUEST: Int = 100
+    private val DOCUMENT_REQUEST: Int = 166
+
+    private var encodedPDF : String? = null
 
     private var listanh: ArrayList<Uri> = ArrayList()
+    private var listpdf: ArrayList<Uri> = ArrayList()
     private lateinit var adapteranh: adapter_anhwrite
-//    private var uri : Uri? = null
+    private var uripdf : Uri? = null
 
     private var database: QuestionDto? = null
     var id_user : Int? = null
@@ -73,56 +78,6 @@ class WriteFragment : Fragment(), OnclickItem_deleteanh {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-
-       /* when (radio_group.checkedRadioButtonId) {
-            R.id.select_cntt -> {
-                select_nganhid = 1
-            }
-            R.id.select_khmt -> {
-                select_nganhid = 2
-            }
-            R.id.select_httt -> {
-                select_nganhid = 3
-            }
-            R.id.select_cnktdttt -> {
-                select_nganhid = 4
-            }
-            R.id.select_vlkt -> {
-                select_nganhid = 5
-            }
-            R.id.select_ktnl -> {
-                select_nganhid = 6
-            }
-            R.id.select_cokt -> {
-                select_nganhid = 7
-            }
-            R.id.select_cnktcdt -> {
-                select_nganhid = 8
-            }
-            R.id.select_mmttt -> {
-                select_nganhid = 9
-            }
-            R.id.select_ktmt -> {
-                select_nganhid = 10
-            }
-            R.id.select_cnktxdgt -> {
-                select_nganhid = 11
-            }
-            R.id.select_cnhkvt -> {
-                select_nganhid = 12
-            }
-            R.id.select_ktrb -> {
-                select_nganhid = 13
-            }
-            R.id.select_cnnn -> {
-                select_nganhid = 14
-            }
-            R.id.select_ktdktdh -> {
-                select_nganhid = 15
-            }
-
-        } */
 
         select_chude.setOnClickListener {
             val popupmenu : PopupMenu = PopupMenu(context,select_chude,Gravity.CENTER_VERTICAL)
@@ -226,14 +181,14 @@ class WriteFragment : Fragment(), OnclickItem_deleteanh {
 
             dialogview.anh_camera.setOnClickListener {
 
-                val cameraIntent =
+              /*  val cameraIntent =
                     Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-                startActivityForResult(cameraIntent, CAMERA_REQUEST)
-
+                startActivityForResult(cameraIntent, CAMERA_REQUEST)*/
+                onclickRequestPermission("image")
                 dialog.dismiss()
             }
             dialogview.anh_thumuc.setOnClickListener {
-                onclickRequestPermission()
+                onclickRequestPermission("pdf")
                 dialog.dismiss()
             }
 
@@ -258,6 +213,7 @@ class WriteFragment : Fragment(), OnclickItem_deleteanh {
                 Toast.makeText(context,"Bạn chưa cập nhật thông tin đầy đủ",Toast.LENGTH_SHORT).show()
             }else
             {
+
                 callApi(
                     edtxt_status.text.toString(),
                     write_title.text.toString(),
@@ -275,7 +231,7 @@ class WriteFragment : Fragment(), OnclickItem_deleteanh {
         writeContent: String,
         title: String,
         selectNganh: Int,
-        listUri: List<Uri>,
+        listuri: List<Uri>,
         user: Int
     ) {
         val builder = MultipartBody.Builder()
@@ -289,8 +245,12 @@ class WriteFragment : Fragment(), OnclickItem_deleteanh {
         val questionString = gson.toJson(question).toString()
         builder.addFormDataPart("Question", questionString)
 
-        listUri.forEach {
-            val strRealPath = RealPathUtil.getRealPath(requireContext(), it)
+
+
+        listuri.forEach {
+
+
+             val strRealPath = RealPathUtil.getRealPath(requireContext(),it)
             val file = File(strRealPath)
             builder.addFormDataPart(
                 "image_files",
@@ -324,17 +284,42 @@ class WriteFragment : Fragment(), OnclickItem_deleteanh {
         item3.isVisible = false
     }
 
-    fun onclickRequestPermission() {
+    fun onclickRequestPermission(theloai : String) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            openGallery()
+            if (theloai.equals("image"))
+            {
+                openGallery()
+            }
+            if (theloai.equals("pdf"))
+            {
+                openDocument()
+            }
+
             return
         }
         if (activity?.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            openGallery()
+            if (theloai.equals("image"))
+            {
+                openGallery()
+            }
+            if (theloai.equals("pdf"))
+            {
+                openDocument()
+            }
         } else {
-            requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), MY_REQUEST)
+            if (theloai.equals("image"))
+            {
+                requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), MY_REQUEST)
+            }
+            if (theloai.equals("pdf"))
+            {
+                requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), DOCUMENT_REQUEST)
+            }
+
         }
     }
+
+
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -347,30 +332,43 @@ class WriteFragment : Fragment(), OnclickItem_deleteanh {
                 openGallery()
             }
         }
+        if (requestCode== DOCUMENT_REQUEST)
+        {
+            if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                openDocument()
+            }
+        }
 
+    }
+
+    private fun openDocument() {
+        val intent = Intent()
+        intent.type = "application/pdf"
+        intent.action = Intent.ACTION_GET_CONTENT
+        startActivityForResult(Intent.createChooser(intent, "Select Pdf"), CAMERA_REQUEST)
     }
 
     fun openGallery() {
         val intent: Intent = Intent()
         intent.type = "image/*"
         intent.action = Intent.ACTION_GET_CONTENT
-        //mActivityResultLauncher.launch(Intent.createChooser(intent,"select picture"))
         startActivityForResult(Intent.createChooser(intent, "select picture"), IMG_REQUEST)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == IMG_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
-            val uri = data.data!!
-            listanh.add(uri)
+            val uri : Uri = data.data!!
+            //listanh.add(uri)
             listanh_write_forum.adapter?.notifyDataSetChanged()
 
 
         }
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
-            val uri = data.data!!
-            listanh.add(uri)
-            listanh_write_forum.adapter?.notifyDataSetChanged()
+             uripdf = data.data!!
+
+            val inputStream : InputStream = context?.contentResolver?.openInputStream(uripdf!!)!!
+            Log.e("uri",inputStream.toString())
         }
 
     }
@@ -379,6 +377,8 @@ class WriteFragment : Fragment(), OnclickItem_deleteanh {
         listanh.remove(anh)
         listanh_write_forum.adapter?.notifyDataSetChanged()
     }
+
+
 
 
 }

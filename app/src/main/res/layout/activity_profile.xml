@@ -42,7 +42,7 @@
                     android:orientation="vertical">
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="30dp"
+                        android:layout_height="wrap_content"
                         android:orientation="horizontal">
                         <TextView
                             android:layout_width="120dp"
@@ -59,11 +59,11 @@
                             android:id="@+id/Mssv"
                             android:textColor="@color/black"
                             android:textStyle="bold"
-                            android:textSize="18sp"/>
+                            android:textSize="15sp"/>
                     </LinearLayout>
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="30dp"
+                        android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
                         <TextView
@@ -82,11 +82,11 @@
                             android:id="@+id/username"
                             android:textColor="@color/black"
                             android:textStyle="bold"
-                            android:textSize="18sp"/>
+                            android:textSize="15sp"/>
                     </LinearLayout>
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="30dp"
+                        android:layout_height="wrap_content"
                         android:orientation="horizontal">
                         <TextView
                             android:layout_width="120dp"
@@ -104,12 +104,12 @@
                             android:id="@+id/email"
                             android:textColor="@color/black"
                             android:textStyle="bold"
-                            android:textSize="18sp"/>
+                            android:textSize="15sp"/>
 
                     </LinearLayout>
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="30dp"
+                        android:layout_height="wrap_content"
                         android:orientation="horizontal">
                         <TextView
                             android:layout_width="120dp"
@@ -127,7 +127,7 @@
                             android:id="@+id/khoa"
                             android:textColor="@color/black"
                             android:textStyle="bold"
-                            android:textSize="18sp"/>
+                            android:textSize="15sp"/>
 
                     </LinearLayout>
 
@@ -171,6 +171,7 @@
         </LinearLayout>
 
         <View
+            android:layout_marginTop="5dp"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/black"
@@ -179,10 +180,63 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-            <androidx.recyclerview.widget.RecyclerView
+            <com.google.android.material.chip.ChipGroup
+                android:layout_height="60dp"
+                android:layout_marginBottom="10dp"
+                android:layout_width="match_parent"
+                android:id="@+id/select_chip_profile"
+                app:singleSelection="true">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/profile_uettalk"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="60dp"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:text="UET TALK"
+                        android:checked="true"
+                        android:textStyle="bold"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:textAlignment="center"
+                        android:textColor="@color/white"
+                        app:chipBackgroundColor="@color/mautoolbar"
+                        android:theme="@style/Theme.MaterialComponents.Light"/>
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/profile_forum"
+                        android:layout_weight="1"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="60dp"
+                        android:clickable="true"
+                        android:text="FORUM"
+                        android:textStyle="bold"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:textAlignment="center"
+                        android:textColor="@color/white"
+                        app:chipBackgroundColor="@color/mautoolbar"
+                        android:theme="@style/Theme.MaterialComponents.Light"/>
+                </LinearLayout>
+
+
+            </com.google.android.material.chip.ChipGroup>
+            <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/profile_list_question"/>
+                android:id="@+id/profile_scrollview">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/profile_list_question"/>
+            </androidx.core.widget.NestedScrollView>
+
         </LinearLayout>
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

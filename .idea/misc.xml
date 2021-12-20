@@ -66,9 +66,11 @@
         <entry key="..\:/Users/Admin/AndroidStudioProjects/UETStudents2/app/src/main/res/layout/toolbar.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/UETStudents2/app/src/main/res/menu/activity_main_drawer.xml" value="0.18" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/UETStudents2/app/src/main/res/menu/main.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/Admin/Documents/codemoiduan/lecong/lecong/app/src/main/res/drawable/vien_button.xml" value="0.2203125" />
         <entry key="..\:/Users/Admin/Documents/codemoiduan/lecong/lecong/app/src/main/res/drawable/vienxanh.xml" value="0.2169230769230769" />
         <entry key="..\:/Users/Admin/Documents/codemoiduan/lecong/lecong/app/src/main/res/layout/activity_detail_document_exam.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Admin/Documents/codemoiduan/lecong/lecong/app/src/main/res/layout/activity_main.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/Admin/Documents/codemoiduan/lecong/lecong/app/src/main/res/layout/activity_notifications.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Admin/Documents/codemoiduan/lecong/lecong/app/src/main/res/layout/activity_profile.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Admin/Documents/codemoiduan/lecong/lecong/app/src/main/res/layout/app_bar_main.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Admin/Documents/codemoiduan/lecong/lecong/app/src/main/res/layout/change.xml" value="0.20416666666666666" />
@@ -83,6 +85,7 @@
         <entry key="..\:/Users/Admin/Documents/codemoiduan/lecong/lecong/app/src/main/res/layout/fragment_logout.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Admin/Documents/codemoiduan/lecong/lecong/app/src/main/res/layout/fragment_news.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Admin/Documents/codemoiduan/lecong/lecong/app/src/main/res/layout/fragment_notifications.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/Admin/Documents/codemoiduan/lecong/lecong/app/src/main/res/layout/fragment_uet.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Admin/Documents/codemoiduan/lecong/lecong/app/src/main/res/layout/fragment_uettalk.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Admin/Documents/codemoiduan/lecong/lecong/app/src/main/res/layout/fragment_write.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Admin/Documents/codemoiduan/lecong/lecong/app/src/main/res/layout/item_chude.xml" value="0.20416666666666666" />
@@ -96,7 +99,7 @@
         <entry key="..\:/Users/Admin/Documents/codemoiduan/lecong/lecong/app/src/main/res/layout/itemdatasubject.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Admin/Documents/codemoiduan/lecong/lecong/app/src/main/res/layout/itemnotificationuet.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Admin/Documents/codemoiduan/lecong/lecong/app/src/main/res/layout/nav_header_main.xml" value="0.20416666666666666" />
-        <entry key="..\:/Users/Admin/Documents/codemoiduan/lecong/lecong/app/src/main/res/layout/searchdialog_fullscreen.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/Admin/Documents/codemoiduan/lecong/lecong/app/src/main/res/layout/searchdialog_fullscreen.xml" value="0.16818181818181818" />
         <entry key="..\:/Users/Admin/Documents/codemoiduan/lecong/lecong/app/src/main/res/menu/activity_main_drawer.xml" value="0.1" />
         <entry key="..\:/Users/Admin/Documents/codemoiduan/lecong/lecong/app/src/main/res/menu/chude_select.xml" value="0.20416666666666666" />
         <entry key="app/src/main/res/drawable/shape_notification.xml" value="0.25092592592592594" />

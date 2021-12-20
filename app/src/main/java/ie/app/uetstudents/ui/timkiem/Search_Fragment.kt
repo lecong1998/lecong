@@ -9,6 +9,7 @@ import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.chip.ChipGroup
 import ie.app.uetstudents.R
 import ie.app.uetstudents.Repository.Repository
 import ie.app.uetstudents.data.response.AccountDto
@@ -49,17 +50,26 @@ class Search_Fragment: Fragment() ,OnCLickItem_search , OnClickItem_SearchPerson
         search_forum.setOnClickListener {
             type_content_id = 1
             Toast.makeText(context,"Đã chọn tìm kiếm diễn đàn",Toast.LENGTH_SHORT).show()
+            search_forum.isChecked = true
+            search_person.isChecked = false
+            search_uettalk.isChecked = false
 
         }
         search_uettalk.setOnClickListener {
             type_content_id = 2
             Toast.makeText(context,"Đã chọn tìm kiếm Bài viết UETTalk",Toast.LENGTH_SHORT).show()
-
+            search_forum.isChecked = false
+            search_person.isChecked = false
+            search_uettalk.isChecked = true
         }
         search_person.setOnClickListener {
             type_content_id = 3
             Toast.makeText(context,"Đã chọn tìm kiếm Người dùng",Toast.LENGTH_SHORT).show()
+            search_forum.isChecked = false
+            search_person.isChecked = true
+            search_uettalk.isChecked = false
         }
+
 
         /*-----------------------------Sử lý search--------------------------------------*/
 
