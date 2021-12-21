@@ -21,7 +21,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="REGISTER"
+                android:text="ĐĂNG KÝ"
                 android:textAlignment="center"
                 android:textColor="#1368AC"
                 android:textSize="30sp"
@@ -79,7 +79,7 @@
                 android:layout_marginTop="30dp"
                 android:layout_marginRight="40dp"
                 android:background="#1368AC"
-                android:text="Register"
+                android:text="Đăng ký"
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 />
@@ -92,7 +92,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginRight="40dp"
                 android:background="#1368AC"
-                android:text="Cancel"
+                android:text="Trở lại"
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 />

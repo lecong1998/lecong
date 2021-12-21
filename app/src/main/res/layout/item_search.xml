@@ -3,22 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:background="@drawable/vienvuongtrang"
-    android:layout_marginTop="5dp"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
+    android:layout_marginTop="2dp"
+    android:background="@color/white"
+
     android:layout_height="70dp">
     <de.hdodenhof.circleimageview.CircleImageView
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:layout_marginLeft="5dp"
+        android:layout_marginLeft="10dp"
         android:src="@drawable/_60279747_1127526494354946_6683273208343303265_n"
         android:id="@+id/item_search_image"/>
     <View
         android:layout_marginLeft="5dp"
         android:layout_width="1dp"
         android:layout_height="match_parent"
-        android:background="@color/white"/>
+        android:background="@color/black"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

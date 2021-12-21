@@ -56,10 +56,10 @@
                             android:layout_height="match_parent"
                             android:layout_marginLeft="20dp"
                             android:background="@color/white"
-                            android:drawableLeft="@drawable/ic_menu_camera"
+                            android:drawableLeft="@drawable/ic_folder"
                             android:paddingLeft="5dp"
                             android:paddingRight="20dp"
-                            android:text="Thêm Ảnh"
+                            android:text="Thêm"
                             android:textAllCaps="false" />
                     </LinearLayout>
                 </LinearLayout>
@@ -91,16 +91,16 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button
+        android:id="@+id/update_status"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:background="@drawable/vien_button"
         android:text="Đăng"
         android:textColor="@color/white"
-        android:textSize="20sp"
-        android:background="@color/purple_500"
-        android:id="@+id/update_status"/>
+        android:textSize="20sp" />
 
 </RelativeLayout>

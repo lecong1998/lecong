@@ -56,20 +56,21 @@
                     <Button
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:text="  Thêm ảnh"
-                        android:drawableLeft="@drawable/ic_menu_camera"
+                        android:text=" Thêm"
+                        android:drawableLeft="@drawable/ic_folder"
                         android:layout_marginLeft="20dp"
                         android:id="@+id/write_camera"
                         android:background="@color/white"/>
                 </LinearLayout>
                 <Button
-                    android:background="@color/purple_200"
+                    android:background="@drawable/vien_button"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:layout_margin="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="Chọn thể loại"
+                    android:textColor="@color/white"
                     android:id="@+id/select_chude"/>
             </LinearLayout>
             <LinearLayout
@@ -124,18 +125,17 @@
     </androidx.core.widget.NestedScrollView>
 
 
-
     <Button
-        android:layout_marginBottom="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:textSize="20sp"
-        android:textColor="@color/white"
-        android:background="@color/purple_500"
-        android:layout_alignParentBottom="true"
+        android:id="@+id/chuyentrang"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/vien_button"
         android:text="Đăng Bài"
-        android:id="@+id/chuyentrang"/>
+        android:textColor="@color/white"
+        android:textSize="20sp" />
 
 </RelativeLayout>
