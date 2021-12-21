@@ -1,22 +1,25 @@
 package ie.app.uetstudents.ui.diendan.Write
 
+
 import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.database.Cursor
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
+import android.provider.OpenableColumns
 import android.util.Log
 import android.view.*
+import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import ie.app.uetstudents.R
-import ie.app.uetstudents.RealPathUtil.RealPathUtil
 import ie.app.uetstudents.adapter.OnclickItem_deleteanh
 import ie.app.uetstudents.adapter.adapter_anhwrite
 import ie.app.uetstudents.ui.API.ApiClient
@@ -26,9 +29,9 @@ import ie.app.uetstudents.ui.Entity.Question.post.Account
 import ie.app.uetstudents.ui.Entity.Question.post.Category
 import ie.app.uetstudents.ui.Entity.Question.post.QuestionPost
 import ie.app.uetstudents.ui.Entity.Question.post.TypeContent
+import ie.app.uetstudents.utils.PreferenceUtils
 import kotlinx.android.synthetic.main.fragment_write.*
 import kotlinx.android.synthetic.main.fragment_write.view.*
-import kotlinx.android.synthetic.main.fragment_writing_status.*
 import kotlinx.android.synthetic.main.layout_bottomsheet_anh.view.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -36,29 +39,37 @@ import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.IOException
+import java.io.InputStream
 
 
-class WriteFragment : Fragment(),OnclickItem_deleteanh{
+class WriteFragment : Fragment(), OnclickItem_deleteanh {
 
 
-    var select_nganhid : Int = 1
+    var select_nganhid: Int = 0
     private val MY_REQUEST: Int = 1111
     private val IMG_REQUEST: Int = 1000
-    private val  CAMERA_REQUEST: Int = 100
+    private val CAMERA_REQUEST: Int = 100
+    private val DOCUMENT_REQUEST: Int = 166
 
-    private var listanh : ArrayList<Uri> = ArrayList()
-    private lateinit var adapteranh : adapter_anhwrite
-    private var uri : Uri? = null
+    private var encodedPDF: String? = null
 
+    private var listanh: ArrayList<Uri> = ArrayList()
+    private var listpdf: ArrayList<Uri> = ArrayList()
+    private lateinit var adapteranh: adapter_anhwrite
+    private var uripdf: Uri? = null
 
-
-    private var database : QuestionDto? = null
+    private var database: QuestionDto? = null
+    var id_user: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        id_user = PreferenceUtils.getUser().id
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -67,142 +78,283 @@ class WriteFragment : Fragment(),OnclickItem_deleteanh{
         return inflater.inflate(R.layout.fragment_write, container, false)
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        when(radio_group.checkedRadioButtonId)
-        {
-            R.id.select_cntt -> {select_nganhid = 1}
-            R.id.select_khmt -> {select_nganhid = 2}
-            R.id.select_httt -> {select_nganhid = 3}
-            R.id.select_cnktdttt -> {select_nganhid = 4}
-            R.id.select_vlkt -> {select_nganhid = 5}
-            R.id.select_ktnl -> {select_nganhid = 6}
-            R.id.select_cokt -> {select_nganhid = 7}
-            R.id.select_cnktcdt -> {select_nganhid = 8}
-            R.id.select_mmttt -> {select_nganhid = 9}
-            R.id.select_ktmt -> {select_nganhid = 10}
-            R.id.select_cnktxdgt -> {select_nganhid = 11}
-            R.id.select_cnhkvt -> {select_nganhid = 12}
-            R.id.select_ktrb -> {select_nganhid = 13}
-            R.id.select_cnnn -> {select_nganhid = 14}
-            R.id.select_ktdktdh -> {select_nganhid = 15}
 
+        select_chude.setOnClickListener {
+            val popupmenu: PopupMenu = PopupMenu(context, select_chude, Gravity.CENTER_VERTICAL)
+            popupmenu.menuInflater.inflate(R.menu.chude_select, popupmenu.menu)
+            popupmenu.setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.write_cntt -> {
+                        select_nganhid = 1
+                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
+                        popupmenu.dismiss()
+                    }
+                    R.id.write_khmt -> {
+                        select_nganhid = 2
+                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
+                        popupmenu.dismiss()
+                    }
+                    R.id.write_httt -> {
+                        select_nganhid = 3
+                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
+                        popupmenu.dismiss()
+                    }
+                    R.id.write_cnktdttt -> {
+                        select_nganhid = 4
+                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
+                        popupmenu.dismiss()
+                    }
+                    R.id.write_vlkt -> {
+                        select_nganhid = 5
+                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
+                        popupmenu.dismiss()
+                    }
+                    R.id.write_ktnl -> {
+                        select_nganhid = 6
+                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
+                        popupmenu.dismiss()
+                    }
+                    R.id.write_cokt -> {
+                        select_nganhid = 7
+                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
+                        popupmenu.dismiss()
+                    }
+                    R.id.write_cnktcdt -> {
+                        select_nganhid = 8
+                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
+                        popupmenu.dismiss()
+                    }
+                    R.id.write_mmttt -> {
+                        select_nganhid = 9
+                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
+                        popupmenu.dismiss()
+                    }
+                    R.id.write_ktmt -> {
+                        select_nganhid = 10
+                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
+                        popupmenu.dismiss()
+                    }
+                    R.id.write_cnktxdgt -> {
+                        select_nganhid = 11
+                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
+                        popupmenu.dismiss()
+                    }
+                    R.id.write_cnhkvt -> {
+                        select_nganhid = 12
+                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
+                        popupmenu.dismiss()
+                    }
+                    R.id.write_ktrb -> {
+                        select_nganhid = 13
+                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
+                        popupmenu.dismiss()
+                    }
+                    R.id.write_cnnn -> {
+                        select_nganhid = 14
+                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
+                        popupmenu.dismiss()
+                    }
+                    R.id.write_ktdktdh -> {
+                        select_nganhid = 15
+                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
+                        popupmenu.dismiss()
+                    }
+                }
+                true
+            }
+            popupmenu.show()
         }
+
+
         /*-----------------thêm ảnh---------------------------------*/
-            view.write_camera.setOnClickListener {
+        view.write_camera.setOnClickListener {
 
-                val alertDialogbuild : AlertDialog.Builder = AlertDialog.Builder(context)
-                val dialogview = LayoutInflater.from(context).inflate(R.layout.layout_bottomsheet_anh,null)
-                alertDialogbuild.setView(dialogview)
-                val dialog = alertDialogbuild.create()
-                dialog.show()
+            val alertDialogbuild: AlertDialog.Builder = AlertDialog.Builder(context)
+            val dialogview =
+                LayoutInflater.from(context).inflate(R.layout.layout_bottomsheet_anh, null)
+            alertDialogbuild.setView(dialogview)
+            val dialog = alertDialogbuild.create()
+            dialog.show()
 
-                dialogview.anh_camera.setOnClickListener {
+            dialogview.anh_camera.setOnClickListener {
 
-                    val cameraIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-                    startActivityForResult(cameraIntent,CAMERA_REQUEST)
-
-                    dialog.dismiss()
-                }
-                dialogview.anh_thumuc.setOnClickListener {
-                    onclickRequestPermission()
-                    dialog.dismiss()
-                }
-
+                /*  val cameraIntent =
+                      Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                  startActivityForResult(cameraIntent, CAMERA_REQUEST)*/
+                onclickRequestPermission("image")
+                dialog.dismiss()
+            }
+            dialogview.anh_thumuc.setOnClickListener {
+                onclickRequestPermission("pdf")
+                dialog.dismiss()
             }
 
-        adapteranh = adapter_anhwrite(listanh,this)
-        if (listanh == null)
-        {
-            listanh_write_forum.visibility = View.GONE
         }
-        else{
+
+        adapteranh = adapter_anhwrite(listanh, this)
+        if (listanh == null) {
+            listanh_write_forum.visibility = View.GONE
+        } else {
             listanh_write_forum.visibility = View.VISIBLE
         }
-        listanh_write_forum.layoutManager = LinearLayoutManager(context,
-            LinearLayoutManager.HORIZONTAL,false)
-        listanh_write_forum.adapter= adapteranh
+        listanh_write_forum.layoutManager = LinearLayoutManager(
+            context,
+            LinearLayoutManager.HORIZONTAL, false
+        )
+        listanh_write_forum.adapter = adapteranh
 
         /*---------------------đăng--------------------------*/
         chuyentrang?.setOnClickListener {
-            callapi(edtxt_status.text.toString(),write_title.text.toString(),select_nganhid, uri,1)
-            it.findNavController().navigate(R.id.writeFragment_to_forumFragment)
+            if (write_title.text.isEmpty() || edtxt_status.text.isEmpty() || select_nganhid == 0) {
+                Toast.makeText(context, "Bạn chưa cập nhật thông tin đầy đủ", Toast.LENGTH_SHORT)
+                    .show()
+            } else {
+
+                callApi(
+                    edtxt_status.text.toString(),
+                    write_title.text.toString(),
+                    select_nganhid,
+                    listanh,
+                    id_user!!
+                )
+            }
+
 
         }
     }
 
-    fun callapi(writeContent : String,title : String, select_nganh : Int,anh : Uri?, user: Int)
-    {
-        val category = Category(1)
-        val type_content = TypeContent(1)
-        val account = Account(1)
-        val question = QuestionPost(account,category,writeContent,title,type_content)
-        val gson : Gson = Gson()
-        val question_to_json : String = gson.toJson(question).toString()
-        val requestbodyQuestion : RequestBody = RequestBody.create(MediaType.parse("multipart/form-data"),question_to_json)
+    private fun callApi(
+        writeContent: String,
+        title: String,
+        selectNganh: Int,
+        listuri: List<Uri>,
+        user: Int
+    ) {
+        val builder = MultipartBody.Builder()
+        builder.setType(MultipartBody.FORM)
 
-        var multipartbodyfile : MultipartBody.Part? = null
+        val category = Category(selectNganh)
+        val typeContent = TypeContent(1)
+        val account = Account(user)
+        val question = QuestionPost(account, category, writeContent, title, typeContent)
+        val gson = Gson()
+        val questionString = gson.toJson(question).toString()
+        builder.addFormDataPart("Question", questionString)
 
-        if(uri != null)
-        {
-            Log.e("uri",uri.toString())
-            var strRealPath = RealPathUtil.getRealPath(requireContext(), uri!!)
-            val file : File = File(strRealPath)
-            val requestbodyFile : RequestBody = RequestBody.create(MediaType.parse("multipart/form-data"),file)
-            // listrequestbody.add(requestbodyFile)
-             multipartbodyfile= MultipartBody.Part.createFormData("image_files",file.name,requestbodyFile)
-
+        listuri.forEach {
+            val fileName = getSelectedFileName(it)
+            val byteDataFile = getByteDataFile(it)
+            builder.addFormDataPart(
+                "image_files",
+                fileName,
+                RequestBody.create(MediaType.parse("multipart/form-data"), byteDataFile)
+            )
         }
-        else
-        {
-            multipartbodyfile = null
-        }
 
-
-
-        val call : Call<question> = ApiClient.getClient.setQuestion(multipartbodyfile,requestbodyQuestion)
-        call.enqueue(object : Callback<question>{
+        val call: Call<question> = ApiClient.getClient.setQuestion(builder.build())
+        call.enqueue(object : Callback<question> {
             override fun onResponse(call: Call<question>, response: Response<question>) {
-                if (response.isSuccessful)
-                {
-                    Log.e("Đăng thành công","Đăng thành công")
+                if (response.isSuccessful) {
+                    Log.e("Đăng thành công", "Đăng thành công")
+                    findNavController().navigate(R.id.writeFragment_to_forumFragment)
                 }
             }
 
             override fun onFailure(call: Call<question>, t: Throwable) {
-                Log.e("đăng thành công","Thất bại")
+                Log.e("đăng thành công", "Thất bại")
             }
         })
+    }
 
+    private fun getSelectedFileName(selectFileUri: Uri): String? {
+        val uriString: String = selectFileUri.toString()
+        val myFile = File(uriString)
+        var displayName: String? = null
+        if (uriString.startsWith("content://")) {
+            var cursor: Cursor? = null
+            try {
+                cursor =
+                    requireContext().contentResolver.query(selectFileUri, null, null, null, null)
+                if (cursor != null && cursor.moveToFirst()) {
+                    displayName =
+                        cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+                }
+            } finally {
+                cursor!!.close()
+            }
+        } else if (uriString.startsWith("file://")) {
+            displayName = myFile.name
+        }
+        return displayName
+    }
+
+    private fun getByteDataFile(uri: Uri?): ByteArray? {
+        try {
+            val input: InputStream? = requireContext().contentResolver.openInputStream(uri!!)
+            return getBytes(input!!)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return null
+        }
+    }
+
+    @Throws(IOException::class)
+    private fun getBytes(inputStream: InputStream): ByteArray {
+        val byteBuffer = ByteArrayOutputStream()
+        val bufferSize = 1024
+        val buffer = ByteArray(bufferSize)
+        var len = 0
+        while (inputStream.read(buffer).also { len = it } != -1) {
+            byteBuffer.write(buffer, 0, len)
+        }
+        return byteBuffer.toByteArray()
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
-        val item : MenuItem = menu.findItem(R.id.action_search)
-        val item2 : MenuItem = menu.findItem(R.id.action_profile)
-        val item3 : MenuItem = menu.findItem(R.id.action_notification)
+        val item: MenuItem = menu.findItem(R.id.action_search)
+        val item2: MenuItem = menu.findItem(R.id.action_profile)
+        val item3: MenuItem = menu.findItem(R.id.action_notification)
         item.isVisible = false
-        item2.setVisible(false)
-        item3.setVisible(false)
+        item2.isVisible = false
+        item3.isVisible = false
     }
 
-    fun onclickRequestPermission()
-    {
-        if (Build.VERSION.SDK_INT< Build.VERSION_CODES.M)
-        {
-            openGallery()
+    fun onclickRequestPermission(theloai: String) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            if (theloai.equals("image")) {
+                openGallery()
+            }
+            if (theloai.equals("pdf")) {
+                openDocument()
+            }
+
             return
         }
-        if (activity?.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
-        {
-            openGallery()
-        }else
-        {
-            requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), MY_REQUEST)
+        if (activity?.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            if (theloai.equals("image")) {
+                openGallery()
+            }
+            if (theloai.equals("pdf")) {
+                openDocument()
+            }
+        } else {
+            if (theloai.equals("image")) {
+                requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), MY_REQUEST)
+            }
+            if (theloai.equals("pdf")) {
+                requestPermissions(
+                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                    DOCUMENT_REQUEST
+                )
+            }
+
         }
     }
+
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -210,39 +362,50 @@ class WriteFragment : Fragment(),OnclickItem_deleteanh{
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == MY_REQUEST)
-        {
-            if (grantResults.size>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-            {
+        if (requestCode == MY_REQUEST) {
+            if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 openGallery()
+            }
+        }
+        if (requestCode == DOCUMENT_REQUEST) {
+            if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                openDocument()
             }
         }
 
     }
 
-    fun openGallery()
-    {
-        val intent : Intent = Intent()
-        intent.setType("image/*")
-        intent.setAction(Intent.ACTION_GET_CONTENT)
-        //mActivityResultLauncher.launch(Intent.createChooser(intent,"select picture"))
-        startActivityForResult(Intent.createChooser(intent,"select picture"),IMG_REQUEST)
+    private fun openDocument() {
+        val intent = Intent()
+        intent.type = "application/pdf"
+        intent.action = Intent.ACTION_GET_CONTENT
+        startActivityForResult(Intent.createChooser(intent, "Select Pdf"), DOCUMENT_REQUEST)
+    }
+
+    fun openGallery() {
+        val intent: Intent = Intent()
+        intent.type = "image/*"
+        intent.action = Intent.ACTION_GET_CONTENT
+        startActivityForResult(Intent.createChooser(intent, "select picture"), IMG_REQUEST)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode== IMG_REQUEST && resultCode == Activity.RESULT_OK && data!= null)
-        {
-            uri = data.data!!
-            listanh.add(uri!!)
+        if (requestCode == IMG_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
+            val uri: Uri = data.data!!
+            listanh.add(uri)
             listanh_write_forum.adapter?.notifyDataSetChanged()
 
 
-        }
-        if (requestCode== CAMERA_REQUEST && resultCode == Activity.RESULT_OK && data!= null)
-        {
-            uri = data.data!!
-            listanh.add(uri!!)
+        } else if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
+            val uriCameraImage = data.data!!
+            listanh.add(uriCameraImage)
+            listanh_write_forum.adapter?.notifyDataSetChanged()
+        } else if (requestCode == DOCUMENT_REQUEST && resultCode == Activity.RESULT_OK) {
+            uripdf = data?.data!!
+            uripdf?.let {
+                listanh.add(it)
+            }
             listanh_write_forum.adapter?.notifyDataSetChanged()
         }
 

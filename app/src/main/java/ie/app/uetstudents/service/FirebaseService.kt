@@ -1,10 +1,7 @@
 package ie.app.uetstudents.service
 
 import android.annotation.SuppressLint
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
+import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -18,6 +15,7 @@ import com.google.android.gms.common.util.SharedPreferencesUtils
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.google.gson.Gson
+import ie.app.uetstudents.MainActivity
 import ie.app.uetstudents.R
 import ie.app.uetstudents.data.response.FirebaseMessageModel
 import ie.app.uetstudents.utils.PreferenceUtils
@@ -56,6 +54,9 @@ class FirebaseService : FirebaseMessagingService() {
 
     @SuppressLint("UnspecifiedImmutableFlag")
     private fun sendNotification(data: String?) {
+        val intent = Intent(this, MainActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(this,345,intent,0)
+
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val channelID = "UET"
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
@@ -70,6 +71,7 @@ class FirebaseService : FirebaseMessagingService() {
                     NotificationCompat.BigTextStyle().bigText(data)
                 )
                 .setAutoCancel(true).setSound(defaultSoundUri).setDefaults(Notification.DEFAULT_ALL)
+                .setContentIntent(pendingIntent)
                 .setPriority(
                     NotificationManager.IMPORTANCE_HIGH
                 ).setContentText(data)

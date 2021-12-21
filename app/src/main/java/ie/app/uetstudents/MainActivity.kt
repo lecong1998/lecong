@@ -10,6 +10,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
@@ -25,7 +27,11 @@ import ie.app.uetstudents.service.FirebaseService
 import ie.app.uetstudents.ui.API.ApiClient
 import ie.app.uetstudents.ui.notifications.notification_service
 import ie.app.uetstudents.ui.timkiem.*
+import ie.app.uetstudents.utils.Constants.KEY_PREFERENCE_USER
+import ie.app.uetstudents.utils.PreferenceUtils
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_notifications.*
+import kotlinx.android.synthetic.main.app_bar_main.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -65,7 +71,6 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home,
                 R.id.nav_notifications,
                 R.id.nav_document,
                 R.id.nav_exam,
@@ -77,53 +82,23 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-        val bundle = Bundle()
-        bundle.putInt("id_user", id_user!!)
-
-
-  /*      navView.setNavigationItemSelectedListener(object : NavigationView.OnNavigationItemSelectedListener{
-            override fun onNavigationItemSelected(item: MenuItem): Boolean {
-                when(item.itemId)
-                {
-                    R.id.nav_home -> {
-                        navController.navigate(R.id.nav_home,bundle)
-                    }
-                    R.id.nav_notifications -> {
-                        navController.navigate(R.id.nav_notifications,bundle)
-                    }
-                    R.id.nav_document -> {
-                        navController.navigate(R.id.nav_document,bundle)
-                    }
-                    R.id.nav_exam -> {
-                        navController.navigate(R.id.nav_exam,bundle)
-                    }
-                    R.id.nav_news -> {
-                        navController.navigate(R.id.nav_news,bundle)
-                    }
-                    R.id.nav_forum -> {
-                        navController.navigate(R.id.nav_forum,bundle)
-                    }
-                    R.id.nav_uettalk -> {
-                        navController.navigate(R.id.nav_uettalk,bundle)
-                    }
-                    R.id.nav_login -> {
-                        navController.navigate(R.id.nav_login,bundle)
-                    }
-                }
-
-                return true
-            }
-        })
-*/
-
-
-
         val intent = Intent(this, notification_service::class.java)
         startService(intent)
 
         Handler(Looper.getMainLooper()).postDelayed({
-            getUnreadNotification(1)
+            getUnreadNotification(PreferenceUtils.getUser().id)
         }, 500)
+
+        nav_view.setNavigationItemSelectedListener {
+            when(it.itemId) {
+                R.id.nav_login -> {
+                    PreferenceUtils.remove(KEY_PREFERENCE_USER)
+                }
+            }
+            drawer_layout.close()
+            navController.navigate(it.itemId)
+            true
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -151,7 +126,7 @@ class MainActivity : AppCompatActivity() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: String) {
         if(event == FirebaseService.UPDATE_NOTIFICATION) {
-            getUnreadNotification(1)
+            getUnreadNotification(PreferenceUtils.getUser().id)
         }
     }
 
@@ -236,32 +211,4 @@ class MainActivity : AppCompatActivity() {
         //navController.navigate(R.id.mobile_navigation,bundle)
         return navController.navigateUp(appBarConfiguration)|| super.onSupportNavigateUp()
     }
-
-  /*  override fun onStart() {
-        super.onStart()
-
-       // val intentFilter = IntentFilter(mBroadcastAction)
-        //registerReceiver(mbroadcastReceiver,intentFilter)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        //unregisterReceiver(mbroadcastReceiver)
-    }
-
- /*   val mbroadcastReceiver : BroadcastReceiver = object : BroadcastReceiver(){
-        override fun onReceive(context: Context?, intent: Intent?) {
-            if (intent?.action?.equals(MainActivity().mBroadcastAction)!!)
-            {
-
-                val jsonString : String = intent.getStringExtra("broadcast")
-                val type = object : TypeToken<List<NotificationCommentDto?>?>() {}.type
-                val gson : Gson = Gson()
-                val notifi : List<NotificationCommentDto> = gson.fromJson(jsonString,type)
-
-            }
-        }
-    }*/
-
-*/
 }

@@ -6,9 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import ie.app.uetstudents.R
-import ie.app.uetstudents.ui.Entity.Search.PersonDto
-import ie.app.uetstudents.ui.Entity.Search.person.AccountDto
-import ie.app.uetstudents.ui.Entity.Search.person.person
+import ie.app.uetstudents.data.response.AccountDto
 import kotlinx.android.synthetic.main.item_search.view.*
 
 class adapter_search_person(  var CLickItem : OnClickItem_SearchPerson)
@@ -23,7 +21,10 @@ class adapter_search_person(  var CLickItem : OnClickItem_SearchPerson)
    inner class ViewHolder(var itemview : View) : RecyclerView.ViewHolder(itemview) {
         fun OnBindata(personDto: AccountDto)
         {
-            Glide.with(itemView.context).load(personDto.avatar).error(R.drawable._60279747_1127526494354946_6683273208343303265_n).into(itemview.item_search_image)
+            Glide.with(itemView.context).load(personDto.avatar)
+                .error(R.drawable.img_default_user)
+                .placeholder(R.drawable.img_default_user)
+                .into(itemview.item_search_image)
             itemview.item_search_content.text = personDto.username
         }
     }

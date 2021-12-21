@@ -17,6 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
             <LinearLayout
                 android:background="@color/white"
                 android:id="@+id/linear1"
@@ -24,13 +25,12 @@
                 android:layout_height="70dp"
                 android:orientation="horizontal">
 
-                <com.makeramen.roundedimageview.RoundedImageView
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/image_uettalk"
-                    app:riv_corner_radius="30dp"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_margin="5dp"
-                    android:src="@drawable/_60279747_1127526494354946_6683273208343303265_n" />
+                    android:src="@drawable/img_default_user" />
 
                 <Button
                     android:id="@+id/status_uettalk"

@@ -1,13 +1,23 @@
 package ie.app.uetstudents.ui.profile
 
+import ie.app.uetstudents.ui.Entity.Comment.get.Comment
 import ie.app.uetstudents.ui.Entity.Question.get.QuestionDto
+import ie.app.uetstudents.ui.Entity.Question.get.question
+import ie.app.uetstudents.ui.Entity.userProfile.get.userprofile
 
 interface ProfileContract {
     interface View{
-        fun UpdateViewDataQuestionProfile(Question : QuestionDto)
+        fun UpdateViewDataQuestionProfile(question: question,type_content_id: Int)
+        fun UpdateViewDataUser(userprofile: userprofile)
     }
     interface Presenter{
-        fun getQuestionProfile(username : String)
-        fun UpdateUIQuestionProfile(Question: QuestionDto)
+
+        /*---------------lấy question profile-------------------*/
+        fun getQuestionProfile(index : Int,account_id : Int,type_content_id : Int)
+        fun UpdateUIQuestionProfile(question: question,type_content_id: Int)
+        /*-----------------------Lấy thông tin u-------------------------------*/
+
+        fun getUserInformation(account_id: Int)
+        fun UpdateUIUserinformation(userprofile: userprofile)
     }
 }

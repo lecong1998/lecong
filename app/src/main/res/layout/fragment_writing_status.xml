@@ -68,26 +68,25 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
+
                     <EditText
-                        android:layout_above="@id/write_themanh"
                         android:id="@+id/edt_status"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:minHeight="350dp"
+                        android:layout_above="@id/write_themanh"
                         android:focusedByDefault="false"
                         android:gravity="top"
                         android:hint="Bạn đang nghĩ gì ?"
+                        android:minHeight="350dp"
                         android:padding="20dp" />
                     <androidx.recyclerview.widget.RecyclerView
+                        android:layout_marginBottom="8dp"
                         android:visibility="gone"
                         android:layout_alignParentBottom="true"
                         android:layout_width="match_parent"
-                        android:layout_height="200dp"
+                        android:layout_height="120dp"
                         android:id="@+id/write_themanh"/>
                 </RelativeLayout>
-
-
-
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 

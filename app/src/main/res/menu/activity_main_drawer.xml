@@ -4,36 +4,40 @@
     tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_home"
-            android:icon="@drawable/ic_baseline_home_24"
-            android:title="@string/menu_home" />
+
         <item
             android:id="@+id/nav_notifications"
+            android:orderInCategory="5"
             android:icon="@drawable/ic_baseline_notifications_24"
             android:title="@string/menu_thongbao" />
         <item
             android:id="@+id/nav_document"
+            android:orderInCategory="3"
             android:icon="@drawable/ic_baseline_folder_24"
             android:title="@string/menu_tailieu" />
         <item
             android:id="@+id/nav_exam"
+            android:orderInCategory="4"
             android:icon="@drawable/ic_baseline_menu_book_24"
             android:title="@string/menu_dethi" />
         <item
             android:id="@+id/nav_news"
+            android:orderInCategory="6"
             android:icon="@drawable/ic_baseline_desktop_windows_24"
             android:title="@string/menu_bantin" />
         <item
             android:id="@+id/nav_forum"
+            android:orderInCategory="2"
             android:icon="@drawable/ic_baseline_forum_24"
             android:title="@string/menu_diendan" />
         <item
             android:id="@+id/nav_uettalk"
+            android:orderInCategory="1"
             android:icon="@drawable/ic_baseline_folder_shared_24"
             android:title="@string/menu_uettalk" />
         <item
             android:id="@+id/nav_login"
+            android:orderInCategory="7"
             android:icon="@drawable/ic_baseline_login_24"
             android:title="Đăng Xuất" />
     </group>

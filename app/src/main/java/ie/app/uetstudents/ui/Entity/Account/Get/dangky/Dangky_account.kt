@@ -1,6 +1,6 @@
 package ie.app.uetstudents.ui.Entity.Account.Get.dangky
 
-import ie.app.uetstudents.ui.Entity.Account.Get.dangky.AccountDto
+import ie.app.uetstudents.data.response.AccountDto
 
 data class dangky_account(
     val accountDto: AccountDto,

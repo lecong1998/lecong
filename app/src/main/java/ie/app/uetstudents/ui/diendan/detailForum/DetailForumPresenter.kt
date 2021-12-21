@@ -10,8 +10,8 @@ class DetailForumPresenter(
     private val View : DetailForumContract.View,
     private val repository: Repository
 ): DetailForumContract.Presenter {
-    override fun getDetailForum(id: Int) {
-        repository.CallQuestionDetail(this,id)
+    override fun getDetailForum(id: Int,account_id : Int) {
+        repository.CallQuestionDetail(this,id,account_id)
     }
 
     override fun getDataUI(data: QuestionDtoX) {
@@ -23,8 +23,8 @@ class DetailForumPresenter(
         View.getDataViewComment(datacomment)
     }
 
-    override fun getDetailComment(id: Int,index : Int) {
-        repository.CallCommentQuestion(this,id,index)
+    override fun getDetailComment(id: Int,index : Int,account_id: Int) {
+        repository.CallCommentQuestion(this,id,index,account_id)
     }
 
     /*-------------------------Post notification Question into database---------------------------*/
@@ -36,11 +36,4 @@ class DetailForumPresenter(
         repository.updateNotifi_Comment(notifi_comment)
     }
 
-    override fun getPersonlikeQuestion(id_question: Int, page: Int) {
-        repository.getPersons_LikeQuestion(this,id_question, page)
-    }
-
-    override fun getDataUIpersonlike(songuoilike: Int) {
-        View.getDataViewPersonsLikeQuestion(songuoilike)
-    }
 }

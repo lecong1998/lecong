@@ -1,10 +1,16 @@
 package ie.app.uetstudents.ui.Entity.Comment.get
 
+import ie.app.uetstudents.data.response.AccountDto
+
 data class CommentDto(
-    val account_id: Int,
-    val content: String,
-    val id: Int,
-    val image: String,
-    val question_id: Int,
-    val time: String
+    val account_id: Int? = null,
+    val content: String? = null,
+    val id: Int? = null,
+    val image: String? = null,
+    val question_id: Int? = null,
+    val time: String? = null,
+    val like_quantity : Int = 0,
+    val sub_comment_quantity : Int = 0,
+    val liked : Boolean = false,
+    val accountDto : AccountDto? = null
 )

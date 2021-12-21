@@ -3,19 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_forum">
+    app:startDestination="@+id/nav_uettalk">
 
-    <fragment
-        android:id="@+id/nav_home"
-        android:name="ie.app.uetstudents.ui.home.HomeFragment"
-        android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
+
 
     <fragment
         android:id="@+id/nav_notifications"
         android:name="ie.app.uetstudents.ui.thongbao.NotificationsFragment"
         android:label="@string/menu_thongbao"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_notifications" >
+        <action
+            android:id="@+id/action_nav_notifications_to_detailNotifiFragment"
+            app:destination="@id/detailNotiFragment" />
+
+    </fragment>
     <fragment
         android:id="@+id/nav_document"
         android:name="ie.app.uetstudents.ui.tailieu.DocumentFragment"
@@ -31,6 +32,10 @@
         android:name="ie.app.uetstudents.ui.bantin.NewsFragment"
         android:label="@string/menu_bantin"
         tools:layout="@layout/fragment_news">
+
+        <action
+            android:id="@+id/action_nav_news_to_detailNotifiFragment"
+            app:destination="@id/detailNotiFragment" />
 
     </fragment>
 
@@ -102,11 +107,33 @@
         <action
             android:id="@+id/action_search_Fragment_to_detailForumFragment"
             app:destination="@id/detailForumFragment" />
+        <action
+            android:id="@+id/action_action_search_to_action_profile"
+            app:destination="@id/action_profile" />
     </fragment>
     <fragment
         android:id="@+id/action_profile"
         android:name="ie.app.uetstudents.ui.profile.Profile_Fragment"
-        android:label="Trang cá nhân" />
+        android:label="Trang cá nhân" >
+        <action
+            android:id="@+id/action_action_profile_to_detailForumFragment"
+            app:destination="@id/detailForumFragment" />
+        <action
+            android:id="@+id/action_action_profile_to_changeFragment"
+            app:destination="@id/changeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailNotiFragment"
+        android:name="ie.app.uetstudents.ui.thongbao.detail.DatailNotiFragment"
+        android:label="Nội dung thông báo"
+        tools:layout="@layout/fragment_detail_notifi" >
+
+    </fragment>
+    <fragment
+        android:id="@+id/changeFragment"
+        android:name="ie.app.uetstudents.ui.profile.change.changeFragment"
+        android:label="Thay đổi thông tin"
+        tools:layout="@layout/fragment_change" />
 
 
 </navigation>

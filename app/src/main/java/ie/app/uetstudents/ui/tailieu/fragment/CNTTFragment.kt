@@ -20,6 +20,7 @@ import ie.app.uetstudents.ui.Entity.subject.DataSubject.data_subject
 import ie.app.uetstudents.ui.Entity.subject.SubjectDto
 import ie.app.uetstudents.ui.Entity.subject.subject
 import ie.app.uetstudents.ui.tailieu.DetailDocumentExamActivity
+import ie.app.uetstudents.ui.tailieu.detailPDF
 import kotlinx.android.synthetic.main.dialog_listtailieudethi.view.*
 import kotlinx.android.synthetic.main.fragment_c_n_t_t.*
 import kotlinx.android.synthetic.main.fragment_c_n_t_t2.*
@@ -143,7 +144,7 @@ class CNTTFragment : Fragment() , OnClickItem_Subject,OnCLickItem_DataSubject{
     }
 
     override fun ClickItem(ExamDocument: ExamDocumentDto) {
-        val intent = Intent(activity,DetailDocumentExamActivity::class.java)
+        val intent = Intent(activity, detailPDF::class.java)
         intent.putExtra("ExamDocument", ExamDocument.link)
         startActivity(intent)
     }

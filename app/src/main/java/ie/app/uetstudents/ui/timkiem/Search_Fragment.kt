@@ -3,26 +3,21 @@ package ie.app.uetstudents.ui.timkiem
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.chip.ChipGroup
 import ie.app.uetstudents.R
 import ie.app.uetstudents.Repository.Repository
-import ie.app.uetstudents.ui.API.ApiClient
-import ie.app.uetstudents.ui.Entity.Search.PersonDto
+import ie.app.uetstudents.data.response.AccountDto
 import ie.app.uetstudents.ui.Entity.Search.Question.QuestionDto
-import ie.app.uetstudents.ui.Entity.Search.search_person
 import ie.app.uetstudents.ui.Entity.Search.Question.search_question
-import ie.app.uetstudents.ui.Entity.Search.person.AccountDto
 import ie.app.uetstudents.ui.Entity.Search.person.person
+import ie.app.uetstudents.utils.PreferenceUtils
 import kotlinx.android.synthetic.main.searchdialog_fullscreen.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class Search_Fragment: Fragment() ,OnCLickItem_search , OnClickItem_SearchPerson,SearchContract.View{
 
@@ -33,10 +28,12 @@ class Search_Fragment: Fragment() ,OnCLickItem_search , OnClickItem_SearchPerson
     private lateinit var adapter_person: adapter_search_person
     private lateinit var adapter_question : adapter_search
 
+    var id_user : Int ?= null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        id_user = PreferenceUtils.getUser().id
     }
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,17 +50,26 @@ class Search_Fragment: Fragment() ,OnCLickItem_search , OnClickItem_SearchPerson
         search_forum.setOnClickListener {
             type_content_id = 1
             Toast.makeText(context,"Đã chọn tìm kiếm diễn đàn",Toast.LENGTH_SHORT).show()
+            search_forum.isChecked = true
+            search_person.isChecked = false
+            search_uettalk.isChecked = false
 
         }
         search_uettalk.setOnClickListener {
             type_content_id = 2
             Toast.makeText(context,"Đã chọn tìm kiếm Bài viết UETTalk",Toast.LENGTH_SHORT).show()
-
+            search_forum.isChecked = false
+            search_person.isChecked = false
+            search_uettalk.isChecked = true
         }
         search_person.setOnClickListener {
             type_content_id = 3
             Toast.makeText(context,"Đã chọn tìm kiếm Người dùng",Toast.LENGTH_SHORT).show()
+            search_forum.isChecked = false
+            search_person.isChecked = true
+            search_uettalk.isChecked = false
         }
+
 
         /*-----------------------------Sử lý search--------------------------------------*/
 
@@ -148,7 +154,7 @@ class Search_Fragment: Fragment() ,OnCLickItem_search , OnClickItem_SearchPerson
         if(type_content_id == 1 ||type_content_id == 2)
         {
             adapter_question = adapter_search(this)
-            presenter.getQuestions(page,textsearch,type_content_id)
+            presenter.getQuestions(page,textsearch,type_content_id,id_user!!)
             search_recyclerview.layoutManager = LinearLayoutManager(context)
             search_recyclerview.adapter = adapter_question
 
@@ -175,6 +181,7 @@ class Search_Fragment: Fragment() ,OnCLickItem_search , OnClickItem_SearchPerson
     override fun Onclick(Questiontdo: QuestionDto) {
         val bundle = Bundle()
         bundle.putInt("id_question",Questiontdo.id)
+        bundle.putString("owner_username",Questiontdo.accountDto?.username ?: "")
         this.findNavController().navigate(R.id.action_search_Fragment_to_detailForumFragment,bundle)
     }
 
@@ -191,5 +198,8 @@ class Search_Fragment: Fragment() ,OnCLickItem_search , OnClickItem_SearchPerson
 
     override fun ClickItem(AccountDto: AccountDto) {
         Toast.makeText(context,AccountDto.username,Toast.LENGTH_SHORT).show()
+        val bundle : Bundle = Bundle()
+        bundle.putInt("id_user",AccountDto.id)
+        this.findNavController().navigate(R.id.action_action_search_to_action_profile,bundle)
     }
 }

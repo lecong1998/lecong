@@ -9,15 +9,14 @@ interface DetailForumContract {
     interface View {
         fun getDataView(data: QuestionDtoX)
         fun getDataViewComment(datacomment : Comment)
-        fun getDataViewPersonsLikeQuestion(songuoilike: Int)
     }
     interface Presenter{
         /*------------update_chi tiết question-----------------------*/
-        fun getDetailForum(id: Int)
+        fun getDetailForum(id: Int,account_id : Int)
         fun getDataUI(data: QuestionDtoX)
         /*---------------------update comment----------------------------------*/
         fun getDataUIComment(datacomment: Comment)
-        fun getDetailComment(id:Int,index: Int)
+        fun getDetailComment(id:Int,index: Int,account_id: Int)
 
         /*------------------Post Question Like or Comment into Notification database-------------------------*/
 
@@ -27,7 +26,6 @@ interface DetailForumContract {
         fun setNotificationComment(notifi_comment : post_notifi_comment)
 
         /*---------------------------------Lấy số người like bài viết-------------------------------------*/
-        fun getPersonlikeQuestion(id_question: Int, page: Int)
-        fun getDataUIpersonlike(songuoilike : Int)
+
     }
 }

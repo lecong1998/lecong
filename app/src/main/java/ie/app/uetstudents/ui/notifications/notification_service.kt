@@ -53,26 +53,7 @@ class notification_service : Service()  {
                     ) {
                         if (response.isSuccessful)
                         {
-                            var list1 : List<NotificationCommentDto> = ArrayList()
-                            if (list_notification_Comment!= null)
-                            {
-                                list1 = list_notification_Comment
-                            }
-                            var list2 : ArrayList<NotificationCommentDto> = ArrayList()
-                            list_notification_Comment = response.body()!!.notificationCommentDtoList
-                            if (list1 != list_notification_Comment)
-                            {
-                                for (i in 0..list_notification_Comment.size.minus(1))
-                                {
-                                    if (list_notification_Comment[i]!=list1.get(0))
-                                    {
-                                        list2.add(list_notification_Comment[0])
-                                    }else
-                                    {
-                                        return
-                                    }
-                                }
-                            }
+
 
 
 
@@ -86,9 +67,7 @@ class notification_service : Service()  {
                             // Log.e("thureceiver",list_notification_Comment.size.toString())
                             // sendBroadcast(broadcastIntent)
                             Log.e("RESTAPI","Thành CÔng")
-                            list2.forEach {
-                                sentNotification(it)
-                            }
+
 
                         }
                     }

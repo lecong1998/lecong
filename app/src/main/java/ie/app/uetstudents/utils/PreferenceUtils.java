@@ -1,5 +1,7 @@
 package ie.app.uetstudents.utils;
 
+import static ie.app.uetstudents.utils.Constants.KEY_PREFERENCE_USER;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -13,6 +15,8 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+
+import ie.app.uetstudents.data.response.AccountDto;
 
 /**
  *
@@ -173,4 +177,7 @@ public final class PreferenceUtils {
         editor.apply();
     }
 
+    public static AccountDto getUser() {
+        return getObject(KEY_PREFERENCE_USER, AccountDto.class);
+    }
 }

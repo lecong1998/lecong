@@ -8,4 +8,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="red">#E13838</color>
+    <color name="maunotifi">#CBE6EA</color>
+    <color name="mautoolbar">#596FEA</color>
 </resources>

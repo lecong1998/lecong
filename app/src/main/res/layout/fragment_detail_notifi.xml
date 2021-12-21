@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    >
+
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
+
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Tên Thông báo"
+                android:textColor="@color/purple_500"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:id="@+id/detai_notifi_title"/>
+
+        </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="nội dung thông báo"
+            android:textStyle="normal"
+            android:textSize="17sp"
+            android:textColor="@color/black"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            android:layout_marginTop="3dp"
+            android:id="@+id/content_notifi"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Thoi gian"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:paddingLeft="10dp"
+            android:layout_marginTop="20dp"
+            android:id="@+id/time_detail"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/recyclerview_listtailieu"/>
+
+    </LinearLayout>
+
+
+
+</androidx.core.widget.NestedScrollView>

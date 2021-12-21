@@ -4,66 +4,239 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".ui.profile.ProfileActivity">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <FrameLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp">
-            <ImageView
-                android:id="@+id/profile_image_bia"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/anhnentdoc"
-                android:scaleType="fitXY"/>
-            <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_height="250dp"
+            android:orientation="vertical">
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:orientation="vertical"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                android:orientation="horizontal">
+                <LinearLayout
+                    android:gravity="center"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/profile_image_account"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/img_default_user"
+                        />
+                </LinearLayout>
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/black"/>
+                <LinearLayout
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="120dp"
+                            android:layout_height="match_parent"
+                            android:text="MSSV:"
+                            android:paddingLeft="20dp"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text=""
+                            android:id="@+id/Mssv"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:textSize="15sp"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
-                <com.makeramen.roundedimageview.RoundedImageView
-                    android:id="@+id/profile_image_account"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="104dp"
-                    android:src="@drawable/_60279747_1127526494354946_6683273208343303265_n"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:riv_corner_radius="50dp" />
+                        <TextView
+                            android:layout_width="120dp"
+                            android:layout_height="match_parent"
+                            android:text="Username:"
+                            android:paddingLeft="20dp"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text=""
+                            android:id="@+id/username"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:textSize="15sp"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="120dp"
+                            android:layout_height="match_parent"
+                            android:text="Email:"
+                            android:paddingLeft="20dp"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text=""
+                            android:id="@+id/email"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:textSize="15sp"/>
 
-                <TextView
-                    android:id="@+id/profile_nameuser_account"
-                    android:layout_width="wrap_content"
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="120dp"
+                            android:layout_height="match_parent"
+                            android:text="Khóa:"
+                            android:paddingLeft="20dp"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text=""
+                            android:id="@+id/khoa"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:textSize="15sp"/>
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/black"
+                android:layout_marginBottom="5dp"/>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="8dp"
-                    android:text="Lê Công"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/profile_image_account"
-                    app:layout_constraintVertical_bias="0.043" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </FrameLayout>
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:layout_gravity="bottom">
+
+
+
+                    <Button
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:id="@+id/thaydoithongtin"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/vien_button"
+                        android:text="Thay đổi Thông Tin"
+                        android:textColor="@color/white"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/black"
+            android:layout_marginBottom="5dp"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-            <androidx.recyclerview.widget.RecyclerView
+            <com.google.android.material.chip.ChipGroup
+                android:layout_height="60dp"
+                android:layout_marginBottom="10dp"
+                android:layout_width="match_parent"
+                android:id="@+id/select_chip_profile"
+                app:singleSelection="true">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/profile_uettalk"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="60dp"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:text="UET TALK"
+                        android:checked="true"
+                        android:textStyle="bold"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:textAlignment="center"
+                        android:textColor="@color/white"
+                        app:chipBackgroundColor="@color/mautoolbar"
+                        android:theme="@style/Theme.MaterialComponents.Light"/>
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/profile_forum"
+                        android:layout_weight="1"
+                        style="@style/Widget.MaterialComponents.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="60dp"
+                        android:clickable="true"
+                        android:text="FORUM"
+                        android:textStyle="bold"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:textAlignment="center"
+                        android:textColor="@color/white"
+                        app:chipBackgroundColor="@color/mautoolbar"
+                        android:theme="@style/Theme.MaterialComponents.Light"/>
+                </LinearLayout>
+
+
+            </com.google.android.material.chip.ChipGroup>
+            <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/profile_list_question"/>
+                android:id="@+id/profile_scrollview">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/profile_list_question"/>
+            </androidx.core.widget.NestedScrollView>
+
         </LinearLayout>
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

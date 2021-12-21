@@ -41,6 +41,9 @@ class adapter_forum(
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bindData(d: QuestionDtoX) {
             itemView.item_forum_content.text = d.title
+            val time: String = d.time?.substring(11, 16)+ " " + d.time?.substring(0, 10)
+            itemView.item_forum_time.text = time
+            itemView.item_forum_numbercomment.text = d.comment_quantity.toString()
            // Glide.with(itemView.context).load(d.image).error(R.drawable.anhnentdoc).into(itemView.item_forum_image)
         }
     }

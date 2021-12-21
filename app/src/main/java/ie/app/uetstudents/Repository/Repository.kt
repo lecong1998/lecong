@@ -4,6 +4,8 @@ import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import ie.app.uetstudents.ui.API.ApiClient
+import ie.app.uetstudents.ui.Entity.Account.Put.request.password_put
+import ie.app.uetstudents.ui.Entity.Account.Put.response.password_response
 import ie.app.uetstudents.ui.Entity.Category.category
 import ie.app.uetstudents.ui.Entity.Comment.get.Comment
 import ie.app.uetstudents.ui.Entity.Question.get.QuestionDto
@@ -13,12 +15,24 @@ import ie.app.uetstudents.ui.Entity.Search.Question.search_question
 import ie.app.uetstudents.ui.Entity.Search.person.person
 import ie.app.uetstudents.ui.Entity.notifications_comment.get.get_notifi_comment
 import ie.app.uetstudents.ui.Entity.notifications_comment.post.post_notifi_comment
+import ie.app.uetstudents.ui.Entity.notifications_comment.put.request.comment_id_put
+import ie.app.uetstudents.ui.Entity.notifications_comment.put.response.comment_notifi_put
 import ie.app.uetstudents.ui.Entity.notifications_question.get.notification_question
 import ie.app.uetstudents.ui.Entity.notifications_question.post.notification_question_post
+import ie.app.uetstudents.ui.Entity.notifications_question.put.request.question_id_put
+import ie.app.uetstudents.ui.Entity.notifications_question.put.respont.question_notifi_put
+import ie.app.uetstudents.ui.Entity.userProfile.get.userprofile
+import ie.app.uetstudents.ui.Entity.userProfile.post.email.request.email_request
+import ie.app.uetstudents.ui.Entity.userProfile.post.khoa.request.khoa_request
+import ie.app.uetstudents.ui.Entity.userProfile.post.mssv.request.mssv_request
+import ie.app.uetstudents.ui.Entity.userProfile.post.response.update_user_response
 import ie.app.uetstudents.ui.diendan.category.CategoryContract
 import ie.app.uetstudents.ui.diendan.detailForum.DetailForumContract
 import ie.app.uetstudents.ui.diendan.forum_main.forumContract
 import ie.app.uetstudents.ui.notifications.notification_Contract
+import ie.app.uetstudents.ui.profile.ProfileContract
+import ie.app.uetstudents.ui.thongbao.NotificationUetContract
+import ie.app.uetstudents.ui.thongbao.detail.DetailContract
 import ie.app.uetstudents.ui.timkiem.SearchContract
 import retrofit2.Call
 import retrofit2.Callback
@@ -26,13 +40,13 @@ import retrofit2.Response
 
 class Repository(
 val context: Context) {
-    fun CallItemQuestion(presenter : forumContract.Presenter,id_type_content : Int, index: Int)
+    fun CallItemQuestion(presenter : forumContract.Presenter,id_type_content : Int, index: Int, account_id : Int)
     {
         var dataList: List<QuestionDto> = ArrayList<QuestionDto>()
 
         var data : question
         val call: Call<question> =
-            ApiClient.getClient.getQuestions(id_type_content,index)
+            ApiClient.getClient.getQuestions(id_type_content,index,account_id)
         call.enqueue(object : Callback<question> {
             override fun onResponse(
                 call: Call<question>?,
@@ -74,10 +88,10 @@ val context: Context) {
         })
     }
 
-    fun CallQuestions_Category(presenter: forumContract.Presenter,id_category: Int, index: Int)
+    fun CallQuestions_Category(presenter: forumContract.Presenter,id_category: Int, index: Int,account_id: Int)
     {
         var data : question
-        val call : Call<question> = ApiClient.getClient.getQuestion_of_Category(id_category,index)
+        val call : Call<question> = ApiClient.getClient.getQuestion_of_Category(id_category,index,account_id)
         call.enqueue(object : Callback<question>{
             override fun onResponse(call: Call<question>, response: Response<question>) {
                 if(response.isSuccessful)
@@ -94,10 +108,10 @@ val context: Context) {
         })
     }
 
-    fun CallQuestionDetail(presenter: DetailForumContract.Presenter,id:Int)
+    fun CallQuestionDetail(presenter: DetailForumContract.Presenter,id:Int,account_id: Int)
     {
         var data : QuestionDtoX
-        val call: Call<question> = ApiClient.getClient.getDetailQuestion(id)
+        val call: Call<question> = ApiClient.getClient.getDetailQuestion(id,account_id)
         call.enqueue(object : Callback<question>{
             override fun onResponse(call: Call<question>, response: Response<question>) {
                 if (response.isSuccessful)
@@ -115,11 +129,11 @@ val context: Context) {
         })
     }
     /*-----------------Lấy bình luận của câu hỏi----------------------------------*/
-    fun CallCommentQuestion(presenter: DetailForumContract.Presenter,id:Int,index: Int)
+    fun CallCommentQuestion(presenter: DetailForumContract.Presenter,id:Int,index: Int,account_id: Int)
     {
 
         var datacomment : Comment
-        val call: Call<Comment> = ApiClient.getClient.getCommentQuestion(id,index)
+        val call: Call<Comment> = ApiClient.getClient.getCommentQuestion(id,index,account_id)
         call.enqueue(object : Callback<Comment>{
             override fun onResponse(call: Call<Comment>, response: Response<Comment>) {
                 if (response.isSuccessful)
@@ -162,6 +176,29 @@ val context: Context) {
             }
         })
     }
+
+
+    fun putseenNotifiQuestion (questionIdPut: question_id_put)
+    {
+        val call : Call<question_notifi_put> = ApiClient.getClient.putseenNotifi(questionIdPut)
+        call.enqueue(object : Callback<question_notifi_put>{
+            override fun onResponse(
+                call: Call<question_notifi_put>,
+                response: Response<question_notifi_put>
+            ) {
+                if (response.isSuccessful)
+                {
+                    Log.e("Put seen notifi","Thành công")
+                }
+            }
+
+            override fun onFailure(call: Call<question_notifi_put>, t: Throwable) {
+                Log.e("Put seen notifi","Thất bại")
+            }
+        })
+    }
+
+    /*--------------------------------notification comment-------------------------------------*/
     fun callNotificationComment(presenter: notification_Contract.Presenter,id_account: Int,page: Int)
     {
         var data_notifi_comment : get_notifi_comment
@@ -180,6 +217,26 @@ val context: Context) {
 
             override fun onFailure(call: Call<get_notifi_comment>, t: Throwable) {
                 Log.e("Test","Thất Bại")
+            }
+        })
+    }
+
+    fun putSeenNotifi_comment(commentIdPut: comment_id_put)
+    {
+        val call : Call<comment_notifi_put> = ApiClient.getClient.putseenNotifi_comment(commentIdPut)
+        call.enqueue(object : Callback<comment_notifi_put>{
+            override fun onResponse(
+                call: Call<comment_notifi_put>,
+                response: Response<comment_notifi_put>
+            ) {
+                if (response.isSuccessful)
+                {
+                    Log.e("seen comment _ notifi","Thành công")
+                }
+            }
+
+            override fun onFailure(call: Call<comment_notifi_put>, t: Throwable) {
+                Log.e("seen comment _ notifi","Thất bại")
             }
         })
     }
@@ -206,10 +263,10 @@ val context: Context) {
     }
     /*-------------------------------Search_Question------------------------------------*/
 
-    fun callQuestionSearch(presenter: SearchContract.Presenter,page: Int,text: String,type_content_id : Int)
+    fun callQuestionSearch(presenter: SearchContract.Presenter,page: Int,text: String,type_content_id : Int, account_id: Int)
     {
         var searchQuestion : search_question
-        val call: Call<search_question> = ApiClient.getClient.getQuestionSearch(page,text,type_content_id)
+        val call: Call<search_question> = ApiClient.getClient.getQuestionSearch(page,text,type_content_id,account_id)
         call.enqueue(object : Callback<search_question>{
             override fun onResponse(
                 call: Call<search_question>,
@@ -291,7 +348,7 @@ val context: Context) {
                     if (response.body()!!.result_quantity != 0)
                     {
                        personslike = response.body()!!.result_quantity
-                        presenter.getDataUIpersonlike(personslike)
+
                     }
                 }
                 Log.e("test_get_person_like question","Số lượt thích lấy thành công")
@@ -305,4 +362,179 @@ val context: Context) {
             }
         })
     }
+
+    /*------------------------Lấy danh sách bài viết ---------------------------*/
+
+    fun GetQuestion_accountid (presenter: ProfileContract.Presenter,index: Int,account_id: Int,type_content_id: Int)
+    {
+        var question : question
+        val call : Call<question> = ApiClient.getClient.getQuestion_of_account_type_content(account_id,index,account_id,type_content_id)
+        call.enqueue(object  : Callback<question>{
+            override fun onResponse(call: Call<question>, response: Response<question>) {
+                if (response.isSuccessful)
+                {
+                    question = response.body()!!
+                    presenter.UpdateUIQuestionProfile(question,type_content_id)
+                    Log.e("Api_callQuestionAccount","Thành công")
+                }
+
+            }
+
+            override fun onFailure(call: Call<question>, t: Throwable) {
+                Log.e("Api_callQuestionAccount","Thất bại")
+            }
+        })
+    }
+    /*-----------------------Lấy thông tin account------------------------------*/
+
+    fun getInformationAccount(presenter: ProfileContract.Presenter,account_id: Int)
+    {
+
+        val call : Call<userprofile> = ApiClient.getClient.getUserProfile(account_id)
+        call.enqueue(object : Callback<userprofile> {
+            override fun onResponse(call: Call<userprofile>, response: Response<userprofile>) {
+                if (response.isSuccessful)
+                {
+                    presenter.UpdateUIUserinformation(response.body()!!)
+                    Log.e("Test_call_userProfile","Thành công")
+                }
+            }
+
+            override fun onFailure(call: Call<userprofile>, t: Throwable) {
+                Log.e("Test_call_userProfile","Thất bại")
+            }
+        })
+    }
+
+    /*------------------------------Get notification UET-------------------------------*/
+
+    fun getNotificationUet(presenter: NotificationUetContract.Presenter,index: Int,type_content_id: Int,account_id: Int)
+    {
+        var question : question
+        val call : Call<question> = ApiClient.getClient.getQuestions(type_content_id,index,account_id)
+        call.enqueue(object : Callback<question>{
+            override fun onResponse(call: Call<question>, response: Response<question>) {
+                if (response.isSuccessful)
+                {
+                    question = response.body()!!
+                    presenter.UpdateUIItem(question)
+                    Log.e("test_notificationUet","Thành công")
+                }
+            }
+
+            override fun onFailure(call: Call<question>, t: Throwable) {
+                Log.e("test_notificationUet","Thất bại")
+            }
+        })
+    }
+    /*---------------------------Get NotificationDetail---------------------------------------------------*/
+    fun getDetaiNotifiUet(presenter : DetailContract.Presenter,id_question: Int,account_id: Int)
+    {
+        var questionDtoX : QuestionDtoX
+        val call : Call<question> = ApiClient.getClient.getDetailQuestion(id_question, account_id)
+        call.enqueue(object : Callback<question>{
+            override fun onResponse(call: Call<question>, response: Response<question>) {
+                if (response.isSuccessful)
+                {
+                    Log.e("Test","thanh cong")
+                    questionDtoX = response.body()!!.questionDtoList[0]
+                    presenter.UpdateUiDetail(questionDtoX)
+                }
+            }
+
+            override fun onFailure(call: Call<question>, t: Throwable) {
+                Log.e("Test","that bai")
+            }
+        })
+
+    }
+
+    /*--------------------------------------------------------*/
+    fun change_email_user(emailRequest: email_request)
+    {
+            val call: Call<update_user_response> = ApiClient.getClient.update_user_email(emailRequest)
+        call.enqueue(object : Callback<update_user_response>{
+            override fun onResponse(
+                call: Call<update_user_response>,
+                response: Response<update_user_response>
+            ) {
+                if (response.isSuccessful)
+                {
+                    Toast.makeText(context,response.body()!!.message,Toast.LENGTH_SHORT).show()
+                    Log.e("Update email","Thành công")
+                }
+            }
+
+            override fun onFailure(call: Call<update_user_response>, t: Throwable) {
+                Log.e("Update email","Thất bại")
+            }
+        })
+    }
+    /*--------------------------------------------------------*/
+    fun change_khoa_user(khoaRequest: khoa_request)
+    {
+        val call: Call<update_user_response> = ApiClient.getClient.update_user_khoa(khoaRequest)
+        call.enqueue(object : Callback<update_user_response>{
+            override fun onResponse(
+                call: Call<update_user_response>,
+                response: Response<update_user_response>
+            ) {
+                if (response.isSuccessful)
+                {
+                    Toast.makeText(context,response.body()!!.message,Toast.LENGTH_SHORT).show()
+                    Log.e("Update khoa","Thành công")
+                }
+            }
+
+            override fun onFailure(call: Call<update_user_response>, t: Throwable) {
+                Log.e("Update khoa","Thất bại")
+            }
+        })
+    }
+
+    /*--------------------------------------------------------*/
+
+    fun change_mssv_user(mssvRequest: mssv_request)
+    {
+        val call: Call<update_user_response> = ApiClient.getClient.update_user_mssv(mssvRequest)
+        call.enqueue(object : Callback<update_user_response>{
+            override fun onResponse(
+                call: Call<update_user_response>,
+                response: Response<update_user_response>
+            ) {
+                if (response.isSuccessful)
+                {
+                    Toast.makeText(context,response.body()!!.message,Toast.LENGTH_SHORT).show()
+                    Log.e("Update mssv","Thành công")
+                }
+            }
+
+            override fun onFailure(call: Call<update_user_response>, t: Throwable) {
+                Log.e("Update mssv","Thất bại")
+            }
+        })
+    }
+
+    /*---------------------------------------------------------*/
+    fun change_password(put_password : password_put)
+    {
+        val call: Call<password_response> = ApiClient.getClient.change_password(put_password)
+        call.enqueue(object : Callback<password_response>{
+            override fun onResponse(
+                call: Call<password_response>,
+                response: Response<password_response>
+            ) {
+                if (response.isSuccessful)
+                {
+                    Toast.makeText(context,response.body()!!.message,Toast.LENGTH_SHORT).show()
+                    Log.e("Update mật khẩu","Thành công")
+                }
+            }
+
+            override fun onFailure(call: Call<password_response>, t: Throwable) {
+                Log.e("Update mật khẩu","Thất bại")
+            }
+        })
+    }
+
 }

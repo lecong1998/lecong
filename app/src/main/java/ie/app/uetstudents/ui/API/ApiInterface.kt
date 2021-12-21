@@ -1,15 +1,16 @@
 package ie.app.uetstudents.ui.API
 
 
+import ie.app.uetstudents.data.request.LoginRequest
 import ie.app.uetstudents.data.request.RegisterFirebaseTokenRequest
 import ie.app.uetstudents.data.response.Response
+import ie.app.uetstudents.data.response.login.LoginResponse
 import ie.app.uetstudents.ui.Entity.Account.Get.dangky.dangky_account
-import ie.app.uetstudents.ui.Entity.Account.Get.dangnhap.dangnhap_account
-import ie.app.uetstudents.ui.Entity.Account.Get.dangnhap.xacminhdangnhap
 import ie.app.uetstudents.ui.Entity.Account.Post.account
+import ie.app.uetstudents.ui.Entity.Account.Put.request.password_put
+import ie.app.uetstudents.ui.Entity.Account.Put.response.password_response
 import ie.app.uetstudents.ui.Entity.Category.category
 import ie.app.uetstudents.ui.Entity.Comment.get.Comment
-import ie.app.uetstudents.ui.Entity.Comment.post.comment_post
 import ie.app.uetstudents.ui.Entity.Question.get.QuestionX
 import ie.app.uetstudents.ui.Entity.Question.get.question
 import ie.app.uetstudents.ui.Entity.Search.Question.search_question
@@ -19,44 +20,57 @@ import ie.app.uetstudents.ui.Entity.like.Post.like_comment
 import ie.app.uetstudents.ui.Entity.like_question.post.like_question
 import ie.app.uetstudents.ui.Entity.notifications_comment.get.get_notifi_comment
 import ie.app.uetstudents.ui.Entity.notifications_comment.post.post_notifi_comment
+import ie.app.uetstudents.ui.Entity.notifications_comment.put.request.comment_id_put
+import ie.app.uetstudents.ui.Entity.notifications_comment.put.response.comment_notifi_put
 import ie.app.uetstudents.ui.Entity.notifications_question.get.notification_question
 import ie.app.uetstudents.ui.Entity.notifications_question.post.notification_question_post
+import ie.app.uetstudents.ui.Entity.notifications_question.put.request.question_id_put
+import ie.app.uetstudents.ui.Entity.notifications_question.put.respont.question_notifi_put
 import ie.app.uetstudents.ui.Entity.subject.DataSubject.data_subject
 import ie.app.uetstudents.ui.Entity.subject.subject
+import ie.app.uetstudents.ui.Entity.userProfile.get.userprofile
+import ie.app.uetstudents.ui.Entity.userProfile.post.email.request.email_request
+import ie.app.uetstudents.ui.Entity.userProfile.post.khoa.request.khoa_request
+import ie.app.uetstudents.ui.Entity.userProfile.post.mssv.request.mssv_request
+import ie.app.uetstudents.ui.Entity.userProfile.post.response.update_user_response
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.*
 
 interface ApiInterface {
+
+
    /*--------------------------Lây danh sách question theo type content---------------------------*/
    @GET("question/type-content/{id_type_content}")
-    fun getQuestions(@Path("id_type_content")id_type_content : Int, @Query("index") index : Int): Call<question>
+    fun getQuestions(@Path("id_type_content")id_type_content : Int, @Query("index") index : Int,@Query("account_id") account_id : Int): Call<question>
    /*---------------------Lấy danh sách category-----------------------*/
     @GET("category")
     fun getCategory() :Call<category>
 /*---------------------Lấy danh sách question theo category--------------------------*/
     @GET("question/category/{id_category}")
-    fun getQuestion_of_Category(@Path("id_category") id_category : Int, @Query("index") index: Int) : Call<question>
+    fun getQuestion_of_Category(@Path("id_category") id_category : Int, @Query("index") index: Int,@Query("account_id") account_id : Int) : Call<question>
 
 
 /*-----------------------Thêm question-----------------*/
-   @Multipart
-    @POST("question/create")
-    fun setQuestion(@Part image_files : MultipartBody.Part?, @Part("Question") Question : RequestBody ) : Call<question>
+//    @Multipart
+//    @POST("question/create")
+//    fun setQuestion(@Part image_files : MultipartBody.Part?, @Part("Question") Question : RequestBody ) : Call<question>
 
+    @POST("question/create")
+    fun setQuestion(@Body body : RequestBody ) : Call<question>
 
      /*----------------lấy dư liệu question = id question-------------------*/
     @GET("question/id/{id_question}")
-    fun getDetailQuestion(@Path("id_question") id_question : Int) : Call<question>
+    fun getDetailQuestion(@Path("id_question") id_question : Int,@Query("account_id") account_id: Int) : Call<question>
 
     /*                     Comment                               */
     @GET("comment/question/{id_question}")
-    fun getCommentQuestion(@Path("id_question") id_question: Int, @Query("index") index: Int) : Call<Comment>
+    fun getCommentQuestion(@Path("id_question") id_question: Int, @Query("index") index: Int,@Query("account_id")account_id: Int) : Call<Comment>
 
-    @Multipart
+
     @POST("comment/create")
-    fun setCommentQuestion(@Part image_file : MultipartBody.Part?,@Part("Comment") Comment: RequestBody) : Call<Comment>
+    fun setCommentQuestion(@Body body : RequestBody ) : Call<Comment>
 
     /*----------------------Thích--------------------------*/
 
@@ -79,16 +93,21 @@ interface ApiInterface {
     fun CallsetAccount(@Body Account : account) : Call<dangky_account>
 
     //đăng nhập
-    @POST("security")
-    fun CallSigninAccount(@Query("username") username: String,@Query("password") password : String,@Query("remember-me") remember_me : String) : Call<xacminhdangnhap>
+    @POST("login")
+    fun callSigninAccount(@Body request : LoginRequest) : Call<LoginResponse>
 
-    @GET("login-success")
-    fun callloginsuccess() :Call<dangnhap_account>
+//    //đăng nhập
+//    @FormUrlEncoded
+//    @POST("security")
+//    fun callSigninAccount2(@Field("username") username : String, @Field("password") password : String, @Field("remember-me") rememberMe : String) : Call<LoginResponse>
+
+//    @GET("login-success")
+//    fun callloginsuccess() :Call<dangnhap_account>
 
     /*-------------------------Search------------------------------*/
 
     @GET("question/search")
-    fun getQuestionSearch(@Query("index") index: Int,@Query("text") text : String,@Query("type_content_id") type_content_id : Int) : Call<search_question>
+    fun getQuestionSearch(@Query("index") index: Int,@Query("text") text : String,@Query("type_content_id") type_content_id : Int,@Query("account_id")account_id: Int) : Call<search_question>
 
 
     @GET("account/search")
@@ -96,7 +115,11 @@ interface ApiInterface {
 
     /*-------------------------lấy danh sách Question theo id account-------------------------------*/ // chua call
     @GET("question/account/{account_id}")
-    fun getQuestion_of_account(@Path("account_id") account_id : Int, @Query("index") index : Int) : Call<QuestionX>
+    fun getQuestion_of_account(@Path("account_id") account_id : Int, @Query("index") index : Int,@Query("account_id") accountid: Int) : Call<question>
+
+
+    @GET("question/account/{account_id}")
+    fun getQuestion_of_account_type_content(@Path("account_id") account_id : Int, @Query("index") index : Int,@Query("account_id") accountid: Int,@Query("type_content_id") type_content_id: Int) : Call<question>
     /*---------------------------Thông Báo--------------------------------------------*/
 
 
@@ -114,6 +137,14 @@ interface ApiInterface {
     fun setNotification_comment(@Body postnotifi_comment : post_notifi_comment) : Call<post_notifi_comment>
 
     /*----------------------put đã xem thông báo------------------------*/
+    //question
+    @PUT("notification-question/seen")
+    fun putseenNotifi(@Body question_id : question_id_put) : Call<question_notifi_put>
+
+    // comment
+    @PUT("notification-comment/seen")
+    fun putseenNotifi_comment(@Body comment_id_put : comment_id_put) : Call<comment_notifi_put>
+
 
 
     /*--------------------------------Lây danh sách những ngươi đã like comment-----------------------------------------------*/
@@ -137,7 +168,7 @@ interface ApiInterface {
     /*---------------------------------------------------------------------*/
 
     @GET("question/comment/{id_comment}")
-    fun getQuestion_of_comment(@Path("id_comment") id_comment: Int) : Call<QuestionX>
+    fun getQuestion_of_comment(@Path("id_comment") id_comment: Int,@Query("account_id") account_id: Int ) : Call<QuestionX>
 
     @POST("register_firebase_token")
     fun registerFirebaseToken(@Body request : RegisterFirebaseTokenRequest) : Call<Response>
@@ -147,4 +178,23 @@ interface ApiInterface {
 
     @GET("notification-comment/author-account/{userId}/unseen?index=1")
     fun getUnreadComment(@Path("userId") id : Int) : Call<Response>
+
+
+    /*-------------------------get user------------------------*/
+    @GET("user-profile/get/{id_user}")
+    fun getUserProfile(@Path("id_user") id_user : Int) : Call<userprofile>
+
+    /*------------------------Thay đổi mật khẩu------------------------*/
+    @POST("change-password")
+    fun change_password(@Body put_password : password_put) : Call<password_response>
+
+    /*--------------------------Thay đổi thông tin-----------------------------*/
+    @POST("user-profile/update")
+    fun update_user_email(@Body emailRequest: email_request) :Call<update_user_response>
+
+    @POST("user-profile/update")
+    fun update_user_khoa(@Body khoaRequest: khoa_request) : Call<update_user_response>
+
+    @POST("user-profile/update")
+    fun update_user_mssv(@Body mssvRequest: mssv_request) : Call<update_user_response>
 }
