@@ -13,12 +13,18 @@ class adapter_hienthianh(var listanh: ArrayList<String>) :
     RecyclerView.Adapter<adapter_hienthianh.Viewholder>() {
     class Viewholder(var itemview: View) : RecyclerView.ViewHolder(itemview) {
         fun onBindata(link: String) {
-            val urlImage = "${ApiClient.BASE_URL}image${link}"
-            Glide.with(itemView.context)
-                .load(urlImage)
-                .placeholder(R.drawable.img_default)
-                .error(R.drawable.img_default)
-                .into(itemview.imageItem)
+            if(link.contains(".pdf")) {
+                Glide.with(itemView.context)
+                    .load(R.drawable.pdf)
+                    .into(itemview.imageItem)
+            } else {
+                val urlImage = "${ApiClient.BASE_URL}image${link}"
+                Glide.with(itemView.context)
+                    .load(urlImage)
+                    .placeholder(R.drawable.img_default)
+                    .error(R.drawable.img_default)
+                    .into(itemview.imageItem)
+            }
         }
     }
 

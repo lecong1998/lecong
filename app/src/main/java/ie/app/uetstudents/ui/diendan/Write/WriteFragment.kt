@@ -6,9 +6,11 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.database.Cursor
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.OpenableColumns
 import android.util.Log
 import android.view.*
 import android.widget.PopupMenu
@@ -18,7 +20,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import ie.app.uetstudents.R
-import ie.app.uetstudents.RealPathUtil.RealPathUtil
 import ie.app.uetstudents.adapter.OnclickItem_deleteanh
 import ie.app.uetstudents.adapter.adapter_anhwrite
 import ie.app.uetstudents.ui.API.ApiClient
@@ -38,7 +39,9 @@ import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.IOException
 import java.io.InputStream
 
 
@@ -51,15 +54,15 @@ class WriteFragment : Fragment(), OnclickItem_deleteanh {
     private val CAMERA_REQUEST: Int = 100
     private val DOCUMENT_REQUEST: Int = 166
 
-    private var encodedPDF : String? = null
+    private var encodedPDF: String? = null
 
     private var listanh: ArrayList<Uri> = ArrayList()
     private var listpdf: ArrayList<Uri> = ArrayList()
     private lateinit var adapteranh: adapter_anhwrite
-    private var uripdf : Uri? = null
+    private var uripdf: Uri? = null
 
     private var database: QuestionDto? = null
-    var id_user : Int? = null
+    var id_user: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,85 +83,83 @@ class WriteFragment : Fragment(), OnclickItem_deleteanh {
 
 
         select_chude.setOnClickListener {
-            val popupmenu : PopupMenu = PopupMenu(context,select_chude,Gravity.CENTER_VERTICAL)
-            popupmenu.menuInflater.inflate(R.menu.chude_select,popupmenu.menu)
+            val popupmenu: PopupMenu = PopupMenu(context, select_chude, Gravity.CENTER_VERTICAL)
+            popupmenu.menuInflater.inflate(R.menu.chude_select, popupmenu.menu)
             popupmenu.setOnMenuItemClickListener {
-                when(it.itemId)
-                {
-                    R.id.write_cntt ->
-                    {
+                when (it.itemId) {
+                    R.id.write_cntt -> {
                         select_nganhid = 1
-                        Toast.makeText(context,it.title.toString(),Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
                         popupmenu.dismiss()
                     }
                     R.id.write_khmt -> {
                         select_nganhid = 2
-                        Toast.makeText(context,it.title.toString(),Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
                         popupmenu.dismiss()
                     }
                     R.id.write_httt -> {
                         select_nganhid = 3
-                        Toast.makeText(context,it.title.toString(),Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
                         popupmenu.dismiss()
                     }
                     R.id.write_cnktdttt -> {
                         select_nganhid = 4
-                        Toast.makeText(context,it.title.toString(),Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
                         popupmenu.dismiss()
                     }
                     R.id.write_vlkt -> {
                         select_nganhid = 5
-                        Toast.makeText(context,it.title.toString(),Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
                         popupmenu.dismiss()
                     }
                     R.id.write_ktnl -> {
                         select_nganhid = 6
-                        Toast.makeText(context,it.title.toString(),Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
                         popupmenu.dismiss()
                     }
                     R.id.write_cokt -> {
                         select_nganhid = 7
-                        Toast.makeText(context,it.title.toString(),Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
                         popupmenu.dismiss()
                     }
                     R.id.write_cnktcdt -> {
                         select_nganhid = 8
-                        Toast.makeText(context,it.title.toString(),Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
                         popupmenu.dismiss()
                     }
                     R.id.write_mmttt -> {
                         select_nganhid = 9
-                        Toast.makeText(context,it.title.toString(),Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
                         popupmenu.dismiss()
                     }
                     R.id.write_ktmt -> {
                         select_nganhid = 10
-                        Toast.makeText(context,it.title.toString(),Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
                         popupmenu.dismiss()
                     }
                     R.id.write_cnktxdgt -> {
                         select_nganhid = 11
-                        Toast.makeText(context,it.title.toString(),Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
                         popupmenu.dismiss()
                     }
                     R.id.write_cnhkvt -> {
                         select_nganhid = 12
-                        Toast.makeText(context,it.title.toString(),Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
                         popupmenu.dismiss()
                     }
                     R.id.write_ktrb -> {
                         select_nganhid = 13
-                        Toast.makeText(context,it.title.toString(),Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
                         popupmenu.dismiss()
                     }
                     R.id.write_cnnn -> {
                         select_nganhid = 14
-                        Toast.makeText(context,it.title.toString(),Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
                         popupmenu.dismiss()
                     }
                     R.id.write_ktdktdh -> {
                         select_nganhid = 15
-                        Toast.makeText(context,it.title.toString(),Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
                         popupmenu.dismiss()
                     }
                 }
@@ -166,7 +167,6 @@ class WriteFragment : Fragment(), OnclickItem_deleteanh {
             }
             popupmenu.show()
         }
-
 
 
         /*-----------------thêm ảnh---------------------------------*/
@@ -181,9 +181,9 @@ class WriteFragment : Fragment(), OnclickItem_deleteanh {
 
             dialogview.anh_camera.setOnClickListener {
 
-              /*  val cameraIntent =
-                    Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-                startActivityForResult(cameraIntent, CAMERA_REQUEST)*/
+                /*  val cameraIntent =
+                      Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                  startActivityForResult(cameraIntent, CAMERA_REQUEST)*/
                 onclickRequestPermission("image")
                 dialog.dismiss()
             }
@@ -208,11 +208,10 @@ class WriteFragment : Fragment(), OnclickItem_deleteanh {
 
         /*---------------------đăng--------------------------*/
         chuyentrang?.setOnClickListener {
-            if (write_title.text.isEmpty() || edtxt_status.text.isEmpty()|| select_nganhid == 0)
-            {
-                Toast.makeText(context,"Bạn chưa cập nhật thông tin đầy đủ",Toast.LENGTH_SHORT).show()
-            }else
-            {
+            if (write_title.text.isEmpty() || edtxt_status.text.isEmpty() || select_nganhid == 0) {
+                Toast.makeText(context, "Bạn chưa cập nhật thông tin đầy đủ", Toast.LENGTH_SHORT)
+                    .show()
+            } else {
 
                 callApi(
                     edtxt_status.text.toString(),
@@ -245,17 +244,13 @@ class WriteFragment : Fragment(), OnclickItem_deleteanh {
         val questionString = gson.toJson(question).toString()
         builder.addFormDataPart("Question", questionString)
 
-
-
         listuri.forEach {
-
-
-             val strRealPath = RealPathUtil.getRealPath(requireContext(),it)
-            val file = File(strRealPath)
+            val fileName = getSelectedFileName(it)
+            val byteDataFile = getByteDataFile(it)
             builder.addFormDataPart(
                 "image_files",
-                file.name,
-                RequestBody.create(MediaType.parse("multipart/form-data"), file)
+                fileName,
+                RequestBody.create(MediaType.parse("multipart/form-data"), byteDataFile)
             )
         }
 
@@ -274,6 +269,50 @@ class WriteFragment : Fragment(), OnclickItem_deleteanh {
         })
     }
 
+    private fun getSelectedFileName(selectFileUri: Uri): String? {
+        val uriString: String = selectFileUri.toString()
+        val myFile = File(uriString)
+        var displayName: String? = null
+        if (uriString.startsWith("content://")) {
+            var cursor: Cursor? = null
+            try {
+                cursor =
+                    requireContext().contentResolver.query(selectFileUri, null, null, null, null)
+                if (cursor != null && cursor.moveToFirst()) {
+                    displayName =
+                        cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+                }
+            } finally {
+                cursor!!.close()
+            }
+        } else if (uriString.startsWith("file://")) {
+            displayName = myFile.name
+        }
+        return displayName
+    }
+
+    private fun getByteDataFile(uri: Uri?): ByteArray? {
+        try {
+            val input: InputStream? = requireContext().contentResolver.openInputStream(uri!!)
+            return getBytes(input!!)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return null
+        }
+    }
+
+    @Throws(IOException::class)
+    private fun getBytes(inputStream: InputStream): ByteArray {
+        val byteBuffer = ByteArrayOutputStream()
+        val bufferSize = 1024
+        val buffer = ByteArray(bufferSize)
+        var len = 0
+        while (inputStream.read(buffer).also { len = it } != -1) {
+            byteBuffer.write(buffer, 0, len)
+        }
+        return byteBuffer.toByteArray()
+    }
+
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
         val item: MenuItem = menu.findItem(R.id.action_search)
@@ -284,41 +323,37 @@ class WriteFragment : Fragment(), OnclickItem_deleteanh {
         item3.isVisible = false
     }
 
-    fun onclickRequestPermission(theloai : String) {
+    fun onclickRequestPermission(theloai: String) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            if (theloai.equals("image"))
-            {
+            if (theloai.equals("image")) {
                 openGallery()
             }
-            if (theloai.equals("pdf"))
-            {
+            if (theloai.equals("pdf")) {
                 openDocument()
             }
 
             return
         }
         if (activity?.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            if (theloai.equals("image"))
-            {
+            if (theloai.equals("image")) {
                 openGallery()
             }
-            if (theloai.equals("pdf"))
-            {
+            if (theloai.equals("pdf")) {
                 openDocument()
             }
         } else {
-            if (theloai.equals("image"))
-            {
+            if (theloai.equals("image")) {
                 requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), MY_REQUEST)
             }
-            if (theloai.equals("pdf"))
-            {
-                requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), DOCUMENT_REQUEST)
+            if (theloai.equals("pdf")) {
+                requestPermissions(
+                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                    DOCUMENT_REQUEST
+                )
             }
 
         }
     }
-
 
 
     override fun onRequestPermissionsResult(
@@ -332,8 +367,7 @@ class WriteFragment : Fragment(), OnclickItem_deleteanh {
                 openGallery()
             }
         }
-        if (requestCode== DOCUMENT_REQUEST)
-        {
+        if (requestCode == DOCUMENT_REQUEST) {
             if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 openDocument()
             }
@@ -345,7 +379,7 @@ class WriteFragment : Fragment(), OnclickItem_deleteanh {
         val intent = Intent()
         intent.type = "application/pdf"
         intent.action = Intent.ACTION_GET_CONTENT
-        startActivityForResult(Intent.createChooser(intent, "Select Pdf"), CAMERA_REQUEST)
+        startActivityForResult(Intent.createChooser(intent, "Select Pdf"), DOCUMENT_REQUEST)
     }
 
     fun openGallery() {
@@ -358,17 +392,21 @@ class WriteFragment : Fragment(), OnclickItem_deleteanh {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == IMG_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
-            val uri : Uri = data.data!!
-            //listanh.add(uri)
+            val uri: Uri = data.data!!
+            listanh.add(uri)
             listanh_write_forum.adapter?.notifyDataSetChanged()
 
 
-        }
-        if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
-             uripdf = data.data!!
-
-            val inputStream : InputStream = context?.contentResolver?.openInputStream(uripdf!!)!!
-            Log.e("uri",inputStream.toString())
+        } else if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
+            val uriCameraImage = data.data!!
+            listanh.add(uriCameraImage)
+            listanh_write_forum.adapter?.notifyDataSetChanged()
+        } else if (requestCode == DOCUMENT_REQUEST && resultCode == Activity.RESULT_OK) {
+            uripdf = data?.data!!
+            uripdf?.let {
+                listanh.add(it)
+            }
+            listanh_write_forum.adapter?.notifyDataSetChanged()
         }
 
     }
@@ -377,8 +415,6 @@ class WriteFragment : Fragment(), OnclickItem_deleteanh {
         listanh.remove(anh)
         listanh_write_forum.adapter?.notifyDataSetChanged()
     }
-
-
 
 
 }

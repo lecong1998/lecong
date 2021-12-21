@@ -105,6 +105,8 @@ object RealPathUtil {
                     contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
                 } else if ("audio" == type) {
                     contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                } else if("document" == type) {
+                    contentUri = uri
                 }
                 val selection = "_id=?"
                 val selectionArgs = arrayOf(

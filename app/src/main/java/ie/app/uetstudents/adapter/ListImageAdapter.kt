@@ -19,12 +19,18 @@ class ListImageAdapter(context: Context) : BaseAdapter<ImageDto>(context) {
         val item = items[position]
 
         holder.findViewById<ImageView>(R.id.imageItem).apply {
-            val urlImage = "${BASE_URL}image${item.image}"
-            Glide.with(this)
-                .load(urlImage)
-                .placeholder(R.drawable.img_default)
-                .error(R.drawable.img_default)
-                .into(this)
+            if(item.image.contains(".pdf")) {
+                Glide.with(this)
+                    .load(R.drawable.pdf)
+                    .into(this)
+            } else {
+                val urlImage = "${BASE_URL}image${item.image}"
+                Glide.with(this)
+                    .load(urlImage)
+                    .placeholder(R.drawable.img_default)
+                    .error(R.drawable.img_default)
+                    .into(this)
+            }
         }
     }
 }
