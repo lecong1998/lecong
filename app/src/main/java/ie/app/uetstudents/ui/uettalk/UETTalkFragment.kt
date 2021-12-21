@@ -56,7 +56,7 @@ import java.io.File
 
 class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
     DetailForumContract.View,
-    ClickItemCommentLike {
+    ClickItemCommentLike, BaseAdapter.OnclickPdf<ImageDto> {
 
     private val CAMERA_REQUEST: Int = 8888
     private var _binding: FragmentUettalkBinding? = null
@@ -99,7 +99,7 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
 
 
         presenter.getQuestions(2, page_uettalk,id_user!!)
-        adapter_uettalk = AdapterUETTalk(this)
+        adapter_uettalk = AdapterUETTalk(requireContext(),this,this)
         root.recyclerview_item_uettalk.layoutManager = LinearLayoutManager(requireContext())
         root.recyclerview_item_uettalk.isNestedScrollingEnabled = false
 
@@ -462,6 +462,13 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
                 Log.e("Test_bỏ_like", "Thất bại")
             }
         })
+    }
+
+    override fun onItemClick(position: Int, item: ImageDto) {
+
+        val intent = Intent(activity, detailPDF::class.java)
+        intent.putExtra("ExamDocument",item.image)
+        startActivity(intent)
     }
 
 

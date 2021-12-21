@@ -16,6 +16,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import ie.app.uetstudents.R
 import ie.app.uetstudents.adapter.OnclickItem_deleteanh
@@ -70,6 +71,14 @@ class WritingStatusFragment : Fragment(), OnclickItem_deleteanh {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Glide.with(requireActivity())
+            .load(ApiClient.BASE_URL+"image"+PreferenceUtils.getUser().avatar)
+            .placeholder(R.drawable.img_default_user)
+            .error(R.drawable.img_default_user)
+            .into(image_status)
+        name_user_status.text = PreferenceUtils.getUser().username
+
+
         /*-------------------Chọn ảnh--------------------------------*/
 
         view.btn_addimage_status.setOnClickListener {

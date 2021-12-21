@@ -13,7 +13,11 @@ import ie.app.uetstudents.ui.API.ApiClient.BASE_URL
 import ie.app.uetstudents.ui.Entity.Question.get.ImageDto
 import ie.app.uetstudents.ui.tailieu.detailPDF
 
-class ListImageAdapter(context: Context) : BaseAdapter<ImageDto>(context) {
+class ListImageAdapter(context: Context,
+callback: BaseAdapter.OnclickPdf<ImageDto>)
+    : BaseAdapter<ImageDto>(context) {
+
+    val callbackmoi : BaseAdapter.OnclickPdf<ImageDto> = callback
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_image, parent, false)
         return BaseViewHolder(view)
@@ -27,6 +31,8 @@ class ListImageAdapter(context: Context) : BaseAdapter<ImageDto>(context) {
                 Glide.with(this)
                     .load(R.drawable.pdf)
                     .into(this)
+
+
             } else {
                 val urlImage = "${BASE_URL}image${item.image}"
                 Glide.with(this)
@@ -34,6 +40,12 @@ class ListImageAdapter(context: Context) : BaseAdapter<ImageDto>(context) {
                     .placeholder(R.drawable.img_default)
                     .error(R.drawable.img_default)
                     .into(this)
+            }
+        }
+        callback = callbackmoi
+        holder.findViewById<ImageView>(R.id.imageItem).setOnClickListener {
+            if(item.image.contains(".pdf")) {
+                callback!!.onItemClick(position, item)
             }
         }
 

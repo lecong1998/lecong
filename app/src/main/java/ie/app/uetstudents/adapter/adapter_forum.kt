@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import ie.app.uetstudents.R
+import ie.app.uetstudents.ui.API.ApiClient
 import ie.app.uetstudents.ui.Entity.Question.get.QuestionDto
 import ie.app.uetstudents.ui.Entity.Question.get.QuestionDtoX
 import kotlinx.android.synthetic.main.item_forum.view.*
@@ -44,7 +45,11 @@ class adapter_forum(
             val time: String = d.time?.substring(11, 16)+ " " + d.time?.substring(0, 10)
             itemView.item_forum_time.text = time
             itemView.item_forum_numbercomment.text = d.comment_quantity.toString()
-           // Glide.with(itemView.context).load(d.image).error(R.drawable.anhnentdoc).into(itemView.item_forum_image)
+            Glide.with(itemView.context)
+                .load(ApiClient.BASE_URL+"image"+d.accountDto?.avatar)
+                .placeholder(R.drawable.img_default_user)
+                .error(R.drawable.img_default_user)
+                .into(itemView.item_forum_image)
         }
     }
 }

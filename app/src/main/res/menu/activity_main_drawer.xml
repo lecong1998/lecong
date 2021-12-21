@@ -20,11 +20,7 @@
             android:orderInCategory="4"
             android:icon="@drawable/ic_baseline_menu_book_24"
             android:title="@string/menu_dethi" />
-        <item
-            android:id="@+id/nav_news"
-            android:orderInCategory="6"
-            android:icon="@drawable/ic_baseline_desktop_windows_24"
-            android:title="@string/menu_bantin" />
+
         <item
             android:id="@+id/nav_forum"
             android:orderInCategory="2"

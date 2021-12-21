@@ -26,6 +26,7 @@ import ie.app.uetstudents.ui.Entity.Comment.get.Comment
 import ie.app.uetstudents.ui.Entity.Comment.get.CommentDto
 import ie.app.uetstudents.ui.Entity.Comment.post.Account
 import ie.app.uetstudents.ui.Entity.Comment.post.comment_post
+import ie.app.uetstudents.ui.Entity.Question.get.ImageDto
 import ie.app.uetstudents.ui.Entity.Question.get.QuestionDtoX
 import ie.app.uetstudents.ui.Entity.Question.get.question
 import ie.app.uetstudents.ui.Entity.like.Post.like_comment
@@ -34,6 +35,7 @@ import ie.app.uetstudents.ui.Entity.notifications_comment.post.post_notifi_comme
 import ie.app.uetstudents.ui.Entity.notifications_question.post.Question
 import ie.app.uetstudents.ui.Entity.notifications_question.post.notification_question_post
 import ie.app.uetstudents.ui.Entity.userProfile.get.userprofile
+import ie.app.uetstudents.ui.tailieu.detailPDF
 import ie.app.uetstudents.utils.PreferenceUtils
 import kotlinx.android.synthetic.main.activity_profile.*
 import kotlinx.android.synthetic.main.fragment_uettalk.view.*
@@ -47,7 +49,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
 
-class Profile_Fragment: Fragment(),ProfileContract.View, OnClickItem_UetTalk, ClickItemCommentLike ,ClickItem{
+class Profile_Fragment: Fragment(),ProfileContract.View, OnClickItem_UetTalk,
+    ClickItemCommentLike ,ClickItem,BaseAdapter.OnclickPdf<ImageDto>{
 
     var id_user : Int? = null
     private lateinit var presenter_profile : ProfileContract.Presenter
@@ -108,7 +111,7 @@ class Profile_Fragment: Fragment(),ProfileContract.View, OnClickItem_UetTalk, Cl
 
         presenter_profile.getQuestionProfile(page_uettalk,id_user!!,type_content_id)
         adapter = adapter_forum(this)
-        adapterUETTalk = AdapterUETTalk(this)
+        adapterUETTalk = AdapterUETTalk(requireContext(),this,this)
         presenter_profile.getUserInformation(id_user!!)
 
         profile_uettalk.setOnClickListener {
@@ -180,7 +183,15 @@ class Profile_Fragment: Fragment(),ProfileContract.View, OnClickItem_UetTalk, Cl
 
     @SuppressLint("ResourceAsColor")
     override fun UpdateViewDataUser(userprofile: userprofile) {
-        Mssv.text = userprofile.mssv
+        if(userprofile.mssv != null)
+        {
+            Mssv.text = userprofile.mssv
+        }else
+        {
+            Mssv.text = "Chưa cập nhật!"
+            Mssv.setTextColor(R.color.teal_700)
+        }
+
         username.text = userprofile.fullname
         if(userprofile.email!= null)
         {
@@ -506,5 +517,11 @@ class Profile_Fragment: Fragment(),ProfileContract.View, OnClickItem_UetTalk, Cl
         bundle.putString("owner_username",m.accountDto?.username ?: "")
         Toast.makeText( context,m.id.toString(), Toast.LENGTH_SHORT).show()
         this.findNavController().navigate(R.id.action_action_profile_to_detailForumFragment, bundle)
+    }
+
+    override fun onItemClick(position: Int, item: ImageDto) {
+        val intent = Intent(activity, detailPDF::class.java)
+        intent.putExtra("ExamDocument",item.image)
+        startActivity(intent)
     }
 }

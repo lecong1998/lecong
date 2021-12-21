@@ -1,6 +1,8 @@
 package ie.app.uetstudents.adapter
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
 import android.graphics.Typeface
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,22 +12,28 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import ie.app.uetstudents.R
 import ie.app.uetstudents.ui.API.ApiClient
+import ie.app.uetstudents.ui.Entity.Question.get.ImageDto
 import ie.app.uetstudents.ui.Entity.Question.get.QuestionDto
 import ie.app.uetstudents.ui.Entity.Question.get.QuestionDtoX
 import ie.app.uetstudents.ui.Entity.Question.get.question
 import ie.app.uetstudents.ui.Entity.like_question.get.like_question
+import ie.app.uetstudents.ui.tailieu.detailPDF
 import ie.app.uetstudents.utils.PreferenceUtils
 import kotlinx.android.synthetic.main.fragment_uettalk.*
 import kotlinx.android.synthetic.main.item_uettalk.view.*
+import kotlinx.coroutines.flow.callbackFlow
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class AdapterUETTalk(
-    var ClickItem: OnClickItem_UetTalk
+    var context : Context,
+    var ClickItem: OnClickItem_UetTalk,
+    var callback : BaseAdapter.OnclickPdf<ImageDto>
 ) : RecyclerView.Adapter<AdapterUETTalk.ViewHolder>() {
 
     private var dataList: List<QuestionDtoX> = ArrayList()
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -44,8 +52,9 @@ class AdapterUETTalk(
 
     @SuppressLint("ResourceAsColor")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+
         var dataModel = dataList.get(position)
-        holder.bindData(dataModel)
+        holder.bindData(dataModel,callback)
         holder.itemView.like_itemuettlk.setOnClickListener {
             var soluotlike = dataModel.like_quantity
                 if (dataModel.liked == false)
@@ -84,10 +93,11 @@ class AdapterUETTalk(
 
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val adapter = ListImageAdapter(itemView.context)
+
 
         @SuppressLint("ResourceAsColor")
-        fun bindData(d: QuestionDtoX) {
+        fun bindData(d: QuestionDtoX,callback: BaseAdapter.OnclickPdf<ImageDto>) {
+            var adapter = ListImageAdapter(itemView.context ,callback)
             itemView.txt_status_itemuettalk.text = d.content
             val thoigian: String = d.time?.substring(11, 16).toString()
             val ngay: String = d.time?.substring(0, 10).toString()
@@ -126,6 +136,8 @@ class AdapterUETTalk(
 
         }
     }
+
+
 
 }
 

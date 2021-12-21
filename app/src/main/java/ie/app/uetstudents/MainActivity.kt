@@ -74,7 +74,6 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_notifications,
                 R.id.nav_document,
                 R.id.nav_exam,
-                R.id.nav_news,
                 R.id.nav_forum,
                 R.id.nav_uettalk,
                 R.id.nav_login

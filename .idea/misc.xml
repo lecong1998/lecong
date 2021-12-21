@@ -82,6 +82,7 @@
         <entry key="..\:/Users/Admin/Documents/codemoiduan/lecong/lecong/app/src/main/res/layout/fragment_change_profile_.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Admin/Documents/codemoiduan/lecong/lecong/app/src/main/res/layout/fragment_detail_forum.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Admin/Documents/codemoiduan/lecong/lecong/app/src/main/res/layout/fragment_detail_notifi.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/Admin/Documents/codemoiduan/lecong/lecong/app/src/main/res/layout/fragment_forum.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Admin/Documents/codemoiduan/lecong/lecong/app/src/main/res/layout/fragment_login.xml" value="0.25" />
         <entry key="..\:/Users/Admin/Documents/codemoiduan/lecong/lecong/app/src/main/res/layout/fragment_logout.xml" value="0.25" />
         <entry key="..\:/Users/Admin/Documents/codemoiduan/lecong/lecong/app/src/main/res/layout/fragment_news.xml" value="0.20416666666666666" />
@@ -102,7 +103,7 @@
         <entry key="..\:/Users/Admin/Documents/codemoiduan/lecong/lecong/app/src/main/res/layout/itemnotificationuet.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Admin/Documents/codemoiduan/lecong/lecong/app/src/main/res/layout/nav_header_main.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Admin/Documents/codemoiduan/lecong/lecong/app/src/main/res/layout/searchdialog_fullscreen.xml" value="0.16818181818181818" />
-        <entry key="..\:/Users/Admin/Documents/codemoiduan/lecong/lecong/app/src/main/res/menu/activity_main_drawer.xml" value="0.1" />
+        <entry key="..\:/Users/Admin/Documents/codemoiduan/lecong/lecong/app/src/main/res/menu/activity_main_drawer.xml" value="0.15" />
         <entry key="..\:/Users/Admin/Documents/codemoiduan/lecong/lecong/app/src/main/res/menu/chude_select.xml" value="0.20416666666666666" />
         <entry key="app/src/main/res/drawable/shape_notification.xml" value="0.25092592592592594" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2418478260869565" />

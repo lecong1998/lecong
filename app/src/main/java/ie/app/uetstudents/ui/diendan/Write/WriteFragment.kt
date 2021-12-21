@@ -18,6 +18,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import ie.app.uetstudents.R
 import ie.app.uetstudents.adapter.OnclickItem_deleteanh
@@ -81,7 +82,14 @@ class WriteFragment : Fragment(), OnclickItem_deleteanh {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        txtname_writefragment.text = PreferenceUtils.getUser().username
+        Glide.with(requireActivity())
+            .load(ApiClient.BASE_URL+"image"+PreferenceUtils.getUser().avatar)
+            .placeholder(R.drawable.img_default_user)
+            .error(R.drawable.img_default_user)
+            .into(image_writefragment)
 
+        /*------------------------------------------*/
         select_chude.setOnClickListener {
             val popupmenu: PopupMenu = PopupMenu(context, select_chude, Gravity.CENTER_VERTICAL)
             popupmenu.menuInflater.inflate(R.menu.chude_select, popupmenu.menu)
