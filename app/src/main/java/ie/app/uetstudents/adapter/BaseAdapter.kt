@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 abstract class BaseAdapter<T>(val context: Context) : RecyclerView.Adapter<BaseViewHolder>() {
     protected var items : MutableList<T> = mutableListOf()
-    protected var callback: ItemClickListener<T>? = null
+    protected var callback: OnclickPdf<T>? = null
 
     override fun getItemCount(): Int = items.size
 
@@ -33,11 +33,11 @@ abstract class BaseAdapter<T>(val context: Context) : RecyclerView.Adapter<BaseV
         return items[position]
     }
 
-    open fun setOnClickListener(callback: ItemClickListener<T>) {
+    open fun setOnClickListener(callback: OnclickPdf<T>) {
         this.callback = callback
     }
 
-    interface ItemClickListener<T> {
+    interface OnclickPdf<T> {
         fun onItemClick(position: Int, item: T)
     }
 }

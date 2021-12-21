@@ -21,6 +21,7 @@ import ie.app.uetstudents.Repository.Repository
 import ie.app.uetstudents.adapter.ClickItemCommentLike
 import ie.app.uetstudents.adapter.CommentAdapter
 import ie.app.uetstudents.adapter.adapter_hienthianh
+import ie.app.uetstudents.adapter.click_pdf
 import ie.app.uetstudents.ui.API.ApiClient
 import ie.app.uetstudents.ui.Entity.Comment.get.CommentDto
 import ie.app.uetstudents.ui.Entity.Comment.post.Question
@@ -32,6 +33,7 @@ import ie.app.uetstudents.ui.Entity.like.Post.like_comment
 import ie.app.uetstudents.ui.Entity.like_question.post.like_question
 import ie.app.uetstudents.ui.Entity.notifications_comment.post.post_notifi_comment
 import ie.app.uetstudents.ui.Entity.notifications_question.post.notification_question_post
+import ie.app.uetstudents.ui.tailieu.detailPDF
 import ie.app.uetstudents.utils.PreferenceUtils
 import kotlinx.android.synthetic.main.fragment_detail_forum.*
 import kotlinx.android.synthetic.main.fragment_detail_forum.view.*
@@ -44,7 +46,7 @@ import retrofit2.Response
 import java.io.File
 
 
-class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemCommentLike {
+class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemCommentLike,click_pdf {
 
     private val CAMERA_REQUEST: Int = 9999
     private var id_question: Int? = null
@@ -266,7 +268,7 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
                 listlink.add(it.image)
             }
         }
-        val adapterhienthi = adapter_hienthianh(listlink)
+        val adapterhienthi = adapter_hienthianh(listlink,this)
         detail_listanh.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         detail_listanh.adapter = adapterhienthi
@@ -477,5 +479,11 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
         intent.action = Intent.ACTION_GET_CONTENT
         //mActivityResultLauncher.launch(Intent.createChooser(intent,"select picture"))
         startActivityForResult(Intent.createChooser(intent, "select picture"), CAMERA_REQUEST)
+    }
+
+    override fun Onclick_Pdf(anh: String) {
+        val intent = Intent(activity, detailPDF::class.java)
+        intent.putExtra("ExamDocument", anh)
+        startActivity(intent)
     }
 }

@@ -9,7 +9,7 @@ import ie.app.uetstudents.R
 import ie.app.uetstudents.ui.API.ApiClient
 import kotlinx.android.synthetic.main.anh_detail.view.*
 
-class adapter_hienthianh(var listanh: ArrayList<String>) :
+class adapter_hienthianh(var listanh: ArrayList<String>,var onclick : click_pdf) :
     RecyclerView.Adapter<adapter_hienthianh.Viewholder>() {
     class Viewholder(var itemview: View) : RecyclerView.ViewHolder(itemview) {
         fun onBindata(link: String) {
@@ -35,10 +35,21 @@ class adapter_hienthianh(var listanh: ArrayList<String>) :
     }
 
     override fun onBindViewHolder(holder: Viewholder, position: Int) {
-        return holder.onBindata(listanh[position])
+        val datamode : String = listanh.get(position)
+         holder.onBindata(datamode)
+        holder.itemview.setOnClickListener {
+            if (datamode.contains(".pdf"))
+            {
+                onclick.Onclick_Pdf(datamode)
+            }
+        }
     }
 
     override fun getItemCount(): Int {
         return listanh.size
     }
+}
+
+interface click_pdf{
+    fun Onclick_Pdf(anh : String)
 }

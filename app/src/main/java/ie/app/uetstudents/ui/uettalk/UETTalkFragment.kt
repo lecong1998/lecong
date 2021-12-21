@@ -26,6 +26,7 @@ import ie.app.uetstudents.ui.API.ApiClient.BASE_URL
 import ie.app.uetstudents.ui.Entity.Comment.get.CommentDto
 import ie.app.uetstudents.ui.Entity.Comment.post.Question
 import ie.app.uetstudents.ui.Entity.Comment.post.comment_post
+import ie.app.uetstudents.ui.Entity.Question.get.ImageDto
 import ie.app.uetstudents.ui.Entity.Question.get.QuestionDtoX
 import ie.app.uetstudents.ui.Entity.Question.get.question
 import ie.app.uetstudents.ui.Entity.like.Post.Account
@@ -38,6 +39,7 @@ import ie.app.uetstudents.ui.diendan.detailForum.DetailForumContract
 import ie.app.uetstudents.ui.diendan.detailForum.DetailForumPresenter
 import ie.app.uetstudents.ui.diendan.forum_main.forumContract
 import ie.app.uetstudents.ui.diendan.forum_main.forumPresenter
+import ie.app.uetstudents.ui.tailieu.detailPDF
 import ie.app.uetstudents.utils.PreferenceUtils
 import kotlinx.android.synthetic.main.fragment_uettalk.*
 import kotlinx.android.synthetic.main.fragment_uettalk.view.*
@@ -461,4 +463,6 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
             }
         })
     }
+
+
 }
