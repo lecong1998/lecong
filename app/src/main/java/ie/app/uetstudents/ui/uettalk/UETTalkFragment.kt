@@ -74,7 +74,7 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
 
     private var page_comment: Int = 1
     private var page_uettalk: Int = 1
-    var id_user : Int? = null
+    var id_user: Int? = null
 
     var uri: Uri? = null
 
@@ -98,8 +98,8 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
         presenter_uettalk_comment = DetailForumPresenter(this, Repository(requireContext()))
 
 
-        presenter.getQuestions(2, page_uettalk,id_user!!)
-        adapter_uettalk = AdapterUETTalk(requireContext(),this,this)
+        presenter.getQuestions(2, page_uettalk, id_user!!)
+        adapter_uettalk = AdapterUETTalk(requireContext(), this, this)
         root.recyclerview_item_uettalk.layoutManager = LinearLayoutManager(requireContext())
         root.recyclerview_item_uettalk.isNestedScrollingEnabled = false
 
@@ -118,7 +118,7 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
                 if (scrollY == v?.getChildAt(0)?.measuredHeight?.minus(v!!?.measuredHeight) ?: Int) {
                     page_uettalk++
                     root.uet_talk_progressbar.visibility = View.VISIBLE
-                    presenter.getQuestions(2, page_uettalk,id_user!!)
+                    presenter.getQuestions(2, page_uettalk, id_user!!)
                 }
             }
         })
@@ -128,7 +128,7 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        PreferenceUtils.getInstance()
         val user = PreferenceUtils.getUser()
         val urlAvatar = "${BASE_URL}image${user.avatar}"
 
@@ -159,15 +159,13 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
 
     /*-----------------------Click vào btn thích------------------------------------*/
     override fun ClickItem_like(QuestionDto: QuestionDtoX) {
-        if(QuestionDto.liked == false)
-        {
+        if (QuestionDto.liked == false) {
             QuestionDto.liked = true
             PostApiLike(QuestionDto.id, QuestionDto.accountDto?.username ?: "", id_user!!)
-            update_notification("LIKE", QuestionDto.id!!, PreferenceUtils.getUser().username.toString(), QuestionDto.accountDto?.username ?: "")
-        }else
-        {
-            QuestionDto.liked=false
-            deleteLikeQuestion(id_user!!,QuestionDto.id)
+            // update_notification("LIKE", QuestionDto.id!!, PreferenceUtils.getUser().username.toString(), QuestionDto.accountDto?.username ?: "")
+        } else {
+            QuestionDto.liked = false
+            deleteLikeQuestion(id_user!!, QuestionDto.id)
         }
 
 
@@ -191,7 +189,11 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
         bottomSheetView.comment_recyclerview_uettalk.layoutManager =
             LinearLayoutManager(context)
 
-        presenter_uettalk_comment.getDetailComment(QuestionDto.id?.toInt()!!, page_comment,id_user!!)
+        presenter_uettalk_comment.getDetailComment(
+            QuestionDto.id?.toInt()!!,
+            page_comment,
+            id_user!!
+        )
         bottomSheetView.comment_recyclerview_uettalk.isNestedScrollingEnabled = false
         bottomSheetView.comment_recyclerview_uettalk.adapter = adapter_comment_uettalk
         bottomSheetView.comment_recyclerview_uettalk.adapter?.notifyDataSetChanged()
@@ -208,7 +210,11 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
                 if (scrollY == v?.getChildAt(0)?.measuredHeight?.minus(v!!?.measuredHeight) ?: Int) {
                     page_comment++
                     bottomSheetView.comment_progressbar.visibility = View.VISIBLE
-                    presenter_uettalk_comment.getDetailComment(QuestionDto.id, page_comment,id_user!!)
+                    presenter_uettalk_comment.getDetailComment(
+                        QuestionDto.id,
+                        page_comment,
+                        id_user!!
+                    )
                 }
 
             }
@@ -229,7 +235,7 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
 
 
             Log.e("uri", uri.toString())
-            xulybtncommemt(QuestionDto.id, QuestionDto.accountDto?.username ?: "" , uri)
+            xulybtncommemt(QuestionDto.id, QuestionDto.accountDto?.username ?: "", uri)
         }
 
         bottomSheetDialog!!.setContentView(bottomSheetView)
@@ -299,7 +305,7 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
     }
 
     /*--------------------------------Xử lý khi click btn đăng binh luận-----------------------------------------*/
-    fun xulybtncommemt(id_question: Int, owner_username: String , uri: Uri?) {
+    fun xulybtncommemt(id_question: Int, owner_username: String, uri: Uri?) {
         if (bottomSheetView.edt_comment_uettalk.text.isEmpty()) {
             Toast.makeText(context, "Bạn Chưa nhập bình luận!", Toast.LENGTH_LONG).show()
         } else {
@@ -324,7 +330,6 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
                     RequestBody.create(MediaType.parse("multipart/form-data"), file)
                 )
             }
-
 
 
             val call: Call<ie.app.uetstudents.ui.Entity.Comment.get.Comment> =
@@ -359,7 +364,7 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
             bottomSheetView.comment_progressbar.visibility = View.VISIBLE
 
             val call_get: Call<ie.app.uetstudents.ui.Entity.Comment.get.Comment> =
-                ApiClient.getClient.getCommentQuestion(id_question, page_comment,id_user!!)
+                ApiClient.getClient.getCommentQuestion(id_question, page_comment, id_user!!)
             call_get.enqueue(object : Callback<ie.app.uetstudents.ui.Entity.Comment.get.Comment> {
                 override fun onResponse(
                     call: Call<ie.app.uetstudents.ui.Entity.Comment.get.Comment>,
@@ -385,9 +390,13 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
 
     /*---------------------------Update thông báo Question---------------------------------*/
 
-    fun update_notification(type_action: String, id_question: Int, username: String, owner_username : String) {
-        if (PreferenceUtils.getUser().avatar != null)
-        {
+    fun update_notification(
+        type_action: String,
+        id_question: Int,
+        username: String,
+        owner_username: String
+    ) {
+        if (PreferenceUtils.getUser().avatar != null) {
             val notifi_item = notification_question_post(
                 type_action,
                 PreferenceUtils.getUser().avatar.toString(),
@@ -396,8 +405,7 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
                 owner_username
             )
             presenter_uettalk_comment.setNotificationQuestion(notifi_item)
-        }else
-        {
+        } else {
             val notifi_item = notification_question_post(
                 type_action,
                 null,
@@ -419,7 +427,7 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
     }
 
     /*-----------------Post like lên server-------------------*/
-    fun PostApiLike(id_question: Int, owner_username: String,  id_account: Int) {
+    fun PostApiLike(id_question: Int, owner_username: String, id_account: Int) {
         val account = ie.app.uetstudents.ui.Entity.like_question.post.Account(id_account)
         val question = ie.app.uetstudents.ui.Entity.like_question.post.Question(id_question)
         val likeQuestion = like_question(account, question)
@@ -444,8 +452,7 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
     }
 
     /*-------------------Delete like----------------------------*/
-    fun deleteLikeQuestion(account_id: Int,id_question: Int)
-    {
+    fun deleteLikeQuestion(account_id: Int, id_question: Int) {
         val call: Call<like_question> =
             ApiClient.getClient.deletelikeQueston(account_id, id_question)
         call.enqueue(object : Callback<like_question> {
@@ -467,7 +474,7 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
     override fun onItemClick(position: Int, item: ImageDto) {
 
         val intent = Intent(activity, detailPDF::class.java)
-        intent.putExtra("ExamDocument",item.image)
+        intent.putExtra("ExamDocument", item.image)
         startActivity(intent)
     }
 

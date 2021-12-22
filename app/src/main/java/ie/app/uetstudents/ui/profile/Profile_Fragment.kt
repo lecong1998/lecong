@@ -3,10 +3,14 @@ package ie.app.uetstudents.ui.profile
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.*
 import android.widget.Toast
@@ -35,9 +39,11 @@ import ie.app.uetstudents.ui.Entity.notifications_comment.post.post_notifi_comme
 import ie.app.uetstudents.ui.Entity.notifications_question.post.Question
 import ie.app.uetstudents.ui.Entity.notifications_question.post.notification_question_post
 import ie.app.uetstudents.ui.Entity.userProfile.get.userprofile
+import ie.app.uetstudents.ui.Entity.userProfile.post.avatar.avatar
 import ie.app.uetstudents.ui.tailieu.detailPDF
 import ie.app.uetstudents.utils.PreferenceUtils
 import kotlinx.android.synthetic.main.activity_profile.*
+import kotlinx.android.synthetic.main.dialog_update_anh_profile.view.*
 import kotlinx.android.synthetic.main.fragment_uettalk.view.*
 import kotlinx.android.synthetic.main.sheetbottom_comment_uettalk.*
 import kotlinx.android.synthetic.main.sheetbottom_comment_uettalk.view.*
@@ -48,12 +54,16 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
+import android.view.ViewGroup
 
-class Profile_Fragment: Fragment(),ProfileContract.View, OnClickItem_UetTalk,
-    ClickItemCommentLike ,ClickItem,BaseAdapter.OnclickPdf<ImageDto>{
 
-    var id_user : Int? = null
-    private lateinit var presenter_profile : ProfileContract.Presenter
+class Profile_Fragment : Fragment(), ProfileContract.View, OnClickItem_UetTalk,
+    ClickItemCommentLike, ClickItem, BaseAdapter.OnclickPdf<ImageDto> {
+
+    private val IMAGE_REQUEST: Int = 121
+    private val MY_REQUEST: Int = 140
+    var id_user: Int? = null
+    private lateinit var presenter_profile: ProfileContract.Presenter
     private lateinit var adapterUETTalk: AdapterUETTalk
 
     private lateinit var adapter: adapter_forum
@@ -66,26 +76,26 @@ class Profile_Fragment: Fragment(),ProfileContract.View, OnClickItem_UetTalk,
 
     private var page_comment: Int = 1
     private var page_uettalk: Int = 1
-    var id_user_other : Int? = null
+    var id_user_other: Int? = null
 
-    private var type_content_id : Int = 2
+    private var type_content_id: Int = 2
+    private lateinit var view_update_image: View
+    private var uri_updateanh: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         id_user = PreferenceUtils.getUser().id
 
-            arguments.let {
-                if (it?.isEmpty== false)
-                {
-                    id_user_other = it?.getInt("id_user") as Int
-                }
-
+        arguments.let {
+            if (it?.isEmpty == false) {
+                id_user_other = it?.getInt("id_user") as Int
             }
 
+        }
 
-        if(id_user_other != null)
-        {
+
+        if (id_user_other != null) {
             id_user = id_user_other
             id_user_other = null
         }
@@ -97,43 +107,128 @@ class Profile_Fragment: Fragment(),ProfileContract.View, OnClickItem_UetTalk,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.activity_profile,container,false)
+        return inflater.inflate(R.layout.activity_profile, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         presenter_profile = ProfilePresenter(this, Repository(requireContext()))
-        /*----------------------------------------*/
+        /*-----------------------Update ảnh-----------------*/
+
+        view_update_image =
+            LayoutInflater.from(requireContext()).inflate(R.layout.dialog_update_anh_profile, null)
+        if (id_user == PreferenceUtils.getUser().id) {
+            profile_image_account.setOnClickListener {
+                if (view_update_image.parent != null) {
+                    (view_update_image.getParent() as ViewGroup).removeView(view_update_image)
+                }
+
+                view_update_image = LayoutInflater.from(requireContext())
+                    .inflate(R.layout.dialog_update_anh_profile, null)
+                val dialogbuilder: AlertDialog.Builder =
+                    AlertDialog.Builder(requireContext(), R.style.DialogFullScreen)
+
+                dialogbuilder.setView(view_update_image)
+
+                var dialog: AlertDialog? = null
+                if (dialog == null) {
+                    dialog = dialogbuilder.create()
+                    dialog.show()
+
+                }
+
+
+
+
+
+                view_update_image.chonanhmoi.setOnClickListener {
+                    onclickRequestPermission()
+                }
+
+
+                view_update_image.capnhatanh.setOnClickListener {
+                    val builder = MultipartBody.Builder()
+                    builder.setType(MultipartBody.FORM)
+                    builder.addFormDataPart("id", id_user!!.toString())
+                    if (uri_updateanh != null) {
+                        uri_updateanh?.let {
+                            val realpathutil = uri_updateanh.let {
+                                RealPathUtil.getRealPath(
+                                    requireContext(),
+                                    it!!
+                                )
+                            }
+                            val file = File(realpathutil)
+                            builder.addFormDataPart(
+                                "avatar",
+                                file.name,
+                                RequestBody.create(MediaType.parse("multipart/form-data"), file)
+                            )
+                        }
+
+                        val call: Call<avatar> =
+                            ApiClient.getClient.update_image_profile(builder.build())
+                        call.enqueue(object : Callback<avatar> {
+                            override fun onResponse(
+                                call: Call<avatar>,
+                                response: Response<avatar>
+                            ) {
+                                if (response.isSuccessful) {
+                                    Log.e("cập nhật ảnh", response.body()?.message)
+                                    Toast.makeText(
+                                        context,
+                                        response.body()!!.message,
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                    dialog?.dismiss()
+                                    presenter_profile.getUserInformation(id_user!!)
+                                }
+                            }
+
+                            override fun onFailure(call: Call<avatar>, t: Throwable) {
+                                Log.e("cập nhật ảnh", t.message)
+                            }
+                        })
+
+                    } else {
+                        Toast.makeText(context, "Bạn chưa chọn ảnh", Toast.LENGTH_LONG).show()
+                    }
+
+                }
+
+            }
+        }
 
         /*--------------------------uet--------------------------------*/
 
 
-        presenter_profile.getQuestionProfile(page_uettalk,id_user!!,type_content_id)
+        presenter_profile.getQuestionProfile(page_uettalk, id_user!!, type_content_id)
         adapter = adapter_forum(this)
-        adapterUETTalk = AdapterUETTalk(requireContext(),this,this)
+        adapterUETTalk = AdapterUETTalk(requireContext(), this, this)
         presenter_profile.getUserInformation(id_user!!)
 
         profile_uettalk.setOnClickListener {
             type_content_id = 2
-            Toast.makeText(context,"Đã chọn thể loại Bài viết UETTalk",Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Đã chọn thể loại Bài viết UETTalk", Toast.LENGTH_SHORT).show()
             profile_forum.isChecked = false
             adapterUETTalk.notifyDataSetChanged()
-            presenter_profile.getQuestionProfile(page_uettalk,id_user!!,type_content_id)
+            presenter_profile.getQuestionProfile(page_uettalk, id_user!!, type_content_id)
             profile_list_question.adapter?.notifyDataSetChanged()
 
 
         }
         profile_forum.setOnClickListener {
             type_content_id = 1
-            Toast.makeText(context,"Đã chọn thể loại Bài viết diễn đàn",Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Đã chọn thể loại Bài viết diễn đàn", Toast.LENGTH_SHORT).show()
             profile_uettalk.isChecked = false
             adapter.notifyDataSetChanged()
-            presenter_profile.getQuestionProfile(page_uettalk,id_user!!,type_content_id)
+            presenter_profile.getQuestionProfile(page_uettalk, id_user!!, type_content_id)
             profile_list_question.adapter?.notifyDataSetChanged()
         }
 
-        profile_scrollview.setOnScrollChangeListener(object : NestedScrollView.OnScrollChangeListener{
+        profile_scrollview.setOnScrollChangeListener(object :
+            NestedScrollView.OnScrollChangeListener {
             override fun onScrollChange(
                 v: NestedScrollView?,
                 scrollX: Int,
@@ -141,40 +236,38 @@ class Profile_Fragment: Fragment(),ProfileContract.View, OnClickItem_UetTalk,
                 oldScrollX: Int,
                 oldScrollY: Int
             ) {
-                if (scrollY==v?.getChildAt(0)?.measuredHeight?.minus(v?.measuredHeight))
-                {
+                if (scrollY == v?.getChildAt(0)?.measuredHeight?.minus(v?.measuredHeight)) {
                     page_uettalk++
-                    presenter_profile.getQuestionProfile(page_uettalk,id_user!!,type_content_id)
+                    presenter_profile.getQuestionProfile(page_uettalk, id_user!!, type_content_id)
                 }
             }
         })
 
 
-
     }
+
+
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
-        val item1 : MenuItem = menu.findItem(R.id.action_search)
-        val item2 : MenuItem = menu.findItem(R.id.action_notification)
-        val item3 : MenuItem = menu.findItem(R.id.action_profile)
+        val item1: MenuItem = menu.findItem(R.id.action_search)
+        val item2: MenuItem = menu.findItem(R.id.action_notification)
+        val item3: MenuItem = menu.findItem(R.id.action_profile)
         item1.setVisible(false)
         item2.setVisible(false)
         item3.setVisible(false)
     }
 
-    override fun UpdateViewDataQuestionProfile(question: question,type_content_id : Int) {
-        if (type_content_id==2)
-        {
+    override fun UpdateViewDataQuestionProfile(question: question, type_content_id: Int) {
+        if (type_content_id == 2) {
             adapterUETTalk.setData(question.questionDtoList)
             profile_list_question.layoutManager = LinearLayoutManager(context)
-            profile_list_question.adapter= adapterUETTalk
+            profile_list_question.adapter = adapterUETTalk
             profile_list_question.adapter?.notifyDataSetChanged()
         }
-        if (type_content_id==1)
-        {
+        if (type_content_id == 1) {
             adapter.setData(question.questionDtoList)
             profile_list_question.layoutManager = LinearLayoutManager(context)
-            profile_list_question.adapter= adapter
+            profile_list_question.adapter = adapter
             profile_list_question.adapter?.notifyDataSetChanged()
         }
 
@@ -183,59 +276,61 @@ class Profile_Fragment: Fragment(),ProfileContract.View, OnClickItem_UetTalk,
 
     @SuppressLint("ResourceAsColor")
     override fun UpdateViewDataUser(userprofile: userprofile) {
-        if(userprofile.mssv != null)
-        {
+        if (userprofile.mssv != null) {
             Mssv.text = userprofile.mssv
-        }else
-        {
+        } else {
             Mssv.text = "Chưa cập nhật!"
             Mssv.setTextColor(R.color.teal_700)
         }
 
         username.text = userprofile.fullname
-        if(userprofile.email!= null)
-        {
+        if (userprofile.email != null) {
             email.text = userprofile.email
-        }
-        else
-        {
+        } else {
             email.text = "Chưa cập nhật!"
             email.setTextColor(R.color.teal_700)
         }
-        if (userprofile.department != null)
-        {
+        if (userprofile.department != null) {
             khoa.text = userprofile.department.toString()
-        }else
-        {
+        } else {
             khoa.text = "Chưa cập nhật!"
             khoa.setTextColor(R.color.teal_700)
         }
 
         if (userprofile.avatar != null) {
-            Glide.with(requireActivity()).load(ApiClient.BASE_URL+"image"+userprofile.avatar)
+            Glide.with(requireActivity()).load(ApiClient.BASE_URL + "image" + userprofile.avatar)
                 .error(R.drawable.img_default_user).into(profile_image_account)
-        }else
-        {
+        } else {
             profile_image_account.setImageResource(R.drawable.img_default_user)
         }
 
         thaydoithongtin.setOnClickListener {
             val bundle = Bundle()
-            bundle.putSerializable("user",userprofile)
-            this.findNavController().navigate(R.id.action_action_profile_to_changeFragment,bundle)
+            bundle.putSerializable("user", userprofile)
+            this.findNavController().navigate(R.id.action_action_profile_to_changeFragment, bundle)
         }
+        if (uri_updateanh == null) {
+            Glide.with(requireActivity()).load(ApiClient.BASE_URL + "image" + userprofile.avatar)
+                .placeholder(R.drawable.img_default_user)
+                .error(R.drawable.img_default_user)
+                .into(view_update_image.image_update_profile)
+        }
+
     }
 
     override fun ClickItem_like(QuestionDto: QuestionDtoX) {
-        if(QuestionDto.liked == false)
-        {
+        if (QuestionDto.liked == false) {
             QuestionDto.liked = true
-            PostApiLike(QuestionDto.id, QuestionDto.accountDto?.username ?: "" ,id_user!!)
-            update_notification("LIKE", QuestionDto.id!!, PreferenceUtils.getUser().username!!, QuestionDto.accountDto?.username ?: "")
-        }else
-        {
-            QuestionDto.liked=false
-            deleteLikeQuestion(id_user!!,QuestionDto.id)
+            PostApiLike(QuestionDto.id, QuestionDto.accountDto?.username ?: "", id_user!!)
+            update_notification(
+                "LIKE",
+                QuestionDto.id!!,
+                PreferenceUtils.getUser().username!!,
+                QuestionDto.accountDto?.username ?: ""
+            )
+        } else {
+            QuestionDto.liked = false
+            deleteLikeQuestion(id_user!!, QuestionDto.id)
         }
 
     }
@@ -254,7 +349,7 @@ class Profile_Fragment: Fragment(),ProfileContract.View, OnClickItem_UetTalk,
         bottomSheetView.comment_recyclerview_uettalk.layoutManager =
             LinearLayoutManager(context)
 
-        getComment(QuestionDto.id,page_comment,id_user!!)
+        getComment(QuestionDto.id, page_comment, id_user!!)
         bottomSheetView.comment_scrollview.setOnScrollChangeListener(object :
             NestedScrollView.OnScrollChangeListener {
             override fun onScrollChange(
@@ -266,8 +361,8 @@ class Profile_Fragment: Fragment(),ProfileContract.View, OnClickItem_UetTalk,
             ) {
                 if (scrollY == v?.getChildAt(0)?.measuredHeight?.minus(v!!?.measuredHeight) ?: Int) {
                     page_comment++
-                   // bottomSheetView.comment_progressbar.visibility = View.VISIBLE
-                    getComment(QuestionDto.id,page_comment,id_user!!)
+                    // bottomSheetView.comment_progressbar.visibility = View.VISIBLE
+                    getComment(QuestionDto.id, page_comment, id_user!!)
                 }
 
             }
@@ -280,7 +375,7 @@ class Profile_Fragment: Fragment(),ProfileContract.View, OnClickItem_UetTalk,
 //                Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
 //            startActivityForResult(cameraIntent, CAMERA_REQUEST)
             if (activity?.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                openGallery()
+                openGallery_comment()
             } else {
                 requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 261)
             }
@@ -290,7 +385,7 @@ class Profile_Fragment: Fragment(),ProfileContract.View, OnClickItem_UetTalk,
 
 
             Log.e("uri", uri.toString())
-            xulybtncommemt(QuestionDto.id, QuestionDto.accountDto?.username ?: "", uri )
+            xulybtncommemt(QuestionDto.id, QuestionDto.accountDto?.username ?: "", uri)
         }
 
         bottomSheetDialog!!.setContentView(bottomSheetView)
@@ -298,6 +393,13 @@ class Profile_Fragment: Fragment(),ProfileContract.View, OnClickItem_UetTalk,
     }
 
     fun openGallery() {
+        val intent: Intent = Intent()
+        intent.type = "image/*"
+        intent.action = Intent.ACTION_GET_CONTENT
+        startActivityForResult(Intent.createChooser(intent, "select picture"), IMAGE_REQUEST)
+    }
+
+    fun openGallery_comment() {
         val intent: Intent = Intent()
         intent.type = "image/*"
         intent.action = Intent.ACTION_GET_CONTENT
@@ -311,25 +413,33 @@ class Profile_Fragment: Fragment(),ProfileContract.View, OnClickItem_UetTalk,
             Toast.makeText(context, "Đã thêm ảnh vào bình luận!", Toast.LENGTH_LONG).show()
             Log.e("uri", uri.toString())
         }
+        if (requestCode == IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
+            uri_updateanh = data.data
+            val photo: Bitmap =
+                MediaStore.Images.Media.getBitmap(activity?.contentResolver, uri_updateanh)
+            view_update_image.image_update_profile.setImageBitmap(photo)
+            Toast.makeText(context, "Đã thêm ảnh vào trường update", Toast.LENGTH_LONG).show()
+        }
     }
-    private fun getComment(id_question: Int,page : Int, id_account: Int) {
-        val call : Call<Comment> = ApiClient.getClient.getCommentQuestion(id_question,page,id_account)
-        call.enqueue(object : Callback<Comment>{
+
+    private fun getComment(id_question: Int, page: Int, id_account: Int) {
+        val call: Call<Comment> =
+            ApiClient.getClient.getCommentQuestion(id_question, page, id_account)
+        call.enqueue(object : Callback<Comment> {
             override fun onResponse(call: Call<Comment>, response: Response<Comment>) {
-                if (response.isSuccessful)
-                {
+                if (response.isSuccessful) {
                     adapter_comment_uettalk.setData(response.body()!!.commentDtoList as ArrayList<CommentDto>)
                     bottomSheetView.comment_recyclerview_uettalk.isNestedScrollingEnabled = false
                     bottomSheetView.comment_recyclerview_uettalk.adapter = adapter_comment_uettalk
                     bottomSheetView.comment_recyclerview_uettalk.adapter?.notifyDataSetChanged()
 
 
-                    Log.e("Test comment" ,"Thành công")
+                    Log.e("Test comment", "Thành công")
                 }
             }
 
             override fun onFailure(call: Call<Comment>, t: Throwable) {
-                Log.e("Test comment" ,"Thất bại")
+                Log.e("Test comment", "Thất bại")
             }
         })
 
@@ -339,14 +449,14 @@ class Profile_Fragment: Fragment(),ProfileContract.View, OnClickItem_UetTalk,
     override fun ClickItem_uettalk(QuestionDto: QuestionDtoX) {
         val bundle = Bundle()
         bundle.putInt("id_question", QuestionDto.id!!)
-        bundle.putString("owner_username",QuestionDto.accountDto?.username ?: "")
+        bundle.putString("owner_username", QuestionDto.accountDto?.username ?: "")
         Toast.makeText(context, QuestionDto.id.toString(), Toast.LENGTH_SHORT).show()
         this.findNavController().navigate(R.id.action_action_profile_to_detailForumFragment, bundle)
     }
 
 
     /*-----------------Post like lên server-------------------*/
-    fun PostApiLike(id_question: Int, owner_username: String , id_account: Int) {
+    fun PostApiLike(id_question: Int, owner_username: String, id_account: Int) {
         val account = ie.app.uetstudents.ui.Entity.like_question.post.Account(id_account)
         val question = ie.app.uetstudents.ui.Entity.like_question.post.Question(id_question)
         val likeQuestion = like_question(account, question)
@@ -371,8 +481,7 @@ class Profile_Fragment: Fragment(),ProfileContract.View, OnClickItem_UetTalk,
     }
 
     /*-------------------Delete like----------------------------*/
-    fun deleteLikeQuestion(account_id: Int,id_question: Int)
-    {
+    fun deleteLikeQuestion(account_id: Int, id_question: Int) {
         val call: Call<like_question> =
             ApiClient.getClient.deletelikeQueston(account_id, id_question)
         call.enqueue(object : Callback<like_question> {
@@ -390,7 +499,13 @@ class Profile_Fragment: Fragment(),ProfileContract.View, OnClickItem_UetTalk,
             }
         })
     }
-    fun update_notification(type_action: String, id_question: Int, username: String, owner_username : String) {
+
+    fun update_notification(
+        type_action: String,
+        id_question: Int,
+        username: String,
+        owner_username: String
+    ) {
         val notifi_item = notification_question_post(
             type_action,
             "",
@@ -454,7 +569,6 @@ class Profile_Fragment: Fragment(),ProfileContract.View, OnClickItem_UetTalk,
             }
 
 
-
             val call: Call<ie.app.uetstudents.ui.Entity.Comment.get.Comment> =
                 ApiClient.getClient.setCommentQuestion(builder.build())
             call.enqueue(object : Callback<ie.app.uetstudents.ui.Entity.Comment.get.Comment> {
@@ -487,7 +601,7 @@ class Profile_Fragment: Fragment(),ProfileContract.View, OnClickItem_UetTalk,
             bottomSheetView.comment_progressbar.visibility = View.VISIBLE
 
             val call_get: Call<ie.app.uetstudents.ui.Entity.Comment.get.Comment> =
-                ApiClient.getClient.getCommentQuestion(id_question, page_comment,id_user!!)
+                ApiClient.getClient.getCommentQuestion(id_question, page_comment, id_user!!)
             call_get.enqueue(object : Callback<ie.app.uetstudents.ui.Entity.Comment.get.Comment> {
                 override fun onResponse(
                     call: Call<ie.app.uetstudents.ui.Entity.Comment.get.Comment>,
@@ -513,15 +627,39 @@ class Profile_Fragment: Fragment(),ProfileContract.View, OnClickItem_UetTalk,
 
     override fun clickOnItem(m: QuestionDtoX) {
         val bundle = Bundle()
-        bundle.putInt("id_question",m.id!!)
-        bundle.putString("owner_username",m.accountDto?.username ?: "")
-        Toast.makeText( context,m.id.toString(), Toast.LENGTH_SHORT).show()
+        bundle.putInt("id_question", m.id!!)
+        bundle.putString("owner_username", m.accountDto?.username ?: "")
+        Toast.makeText(context, m.id.toString(), Toast.LENGTH_SHORT).show()
         this.findNavController().navigate(R.id.action_action_profile_to_detailForumFragment, bundle)
     }
 
     override fun onItemClick(position: Int, item: ImageDto) {
         val intent = Intent(activity, detailPDF::class.java)
-        intent.putExtra("ExamDocument",item.image)
+        intent.putExtra("ExamDocument", item.image)
         startActivity(intent)
+    }
+
+
+    private fun onclickRequestPermission() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            openGallery()
+            return
+        }
+        if (activity?.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            openGallery()
+        } else {
+            requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), MY_REQUEST)
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == MY_REQUEST && grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            openGallery()
+        }
     }
 }

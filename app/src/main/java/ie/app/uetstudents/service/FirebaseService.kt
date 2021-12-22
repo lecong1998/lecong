@@ -18,6 +18,7 @@ import com.google.gson.Gson
 import ie.app.uetstudents.MainActivity
 import ie.app.uetstudents.R
 import ie.app.uetstudents.data.response.FirebaseMessageModel
+import ie.app.uetstudents.ui.login.SigninActivity
 import ie.app.uetstudents.utils.PreferenceUtils
 import org.greenrobot.eventbus.EventBus
 
@@ -91,6 +92,15 @@ class FirebaseService : FirebaseMessagingService() {
     private fun sendNotificationOptions(data: FirebaseMessageModel) {
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val channelID = "UET"
+        var intent : Intent
+        if (PreferenceUtils.getUser() != null)
+        {
+             intent = Intent(applicationContext,MainActivity::class.java)
+        }else
+        {
+            intent = Intent(applicationContext , SigninActivity::class.java)
+        }
+        val pendingIntent = PendingIntent.getActivity(applicationContext,100,intent,PendingIntent.FLAG_UPDATE_CURRENT)
 
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val builder = NotificationCompat.Builder(this, channelID)
@@ -100,6 +110,7 @@ class FirebaseService : FirebaseMessagingService() {
             .setLargeIcon(bitmap)
             .setTicker(getString(R.string.app_name))
             .setContentTitle(getString(R.string.app_name))
+            .setContentIntent(pendingIntent)
             .setStyle(
                 NotificationCompat.BigTextStyle().bigText(data.title)
             )

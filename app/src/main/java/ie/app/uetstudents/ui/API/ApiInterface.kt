@@ -29,6 +29,7 @@ import ie.app.uetstudents.ui.Entity.notifications_question.put.respont.question_
 import ie.app.uetstudents.ui.Entity.subject.DataSubject.data_subject
 import ie.app.uetstudents.ui.Entity.subject.subject
 import ie.app.uetstudents.ui.Entity.userProfile.get.userprofile
+import ie.app.uetstudents.ui.Entity.userProfile.post.avatar.avatar
 import ie.app.uetstudents.ui.Entity.userProfile.post.email.request.email_request
 import ie.app.uetstudents.ui.Entity.userProfile.post.khoa.request.khoa_request
 import ie.app.uetstudents.ui.Entity.userProfile.post.mssv.request.mssv_request
@@ -197,4 +198,7 @@ interface ApiInterface {
 
     @POST("user-profile/update")
     fun update_user_mssv(@Body mssvRequest: mssv_request) : Call<update_user_response>
+
+    @POST("user-profile/update-avatar")
+    fun update_image_profile(@Body body : RequestBody) : Call<avatar>
 }

@@ -23,11 +23,11 @@ import kotlinx.android.synthetic.main.change_password.*
 import kotlinx.android.synthetic.main.change_password.view.*
 import kotlinx.android.synthetic.main.fragment_change.*
 
-class changeFragment : Fragment() , ProfileContract.View{
+class changeFragment : Fragment(), ProfileContract.View {
 
-    var id_user : Int? = null
+    var id_user: Int? = null
 
-    private lateinit var presenter : ProfileContract.Presenter
+    private lateinit var presenter: ProfileContract.Presenter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -53,43 +53,46 @@ class changeFragment : Fragment() , ProfileContract.View{
         /*-------------------update data---------------------*/
 
 
-
     }
-    fun dialogpassword()
-    {
-        val alertDialogBuilder : AlertDialog.Builder = AlertDialog.Builder(context)
-        var view_pasword = LayoutInflater.from(requireContext()).inflate(R.layout.change_password,null)
+
+    fun dialogpassword() {
+        val alertDialogBuilder: AlertDialog.Builder = AlertDialog.Builder(context)
+        var view_pasword =
+            LayoutInflater.from(requireContext()).inflate(R.layout.change_password, null)
         alertDialogBuilder.setView(view_pasword)
         val dialog_password = alertDialogBuilder.create()
         dialog_password.show()
         view_pasword.capnhat_password.setOnClickListener {
-                if (view_pasword.dialog_old_password.text.isEmpty()||
-                    view_pasword.dialog_reold_password.text.isEmpty()||
-                    view_pasword.dialog_new_password.text.isEmpty())
-                {
-                    Toast.makeText(context,"Bạn chưa nhập thông tin đầy đủ!",Toast.LENGTH_SHORT).show()
-                }else
-                {
-                    if (view_pasword.dialog_old_password.text.toString().equals(view_pasword.dialog_reold_password.text.toString()) == false)
-                    {
-                        Toast.makeText(context,"Mật khẩu cũ không khớp!",Toast.LENGTH_LONG).show()
-                    }else
-                    {
+            if (view_pasword.dialog_old_password.text.isEmpty() ||
+                view_pasword.dialog_reold_password.text.isEmpty() ||
+                view_pasword.dialog_new_password.text.isEmpty()
+            ) {
+                Toast.makeText(context, "Bạn chưa nhập thông tin đầy đủ!", Toast.LENGTH_SHORT)
+                    .show()
+            } else {
+                if (view_pasword.dialog_old_password.text.toString()
+                        .equals(view_pasword.dialog_reold_password.text.toString()) == false
+                ) {
+                    Toast.makeText(context, "Mật khẩu cũ không khớp!", Toast.LENGTH_LONG).show()
+                } else {
 
-                        val passwordPut = password_put(id_user!!,view_pasword.dialog_old_password.text.toString(),view_pasword.dialog_new_password.text.toString())
-                        Repository(requireContext()).change_password(passwordPut)
-                        dialog_password.dismiss()
+                    val passwordPut = password_put(
+                        id_user!!,
+                        view_pasword.dialog_old_password.text.toString(),
+                        view_pasword.dialog_new_password.text.toString()
+                    )
+                    Repository(requireContext()).change_password(passwordPut)
+                    dialog_password.dismiss()
 
-                    }
                 }
+            }
         }
 
     }
 
-    fun dialog(changcontent: String)
-    {
-        val alertDialogBuilder : AlertDialog.Builder = AlertDialog.Builder(context)
-        var view : View?  = LayoutInflater.from(context).inflate(R.layout.change,null)
+    fun dialog(changcontent: String) {
+        val alertDialogBuilder: AlertDialog.Builder = AlertDialog.Builder(context)
+        var view: View? = LayoutInflater.from(context).inflate(R.layout.change, null)
 
         alertDialogBuilder.setView(view!!)
         val dialog_change = alertDialogBuilder.create()
@@ -97,26 +100,24 @@ class changeFragment : Fragment() , ProfileContract.View{
         view.dialog_title.text = "Cập Nhật $changcontent"
         view.dialog_content_change.hint = changcontent
         view.capnhat.setOnClickListener {
-            if (view.dialog_content_change.text.isEmpty())
-            {
-                Toast.makeText(context,"Bạn chưa nhập thông tin đầy đủ",Toast.LENGTH_SHORT).show()
-            }else
-            {
-                if (changcontent.equals("Email"))
-                {
-                    val emailRequest : email_request = email_request(view.dialog_content_change.text.toString(),id_user!!)
+            if (view.dialog_content_change.text.isEmpty()) {
+                Toast.makeText(context, "Bạn chưa nhập thông tin đầy đủ", Toast.LENGTH_SHORT).show()
+            } else {
+                if (changcontent.equals("Email")) {
+                    val emailRequest: email_request =
+                        email_request(view.dialog_content_change.text.toString(), id_user!!)
                     Repository(requireContext()).change_email_user(emailRequest)
                     presenter.getUserInformation(id_user!!)
                 }
-                if (changcontent.equals("Mssv"))
-                {
-                    val mssvRequest : mssv_request = mssv_request(view.dialog_content_change.text.toString(),id_user!!)
+                if (changcontent.equals("Mssv")) {
+                    val mssvRequest: mssv_request =
+                        mssv_request(view.dialog_content_change.text.toString(), id_user!!)
                     Repository(requireContext()).change_mssv_user(mssvRequest)
                     presenter.getUserInformation(id_user!!)
                 }
-                if (changcontent.equals("Khoa"))
-                {
-                    val khoaRequest : khoa_request = khoa_request(view.dialog_content_change.text.toString(),id_user!!)
+                if (changcontent.equals("Khoa")) {
+                    val khoaRequest: khoa_request =
+                        khoa_request(view.dialog_content_change.text.toString(), id_user!!)
                     Repository(requireContext()).change_khoa_user(khoaRequest)
                     presenter.getUserInformation(id_user!!)
                 }
@@ -137,30 +138,25 @@ class changeFragment : Fragment() , ProfileContract.View{
         item3.isVisible = false
     }
 
-    override fun UpdateViewDataQuestionProfile(question: question,type_content_id: Int) {
+    override fun UpdateViewDataQuestionProfile(question: question, type_content_id: Int) {
         TODO("Not yet implemented")
     }
 
     override fun UpdateViewDataUser(user: userprofile) {
-        if (user?.mssv != null)
-        {
+        if (user?.mssv != null) {
             id_mssv.text = user?.mssv.toString()
-        }
-        else{
+        } else {
             id_mssv.text = "Chưa cập nhật"
         }
 
-        if (user?.email != null)
-        {
+        if (user?.email != null) {
             id_email.text = user?.email.toString()
-        }else{
+        } else {
             id_email.text = "Chưa cập nhật"
         }
-        if (user?.department != null)
-        {
+        if (user?.department != null) {
             id_khoa.text = user?.department.toString()
-        }else
-        {
+        } else {
             id_khoa.text = "Chưa cập nhật"
         }
 

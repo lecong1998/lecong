@@ -47,7 +47,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var  view : View
 
-    private  var username : String = "16020859"
     private var id_user : Int? = null
 
     private var textItemCount : TextView? = null
@@ -57,7 +56,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        username = intent.getStringExtra("username")
+
         id_user = intent.getIntExtra("id_user",0)
 
 

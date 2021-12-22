@@ -62,7 +62,6 @@ class ForumFragment: Fragment(),ClickItem , forumContract.View,ClickItemCategory
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         id_user = PreferenceUtils.getUser().id
-        Toast.makeText(context,id_user.toString(),Toast.LENGTH_LONG).show()
         Log.e("id_user", id_user.toString())
     }
 
@@ -147,7 +146,6 @@ class ForumFragment: Fragment(),ClickItem , forumContract.View,ClickItemCategory
         val bundle = Bundle()
         bundle.putInt("id_question",m.id!!)
         bundle.putString("owner_username",m.accountDto?.username ?: "")
-        Toast.makeText( context,m.id.toString(), Toast.LENGTH_SHORT).show()
         this.findNavController().navigate(R.id.action_nav_forum_to_detailForumFragment,bundle)
 
     }
@@ -187,7 +185,6 @@ class ForumFragment: Fragment(),ClickItem , forumContract.View,ClickItemCategory
         }
         else
         {
-            Toast.makeText(context,"có rồi",Toast.LENGTH_LONG).show()
                adapterCategory.setData(data.categoryDtoList)
             bottomSheetView.chude_forum_progressbar.visibility = View.GONE
             bottomSheetView.bottomsheetrecyclerview?.adapter?.notifyDataSetChanged()

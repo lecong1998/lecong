@@ -84,7 +84,7 @@ class WriteFragment : Fragment(), OnclickItem_deleteanh {
 
         txtname_writefragment.text = PreferenceUtils.getUser().username
         Glide.with(requireActivity())
-            .load(ApiClient.BASE_URL+"image"+PreferenceUtils.getUser().avatar)
+            .load(ApiClient.BASE_URL + "image" + PreferenceUtils.getUser().avatar)
             .placeholder(R.drawable.img_default_user)
             .error(R.drawable.img_default_user)
             .into(image_writefragment)
