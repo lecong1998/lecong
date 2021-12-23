@@ -55,6 +55,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
 import android.view.ViewGroup
+import ie.app.uetstudents.data.response.AccountDto
+import ie.app.uetstudents.utils.Constants
 
 
 class Profile_Fragment : Fragment(), ProfileContract.View, OnClickItem_UetTalk,
@@ -183,6 +185,14 @@ class Profile_Fragment : Fragment(), ProfileContract.View, OnClickItem_UetTalk,
                                     ).show()
                                     dialog?.dismiss()
                                     presenter_profile.getUserInformation(id_user!!)
+                                    PreferenceUtils.getUser().avatar = response.body()!!.userProfileDto.avatar
+                                    val account = AccountDto(response.body()!!.userProfileDto.avatar,
+                                        PreferenceUtils.getUser().email,
+                                    id_user!!,
+                                    PreferenceUtils.getUser().password,java.time.LocalDateTime.now().toString(),
+                                    PreferenceUtils.getUser().username)
+                                    PreferenceUtils.remove(Constants.KEY_PREFERENCE_USER)
+                                    PreferenceUtils.saveObject(Constants.KEY_PREFERENCE_USER,account)
                                 }
                             }
 

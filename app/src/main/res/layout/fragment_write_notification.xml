@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <!-- TODO: Update blank fragment layout -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_above="@id/chuyentrang_notifi"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_alignParentTop="true"
+                android:orientation="horizontal"
+                android:id="@+id/relativelayout_notifi"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                >
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/image_writefragment_notifi"
+                    android:layout_width="70dp"
+                    android:layout_height="match_parent"
+                    android:padding="3dp"
+                    android:src="@drawable/_60279747_1127526494354946_6683273208343303265_n" />
+                <LinearLayout
+                    android:layout_weight="2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_marginLeft="20dp"
+                        android:id="@+id/txtname_writefragment_notifi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:gravity="center"
+                        android:text="Lê Công"
+                        android:layout_marginTop="10dp"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        app:layout_constraintLeft_toRightOf="@id/image_writefragment"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        />
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text=" Thêm"
+                        android:drawableLeft="@drawable/ic_folder"
+                        android:layout_marginLeft="20dp"
+                        android:id="@+id/write_camera_notifi"
+                        android:background="@color/white"/>
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linear"
+                android:layout_below="@id/relativelayout_notifi"
+
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/black"/>
+                <EditText
+                    android:layout_marginTop="5dp"
+                    android:hint="Tiêu đề"
+                    android:paddingLeft="10dp"
+                    android:id="@+id/write_title_notifi"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_above="@id/edtxt_status"
+                    android:background="@color/white"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/black"/>
+                <EditText
+                    android:defaultFocusHighlightEnabled="false"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="@color/white"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:hint="Bạn đang nghĩ gì..."
+                    android:gravity="top"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:id="@+id/edtxt_status_notifi"/>
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_below="@id/linear"
+                android:visibility="visible"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:id="@+id/listanh_write_forum_notifi"/>
+        </RelativeLayout>
+    </androidx.core.widget.NestedScrollView>
+
+
+    <Button
+        android:id="@+id/chuyentrang_notifi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/vien_button"
+        android:text="Đăng Bài"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+</RelativeLayout>

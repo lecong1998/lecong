@@ -15,6 +15,9 @@
         <action
             android:id="@+id/action_nav_notifications_to_detailNotifiFragment"
             app:destination="@id/detailNotiFragment" />
+        <action
+            android:id="@+id/action_nav_notifications_to_writeNotificationFragment"
+            app:destination="@id/writeNotificationFragment" />
 
     </fragment>
     <fragment
@@ -134,6 +137,15 @@
         android:name="ie.app.uetstudents.ui.profile.change.changeFragment"
         android:label="Thay đổi thông tin"
         tools:layout="@layout/fragment_change" />
+    <fragment
+        android:id="@+id/writeNotificationFragment"
+        android:name="ie.app.uetstudents.ui.thongbao.write_notifications.WriteNotificationFragment"
+        android:label="Đăng Thông Báo"
+        tools:layout="@layout/fragment_write_notification" >
+        <action
+            android:id="@+id/action_writeNotificationFragment_to_nav_notifications"
+            app:destination="@id/nav_notifications" />
+    </fragment>
 
 
 </navigation>

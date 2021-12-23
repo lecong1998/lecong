@@ -102,4 +102,19 @@ class NotificationsFragment: Fragment() ,NotificationUetContract.View,OnclickIte
         this.findNavController().navigate(R.id.action_nav_notifications_to_detailNotifiFragment,bundle)
 
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val username = PreferenceUtils.getUser().username
+        if (username.equals("admin123"))
+        {
+            dangthongbao.visibility = View.VISIBLE
+
+            dangthongbao.setOnClickListener {
+
+                this.findNavController().navigate(R.id.action_nav_notifications_to_writeNotificationFragment)
+            }
+        }
+
+    }
 }

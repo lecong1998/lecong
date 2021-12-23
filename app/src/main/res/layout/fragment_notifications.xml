@@ -1,32 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".ui.thongbao.NotificationsFragment">
-    <ProgressBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="visible"
-        android:id="@+id/notification_progressbar"/>
-
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/notificationuet_scrollview"
+    <Button
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="wrap_content"
+        android:text="Đăng thông báo"
+        android:textColor="@color/white"
+        android:background="@drawable/vien_button"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:visibility="gone"
+        android:id="@+id/dangthongbao"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"/>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/item_notifications_recyclerview"
-            android:layout_width="match_parent"
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ProgressBar
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="visible"
+            android:id="@+id/notification_progressbar"/>
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/notificationuet_scrollview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.core.widget.NestedScrollView>
+            app:layout_constraintTop_toTopOf="parent">
 
-</FrameLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/item_notifications_recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.core.widget.NestedScrollView>
+    </FrameLayout>
+
+
+</LinearLayout>

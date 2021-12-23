@@ -1,5 +1,4 @@
-package ie.app.uetstudents.ui.diendan.Write
-
+package ie.app.uetstudents.ui.thongbao.write_notifications
 
 import android.Manifest
 import android.app.Activity
@@ -13,9 +12,9 @@ import android.os.Bundle
 import android.provider.OpenableColumns
 import android.util.Log
 import android.view.*
+import androidx.fragment.app.Fragment
 import android.widget.PopupMenu
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -33,6 +32,8 @@ import ie.app.uetstudents.ui.Entity.Question.post.TypeContent
 import ie.app.uetstudents.utils.PreferenceUtils
 import kotlinx.android.synthetic.main.fragment_write.*
 import kotlinx.android.synthetic.main.fragment_write.view.*
+import kotlinx.android.synthetic.main.fragment_write_notification.*
+import kotlinx.android.synthetic.main.fragment_write_notification.view.*
 import kotlinx.android.synthetic.main.layout_bottomsheet_anh.view.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -46,9 +47,7 @@ import java.io.IOException
 import java.io.InputStream
 
 
-class WriteFragment : Fragment(), OnclickItem_deleteanh {
-
-
+class WriteNotificationFragment : Fragment(), OnclickItem_deleteanh {
     var select_nganhid: Int = 0
     private val MY_REQUEST: Int = 1111
     private val IMG_REQUEST: Int = 1000
@@ -76,109 +75,25 @@ class WriteFragment : Fragment(), OnclickItem_deleteanh {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_write, container, false)
+        return inflater.inflate(R.layout.fragment_write_notification, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        txtname_writefragment.text = PreferenceUtils.getUser().username
+        txtname_writefragment_notifi.text = PreferenceUtils.getUser().username
         Glide.with(requireActivity())
             .load(ApiClient.BASE_URL + "image" + PreferenceUtils.getUser().avatar)
             .placeholder(R.drawable.img_default_user)
             .error(R.drawable.img_default_user)
-            .into(image_writefragment)
+            .into(image_writefragment_notifi)
 
         /*------------------------------------------*/
-        select_chude.setOnClickListener {
-            val popupmenu: PopupMenu = PopupMenu(context, select_chude, Gravity.CENTER_VERTICAL)
-            popupmenu.menuInflater.inflate(R.menu.chude_select, popupmenu.menu)
-            popupmenu.setOnMenuItemClickListener {
-                when (it.itemId) {
-                    R.id.write_cntt -> {
-                        select_nganhid = 1
-                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
-                        popupmenu.dismiss()
-                    }
-                    R.id.write_khmt -> {
-                        select_nganhid = 2
-                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
-                        popupmenu.dismiss()
-                    }
-                    R.id.write_httt -> {
-                        select_nganhid = 3
-                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
-                        popupmenu.dismiss()
-                    }
-                    R.id.write_cnktdttt -> {
-                        select_nganhid = 4
-                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
-                        popupmenu.dismiss()
-                    }
-                    R.id.write_vlkt -> {
-                        select_nganhid = 5
-                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
-                        popupmenu.dismiss()
-                    }
-                    R.id.write_ktnl -> {
-                        select_nganhid = 6
-                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
-                        popupmenu.dismiss()
-                    }
-                    R.id.write_cokt -> {
-                        select_nganhid = 7
-                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
-                        popupmenu.dismiss()
-                    }
-                    R.id.write_cnktcdt -> {
-                        select_nganhid = 8
-                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
-                        popupmenu.dismiss()
-                    }
-                    R.id.write_mmttt -> {
-                        select_nganhid = 9
-                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
-                        popupmenu.dismiss()
-                    }
-                    R.id.write_ktmt -> {
-                        select_nganhid = 10
-                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
-                        popupmenu.dismiss()
-                    }
-                    R.id.write_cnktxdgt -> {
-                        select_nganhid = 11
-                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
-                        popupmenu.dismiss()
-                    }
-                    R.id.write_cnhkvt -> {
-                        select_nganhid = 12
-                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
-                        popupmenu.dismiss()
-                    }
-                    R.id.write_ktrb -> {
-                        select_nganhid = 13
-                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
-                        popupmenu.dismiss()
-                    }
-                    R.id.write_cnnn -> {
-                        select_nganhid = 14
-                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
-                        popupmenu.dismiss()
-                    }
-                    R.id.write_ktdktdh -> {
-                        select_nganhid = 15
-                        Toast.makeText(context, it.title.toString(), Toast.LENGTH_SHORT).show()
-                        popupmenu.dismiss()
-                    }
-                }
-                true
-            }
-            popupmenu.show()
-        }
+
 
 
         /*-----------------thêm ảnh---------------------------------*/
-        view.write_camera.setOnClickListener {
+        view.write_camera_notifi.setOnClickListener {
 
             val alertDialogbuild: AlertDialog.Builder = AlertDialog.Builder(context)
             val dialogview =
@@ -186,7 +101,6 @@ class WriteFragment : Fragment(), OnclickItem_deleteanh {
             alertDialogbuild.setView(dialogview)
             val dialog = alertDialogbuild.create()
             dialog.show()
-
             dialogview.anh_camera.setOnClickListener {
 
                 onclickRequestPermission("image")
@@ -201,27 +115,26 @@ class WriteFragment : Fragment(), OnclickItem_deleteanh {
 
         adapteranh = adapter_anhwrite(listanh, this)
         if (listanh == null) {
-            listanh_write_forum.visibility = View.GONE
+            listanh_write_forum_notifi.visibility = View.GONE
         } else {
-            listanh_write_forum.visibility = View.VISIBLE
+            listanh_write_forum_notifi.visibility = View.VISIBLE
         }
-        listanh_write_forum.layoutManager = LinearLayoutManager(
+        listanh_write_forum_notifi.layoutManager = LinearLayoutManager(
             context,
             LinearLayoutManager.HORIZONTAL, false
         )
-        listanh_write_forum.adapter = adapteranh
+        listanh_write_forum_notifi.adapter = adapteranh
 
         /*---------------------đăng--------------------------*/
-        chuyentrang?.setOnClickListener {
-            if (write_title.text.isEmpty() || edtxt_status.text.isEmpty() || select_nganhid == 0) {
+        chuyentrang_notifi?.setOnClickListener {
+            if (write_title_notifi.text.isEmpty() || edtxt_status_notifi.text.isEmpty()) {
                 Toast.makeText(context, "Bạn chưa cập nhật thông tin đầy đủ", Toast.LENGTH_SHORT)
                     .show()
             } else {
 
                 callApi(
-                    edtxt_status.text.toString(),
-                    write_title.text.toString(),
-                    select_nganhid,
+                    edtxt_status_notifi.text.toString(),
+                    write_title_notifi.text.toString(),
                     listanh,
                     id_user!!
                 )
@@ -234,17 +147,15 @@ class WriteFragment : Fragment(), OnclickItem_deleteanh {
     private fun callApi(
         writeContent: String,
         title: String,
-        selectNganh: Int,
         listuri: List<Uri>,
         user: Int
     ) {
         val builder = MultipartBody.Builder()
         builder.setType(MultipartBody.FORM)
 
-        val category = Category(selectNganh)
-        val typeContent = TypeContent(1)
+        val typeContent = TypeContent(3)
         val account = Account(user)
-        val question = QuestionPost(account, category, writeContent, title, typeContent)
+        val question = QuestionPost(account, null, writeContent, title, typeContent)
         val gson = Gson()
         val questionString = gson.toJson(question).toString()
         builder.addFormDataPart("Question", questionString)
@@ -264,7 +175,7 @@ class WriteFragment : Fragment(), OnclickItem_deleteanh {
             override fun onResponse(call: Call<question>, response: Response<question>) {
                 if (response.isSuccessful) {
                     Log.e("Đăng thành công", "Đăng thành công")
-                    findNavController().navigate(R.id.writeFragment_to_forumFragment)
+                    findNavController().navigate(R.id.action_writeNotificationFragment_to_nav_notifications)
                 }
             }
 
@@ -399,27 +310,26 @@ class WriteFragment : Fragment(), OnclickItem_deleteanh {
         if (requestCode == IMG_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
             val uri: Uri = data.data!!
             listanh.add(uri)
-            listanh_write_forum.adapter?.notifyDataSetChanged()
+            listanh_write_forum_notifi.adapter?.notifyDataSetChanged()
 
 
         } else if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
             val uriCameraImage = data.data!!
             listanh.add(uriCameraImage)
-            listanh_write_forum.adapter?.notifyDataSetChanged()
+            listanh_write_forum_notifi.adapter?.notifyDataSetChanged()
         } else if (requestCode == DOCUMENT_REQUEST && resultCode == Activity.RESULT_OK) {
             uripdf = data?.data!!
             uripdf?.let {
                 listanh.add(it)
             }
-            listanh_write_forum.adapter?.notifyDataSetChanged()
+            listanh_write_forum_notifi.adapter?.notifyDataSetChanged()
         }
 
     }
 
     override fun CLickDelete(anh: Uri) {
         listanh.remove(anh)
-        listanh_write_forum.adapter?.notifyDataSetChanged()
+        listanh_write_forum_notifi.adapter?.notifyDataSetChanged()
     }
-
 
 }
