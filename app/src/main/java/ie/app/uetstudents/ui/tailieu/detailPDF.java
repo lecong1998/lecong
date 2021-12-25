@@ -9,16 +9,12 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.barteksc.pdfviewer.PDFView;
-import com.github.barteksc.pdfviewer.listener.OnDrawListener;
-import com.github.barteksc.pdfviewer.listener.OnPageChangeListener;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -28,8 +24,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import ie.app.uetstudents.R;
-import ie.app.uetstudents.ui.API.ApiClient;
-import retrofit2.http.Url;
+import ie.app.uetstudents.API.ApiClient;
 
 public class detailPDF extends AppCompatActivity {
 

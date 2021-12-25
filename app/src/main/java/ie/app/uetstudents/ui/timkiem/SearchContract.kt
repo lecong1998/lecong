@@ -1,7 +1,7 @@
 package ie.app.uetstudents.ui.timkiem
 
-import ie.app.uetstudents.ui.Entity.Search.Question.search_question
-import ie.app.uetstudents.ui.Entity.Search.person.person
+import ie.app.uetstudents.Entity.Search.Question.search_question
+import ie.app.uetstudents.Entity.Search.person.person
 
 interface SearchContract {
     interface View {

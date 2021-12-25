@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import ie.app.uetstudents.R
-import ie.app.uetstudents.ui.API.ApiClient
-import ie.app.uetstudents.ui.Entity.Search.Question.QuestionDto
+import ie.app.uetstudents.API.ApiClient
+import ie.app.uetstudents.Entity.Search.Question.QuestionDto
 import kotlinx.android.synthetic.main.item_search.view.*
 
 class adapter_search ( var ClickItem : OnCLickItem_search)

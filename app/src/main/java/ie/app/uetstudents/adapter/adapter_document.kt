@@ -5,9 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ie.app.uetstudents.R
-import ie.app.uetstudents.ui.Entity.subject.SubjectDto
+import ie.app.uetstudents.Entity.subject.SubjectDto
 import kotlinx.android.synthetic.main.item_document.view.*
-import java.util.zip.Inflater
 
 class adapter_document(var listdocument : List<SubjectDto>, var ClickItem : OnClickItem_Subject) : RecyclerView.Adapter<adapter_document.ViewHoldel>() {
     inner class ViewHoldel(var itemview: View) : RecyclerView.ViewHolder(itemview) {

@@ -4,10 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,15 +13,10 @@ import ie.app.uetstudents.R
 import ie.app.uetstudents.Repository.Repository
 import ie.app.uetstudents.adapter.OnclickItem_NotificationUet
 import ie.app.uetstudents.adapter.adapter_itembantin
-import ie.app.uetstudents.adapter.itembantin
-import ie.app.uetstudents.databinding.FragmentHomeBinding
 import ie.app.uetstudents.databinding.FragmentNotificationsBinding
-import ie.app.uetstudents.ui.Entity.Question.get.QuestionDtoX
-import ie.app.uetstudents.ui.Entity.Question.get.question
-import ie.app.uetstudents.ui.home.HomeViewModel
+import ie.app.uetstudents.Entity.Question.get.QuestionDtoX
+import ie.app.uetstudents.Entity.Question.get.question
 import ie.app.uetstudents.utils.PreferenceUtils
-import kotlinx.android.synthetic.main.fragment_news.view.*
-import kotlinx.android.synthetic.main.fragment_news.view.item_news_recyclerview
 import kotlinx.android.synthetic.main.fragment_notifications.*
 import kotlinx.android.synthetic.main.fragment_notifications.view.*
 

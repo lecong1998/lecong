@@ -3,10 +3,9 @@ package ie.app.uetstudents.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import ie.app.uetstudents.R
-import ie.app.uetstudents.ui.Entity.subject.DataSubject.ExamDocumentDto
+import ie.app.uetstudents.Entity.subject.DataSubject.ExamDocumentDto
 import kotlinx.android.synthetic.main.itemdatasubject.view.*
 
 class adapter_datasubject(var listdata : List<ExamDocumentDto> , var CLickItem : OnCLickItem_DataSubject)

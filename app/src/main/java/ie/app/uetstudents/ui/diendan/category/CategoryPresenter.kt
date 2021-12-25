@@ -1,9 +1,8 @@
 package ie.app.uetstudents.ui.diendan.category
 
 
-import android.util.Log
 import ie.app.uetstudents.Repository.Repository
-import ie.app.uetstudents.ui.Entity.Category.category
+import ie.app.uetstudents.Entity.Category.category
 
 class CategoryPresenter (
     private val View : CategoryContract.View,

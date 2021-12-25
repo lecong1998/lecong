@@ -1,7 +1,7 @@
 package ie.app.uetstudents.ui.notifications
 
-import ie.app.uetstudents.ui.Entity.notifications_comment.get.get_notifi_comment
-import ie.app.uetstudents.ui.Entity.notifications_question.get.notification_question
+import ie.app.uetstudents.Entity.notifications_comment.get.get_notifi_comment
+import ie.app.uetstudents.Entity.notifications_question.get.notification_question
 
 interface notification_Contract {
     interface View {

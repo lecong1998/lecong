@@ -5,9 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ie.app.uetstudents.R
-import ie.app.uetstudents.ui.Entity.Question.get.QuestionDto
-import ie.app.uetstudents.ui.Entity.Question.get.QuestionDtoX
-import ie.app.uetstudents.ui.Entity.Question.get.question
+import ie.app.uetstudents.Entity.Question.get.QuestionDtoX
 import kotlinx.android.synthetic.main.item_news.view.*
 
 class adapter_itembantin(

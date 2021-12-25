@@ -9,13 +9,12 @@ import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.chip.ChipGroup
 import ie.app.uetstudents.R
 import ie.app.uetstudents.Repository.Repository
 import ie.app.uetstudents.data.response.AccountDto
-import ie.app.uetstudents.ui.Entity.Search.Question.QuestionDto
-import ie.app.uetstudents.ui.Entity.Search.Question.search_question
-import ie.app.uetstudents.ui.Entity.Search.person.person
+import ie.app.uetstudents.Entity.Search.Question.QuestionDto
+import ie.app.uetstudents.Entity.Search.Question.search_question
+import ie.app.uetstudents.Entity.Search.person.person
 import ie.app.uetstudents.utils.PreferenceUtils
 import kotlinx.android.synthetic.main.searchdialog_fullscreen.*
 

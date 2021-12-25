@@ -1,0 +1,31 @@
+package ie.app.uetstudents.ui.detailForum
+
+import ie.app.uetstudents.Entity.Comment.get.Comment
+import ie.app.uetstudents.Entity.Question.get.QuestionDtoX
+import ie.app.uetstudents.Entity.notifications_comment.post.post_notifi_comment
+import ie.app.uetstudents.Entity.notifications_question.post.notification_question_post
+
+interface DetailForumContract {
+    interface View {
+        fun getDataView(data: QuestionDtoX)
+        fun getDataViewComment(datacomment : Comment)
+    }
+    interface Presenter{
+        /*------------update_chi tiết question-----------------------*/
+        fun getDetailForum(id: Int,account_id : Int)
+        fun getDataUI(data: QuestionDtoX)
+        /*---------------------update comment----------------------------------*/
+        fun getDataUIComment(datacomment: Comment)
+        fun getDetailComment(id:Int,index: Int,account_id: Int)
+
+        /*------------------Post Question Like or Comment into Notification database-------------------------*/
+
+        fun setNotificationQuestion(notifi_item: notification_question_post)
+
+        /*--------------------------Post Like Comment into Notification database-------------------------------------*/
+        fun setNotificationComment(notifi_comment : post_notifi_comment)
+
+        /*---------------------------------Lấy số người like bài viết-------------------------------------*/
+
+    }
+}

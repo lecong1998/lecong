@@ -1,6 +1,6 @@
 package ie.app.uetstudents.ui.diendan.category
 
-import ie.app.uetstudents.ui.Entity.Category.category
+import ie.app.uetstudents.Entity.Category.category
 
 interface CategoryContract {
     interface View{

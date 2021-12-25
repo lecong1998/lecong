@@ -6,9 +6,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import ie.app.uetstudents.R
-import ie.app.uetstudents.ui.API.ApiClient
-import ie.app.uetstudents.ui.Entity.Question.get.QuestionDto
-import ie.app.uetstudents.ui.Entity.Question.get.QuestionDtoX
+import ie.app.uetstudents.API.ApiClient
+import ie.app.uetstudents.Entity.Question.get.QuestionDtoX
 import kotlinx.android.synthetic.main.item_forum.view.*
 
 class adapter_forum(

@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ie.app.uetstudents.R
-import ie.app.uetstudents.ui.Entity.Category.CategoryDto
+import ie.app.uetstudents.Entity.Category.CategoryDto
 import kotlinx.android.synthetic.main.item_chude.view.*
 
 class adapter_chude(

@@ -14,7 +14,7 @@ import ie.app.uetstudents.data.request.LoginRequest
 import ie.app.uetstudents.data.request.RegisterFirebaseTokenRequest
 import ie.app.uetstudents.data.response.login.LoginResponse
 import ie.app.uetstudents.service.FirebaseService.Companion.KEY_DATA_FCM
-import ie.app.uetstudents.ui.API.ApiClient
+import ie.app.uetstudents.API.ApiClient
 import ie.app.uetstudents.utils.Constants.KEY_PREFERENCE_USER
 import ie.app.uetstudents.utils.PreferenceUtils
 import kotlinx.android.synthetic.main.fragment_login.*

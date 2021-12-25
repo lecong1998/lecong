@@ -1,6 +1,6 @@
 package ie.app.uetstudents.ui.thongbao.detail
 
-import ie.app.uetstudents.ui.Entity.Question.get.QuestionDtoX
+import ie.app.uetstudents.Entity.Question.get.QuestionDtoX
 
 interface DetailContract {
     interface View {

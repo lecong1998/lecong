@@ -2,29 +2,16 @@ package ie.app.uetstudents.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
-import android.graphics.Typeface
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import ie.app.uetstudents.R
-import ie.app.uetstudents.ui.API.ApiClient
-import ie.app.uetstudents.ui.Entity.Question.get.ImageDto
-import ie.app.uetstudents.ui.Entity.Question.get.QuestionDto
-import ie.app.uetstudents.ui.Entity.Question.get.QuestionDtoX
-import ie.app.uetstudents.ui.Entity.Question.get.question
-import ie.app.uetstudents.ui.Entity.like_question.get.like_question
-import ie.app.uetstudents.ui.tailieu.detailPDF
-import ie.app.uetstudents.utils.PreferenceUtils
-import kotlinx.android.synthetic.main.fragment_uettalk.*
+import ie.app.uetstudents.API.ApiClient
+import ie.app.uetstudents.Entity.Question.get.ImageDto
+import ie.app.uetstudents.Entity.Question.get.QuestionDtoX
 import kotlinx.android.synthetic.main.item_uettalk.view.*
-import kotlinx.coroutines.flow.callbackFlow
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class AdapterUETTalk(
     var context : Context,
@@ -55,17 +42,20 @@ class AdapterUETTalk(
 
         var dataModel = dataList.get(position)
         holder.bindData(dataModel,callback)
+        var soluotlike = dataModel.like_quantity
+        var liked  : Boolean = dataModel.liked
         holder.itemView.like_itemuettlk.setOnClickListener {
-            var soluotlike = dataModel.like_quantity
-                if (dataModel.liked == false)
+
+                if (liked == false)
                 {
                     holder.itemView.imagelike.setImageResource(R.drawable.ic_baseline_favorite_24)
                     holder.itemView.textlike.text= "Đã Thích"
                     soluotlike++
                     holder.itemView.numberlike.text = "${soluotlike} Người thích"
-
+                    liked = true
                 }else
                 {
+                    liked = false
                     holder.itemView.imagelike.setImageResource(R.drawable.ic_baseline_favorite_border_24)
                     holder.itemView.textlike.text= "Thích"
                     soluotlike--
@@ -76,7 +66,7 @@ class AdapterUETTalk(
 
                 }
 
-            ClickItem.ClickItem_like(dataModel)
+            ClickItem.ClickItem_like(dataModel,liked)
 
 
         }
@@ -142,7 +132,7 @@ class AdapterUETTalk(
 }
 
 interface OnClickItem_UetTalk {
-    fun ClickItem_like(QuestionDto: QuestionDtoX)
+    fun ClickItem_like(QuestionDto: QuestionDtoX,liked : Boolean)
     fun ClickItem_comment(QuestionDto: QuestionDtoX)
     fun ClickItem_uettalk(QuestionDto: QuestionDtoX)
 }

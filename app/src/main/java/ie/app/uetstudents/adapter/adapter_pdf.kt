@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ie.app.uetstudents.R
-import ie.app.uetstudents.ui.Entity.Question.get.ImageDto
+import ie.app.uetstudents.Entity.Question.get.ImageDto
 import kotlinx.android.synthetic.main.itemdatasubject.view.*
 
 class adapter_pdf(var listfile : List<ImageDto>,var onClick : OnclickImageDto)

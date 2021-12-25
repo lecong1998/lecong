@@ -1,7 +1,7 @@
 package ie.app.uetstudents.ui.diendan.forum_main
 
 
-import ie.app.uetstudents.ui.Entity.Question.get.question
+import ie.app.uetstudents.Entity.Question.get.question
 
 interface forumContract {
 

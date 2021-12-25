@@ -25,21 +25,21 @@ import ie.app.uetstudents.R
 import ie.app.uetstudents.RealPathUtil.RealPathUtil
 import ie.app.uetstudents.Repository.Repository
 import ie.app.uetstudents.adapter.*
-import ie.app.uetstudents.ui.API.ApiClient
-import ie.app.uetstudents.ui.Entity.Comment.get.Comment
-import ie.app.uetstudents.ui.Entity.Comment.get.CommentDto
-import ie.app.uetstudents.ui.Entity.Comment.post.Account
-import ie.app.uetstudents.ui.Entity.Comment.post.comment_post
-import ie.app.uetstudents.ui.Entity.Question.get.ImageDto
-import ie.app.uetstudents.ui.Entity.Question.get.QuestionDtoX
-import ie.app.uetstudents.ui.Entity.Question.get.question
-import ie.app.uetstudents.ui.Entity.like.Post.like_comment
-import ie.app.uetstudents.ui.Entity.like_question.post.like_question
-import ie.app.uetstudents.ui.Entity.notifications_comment.post.post_notifi_comment
-import ie.app.uetstudents.ui.Entity.notifications_question.post.Question
-import ie.app.uetstudents.ui.Entity.notifications_question.post.notification_question_post
-import ie.app.uetstudents.ui.Entity.userProfile.get.userprofile
-import ie.app.uetstudents.ui.Entity.userProfile.post.avatar.avatar
+import ie.app.uetstudents.API.ApiClient
+import ie.app.uetstudents.Entity.Comment.get.Comment
+import ie.app.uetstudents.Entity.Comment.get.CommentDto
+import ie.app.uetstudents.Entity.Comment.post.Account
+import ie.app.uetstudents.Entity.Comment.post.comment_post
+import ie.app.uetstudents.Entity.Question.get.ImageDto
+import ie.app.uetstudents.Entity.Question.get.QuestionDtoX
+import ie.app.uetstudents.Entity.Question.get.question
+import ie.app.uetstudents.Entity.like.Post.like_comment
+import ie.app.uetstudents.Entity.like_question.post.like_question
+import ie.app.uetstudents.Entity.notifications_comment.post.post_notifi_comment
+import ie.app.uetstudents.Entity.notifications_question.post.Question
+import ie.app.uetstudents.Entity.notifications_question.post.notification_question_post
+import ie.app.uetstudents.Entity.userProfile.get.userprofile
+import ie.app.uetstudents.Entity.userProfile.post.avatar.avatar
 import ie.app.uetstudents.ui.tailieu.detailPDF
 import ie.app.uetstudents.utils.PreferenceUtils
 import kotlinx.android.synthetic.main.activity_profile.*
@@ -328,18 +328,11 @@ class Profile_Fragment : Fragment(), ProfileContract.View, OnClickItem_UetTalk,
 
     }
 
-    override fun ClickItem_like(QuestionDto: QuestionDtoX) {
-        if (QuestionDto.liked == false) {
-            QuestionDto.liked = true
+    override fun ClickItem_like(QuestionDto: QuestionDtoX,liked: Boolean) {
+        if (liked == true) {
+
             PostApiLike(QuestionDto.id, QuestionDto.accountDto?.username ?: "", id_user!!)
-            update_notification(
-                "LIKE",
-                QuestionDto.id!!,
-                PreferenceUtils.getUser().username!!,
-                QuestionDto.accountDto?.username ?: ""
-            )
         } else {
-            QuestionDto.liked = false
             deleteLikeQuestion(id_user!!, QuestionDto.id)
         }
 
@@ -467,8 +460,8 @@ class Profile_Fragment : Fragment(), ProfileContract.View, OnClickItem_UetTalk,
 
     /*-----------------Post like lên server-------------------*/
     fun PostApiLike(id_question: Int, owner_username: String, id_account: Int) {
-        val account = ie.app.uetstudents.ui.Entity.like_question.post.Account(id_account)
-        val question = ie.app.uetstudents.ui.Entity.like_question.post.Question(id_question)
+        val account = ie.app.uetstudents.Entity.like_question.post.Account(id_account)
+        val question = ie.app.uetstudents.Entity.like_question.post.Question(id_question)
         val likeQuestion = like_question(account, question)
         val call: Call<like_question> = ApiClient.getClient.postlikequestion(likeQuestion)
         call.enqueue(object : Callback<like_question> {
@@ -526,29 +519,37 @@ class Profile_Fragment : Fragment(), ProfileContract.View, OnClickItem_UetTalk,
         Repository(requireContext()).updateNotifi_Question(notifi_item)
     }
 
-    override fun clickOnItem(m: ie.app.uetstudents.ui.Entity.Comment.get.CommentDto) {
-        val idcomment = ie.app.uetstudents.ui.Entity.like.Post.Comment(m.id!!.toInt())
-        val account = ie.app.uetstudents.ui.Entity.like.Post.Account(null)
-        val likeComment = like_comment(account, idcomment)
-        val call: Call<like_comment> = ApiClient.getClient.setLikeComment(likeComment)
-        call.enqueue(object : Callback<like_comment> {
-            override fun onResponse(call: Call<like_comment>, response: Response<like_comment>) {
-                if (response.isSuccessful) {
-                    val notifi_item = post_notifi_comment(
-                        "LIKE",
-                        "",
-                        ie.app.uetstudents.ui.Entity.notifications_comment.post.Comment(m.id),
-                        PreferenceUtils.getUser().username!!
-                    )
-                    Repository(requireContext()).updateNotifi_Comment(notifi_item)
+    override fun clickOnItem(m: ie.app.uetstudents.Entity.Comment.get.CommentDto, liked : Boolean) {
+        if (liked == true) {
+            val idcomment = ie.app.uetstudents.Entity.like.Post.Comment(m.id!!.toInt())
+            val account = ie.app.uetstudents.Entity.like.Post.Account(null)
+            val likeComment = like_comment(account, idcomment)
+            val call: Call<like_comment> = ApiClient.getClient.setLikeComment(likeComment)
+            call.enqueue(object : Callback<like_comment> {
+                override fun onResponse(
+                    call: Call<like_comment>,
+                    response: Response<like_comment>
+                ) {
+                    if (response.isSuccessful) {
+                        val notifi_item = post_notifi_comment(
+                            "LIKE",
+                            "",
+                            ie.app.uetstudents.Entity.notifications_comment.post.Comment(m.id),
+                            PreferenceUtils.getUser().username!!
+                        )
+                        Repository(requireContext()).updateNotifi_Comment(notifi_item)
+                    }
+                    Log.e("Test_API_Like_Comment", "Thành công")
                 }
-                Log.e("Test_API_Like_Comment", "Thành công")
-            }
 
-            override fun onFailure(call: Call<like_comment>, t: Throwable) {
-                Log.e("Test_API_Like_Comment", "Thất bại")
-            }
-        })
+                override fun onFailure(call: Call<like_comment>, t: Throwable) {
+                    Log.e("Test_API_Like_Comment", "Thất bại")
+                }
+            })
+        }else
+        {
+            Repository(requireContext()).deletelike_comment(PreferenceUtils.getUser().id,m.id!!)
+        }
     }
 
     /*-------------------------------------------------*/
@@ -559,7 +560,7 @@ class Profile_Fragment : Fragment(), ProfileContract.View, OnClickItem_UetTalk,
             val commentpost = comment_post(
                 Account(PreferenceUtils.getUser().id),
                 bottomSheetView.edt_comment_uettalk.text.toString(),
-                ie.app.uetstudents.ui.Entity.Comment.post.Question(id_question)
+                ie.app.uetstudents.Entity.Comment.post.Question(id_question)
             )
             val gson = Gson()
             val commentstr = gson.toJson(commentpost).toString()
@@ -579,12 +580,12 @@ class Profile_Fragment : Fragment(), ProfileContract.View, OnClickItem_UetTalk,
             }
 
 
-            val call: Call<ie.app.uetstudents.ui.Entity.Comment.get.Comment> =
+            val call: Call<ie.app.uetstudents.Entity.Comment.get.Comment> =
                 ApiClient.getClient.setCommentQuestion(builder.build())
-            call.enqueue(object : Callback<ie.app.uetstudents.ui.Entity.Comment.get.Comment> {
+            call.enqueue(object : Callback<ie.app.uetstudents.Entity.Comment.get.Comment> {
                 override fun onResponse(
-                    call: Call<ie.app.uetstudents.ui.Entity.Comment.get.Comment>,
-                    response: Response<ie.app.uetstudents.ui.Entity.Comment.get.Comment>
+                    call: Call<ie.app.uetstudents.Entity.Comment.get.Comment>,
+                    response: Response<ie.app.uetstudents.Entity.Comment.get.Comment>
                 ) {
                     Log.e("Test", "thành công")
                     Toast.makeText(context, "bình luận thành công!", Toast.LENGTH_LONG).show()
@@ -599,7 +600,7 @@ class Profile_Fragment : Fragment(), ProfileContract.View, OnClickItem_UetTalk,
                 }
 
                 override fun onFailure(
-                    call: Call<ie.app.uetstudents.ui.Entity.Comment.get.Comment>,
+                    call: Call<ie.app.uetstudents.Entity.Comment.get.Comment>,
                     t: Throwable
                 ) {
                     Log.e("Test", "thất bại")
@@ -610,12 +611,12 @@ class Profile_Fragment : Fragment(), ProfileContract.View, OnClickItem_UetTalk,
 
             bottomSheetView.comment_progressbar.visibility = View.VISIBLE
 
-            val call_get: Call<ie.app.uetstudents.ui.Entity.Comment.get.Comment> =
+            val call_get: Call<ie.app.uetstudents.Entity.Comment.get.Comment> =
                 ApiClient.getClient.getCommentQuestion(id_question, page_comment, id_user!!)
-            call_get.enqueue(object : Callback<ie.app.uetstudents.ui.Entity.Comment.get.Comment> {
+            call_get.enqueue(object : Callback<ie.app.uetstudents.Entity.Comment.get.Comment> {
                 override fun onResponse(
-                    call: Call<ie.app.uetstudents.ui.Entity.Comment.get.Comment>,
-                    response: Response<ie.app.uetstudents.ui.Entity.Comment.get.Comment>
+                    call: Call<ie.app.uetstudents.Entity.Comment.get.Comment>,
+                    response: Response<ie.app.uetstudents.Entity.Comment.get.Comment>
                 ) {
                     if (response.isSuccessful) {
                         adapter_comment_uettalk.setData(response.body()?.commentDtoList!! as ArrayList<CommentDto>)
@@ -625,7 +626,7 @@ class Profile_Fragment : Fragment(), ProfileContract.View, OnClickItem_UetTalk,
                 }
 
                 override fun onFailure(
-                    call: Call<ie.app.uetstudents.ui.Entity.Comment.get.Comment>,
+                    call: Call<ie.app.uetstudents.Entity.Comment.get.Comment>,
                     t: Throwable
                 ) {
                     Log.e("Test", "lỗi rồi")

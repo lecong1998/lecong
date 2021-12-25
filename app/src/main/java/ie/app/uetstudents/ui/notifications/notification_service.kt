@@ -10,10 +10,10 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import ie.app.uetstudents.MainActivity
 import ie.app.uetstudents.R
-import ie.app.uetstudents.ui.API.ApiClient
-import ie.app.uetstudents.ui.Entity.notifications_comment.get.NotificationCommentDto
-import ie.app.uetstudents.ui.Entity.notifications_comment.get.get_notifi_comment
-import ie.app.uetstudents.ui.Entity.notifications_question.get.NotificationQuestionDto
+import ie.app.uetstudents.API.ApiClient
+import ie.app.uetstudents.Entity.notifications_comment.get.NotificationCommentDto
+import ie.app.uetstudents.Entity.notifications_comment.get.get_notifi_comment
+import ie.app.uetstudents.Entity.notifications_question.get.NotificationQuestionDto
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

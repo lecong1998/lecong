@@ -21,12 +21,10 @@ import ie.app.uetstudents.adapter.ClickItemCategory
 import ie.app.uetstudents.adapter.adapter_chude
 import ie.app.uetstudents.adapter.adapter_forum
 import ie.app.uetstudents.databinding.FragmentForumBinding
-import ie.app.uetstudents.ui.Entity.Category.CategoryDto
-import ie.app.uetstudents.ui.Entity.Category.category
-import ie.app.uetstudents.ui.Entity.Question.get.QuestionDto
-import ie.app.uetstudents.ui.Entity.Question.get.QuestionDtoX
-import ie.app.uetstudents.ui.Entity.Question.get.QuestionX
-import ie.app.uetstudents.ui.Entity.Question.get.question
+import ie.app.uetstudents.Entity.Category.CategoryDto
+import ie.app.uetstudents.Entity.Category.category
+import ie.app.uetstudents.Entity.Question.get.QuestionDtoX
+import ie.app.uetstudents.Entity.Question.get.question
 import ie.app.uetstudents.ui.diendan.category.CategoryContract
 import ie.app.uetstudents.ui.diendan.category.CategoryPresenter
 import ie.app.uetstudents.utils.PreferenceUtils

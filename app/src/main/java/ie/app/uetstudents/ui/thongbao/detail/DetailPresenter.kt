@@ -1,7 +1,7 @@
 package ie.app.uetstudents.ui.thongbao.detail
 
 import ie.app.uetstudents.Repository.Repository
-import ie.app.uetstudents.ui.Entity.Question.get.QuestionDtoX
+import ie.app.uetstudents.Entity.Question.get.QuestionDtoX
 
 class DetailPresenter(
     private val View : DetailContract.View,

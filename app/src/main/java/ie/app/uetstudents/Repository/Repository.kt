@@ -3,31 +3,34 @@ package ie.app.uetstudents.Repository
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
-import ie.app.uetstudents.ui.API.ApiClient
-import ie.app.uetstudents.ui.Entity.Account.Put.request.password_put
-import ie.app.uetstudents.ui.Entity.Account.Put.response.password_response
-import ie.app.uetstudents.ui.Entity.Category.category
-import ie.app.uetstudents.ui.Entity.Comment.get.Comment
-import ie.app.uetstudents.ui.Entity.Question.get.QuestionDto
-import ie.app.uetstudents.ui.Entity.Question.get.QuestionDtoX
-import ie.app.uetstudents.ui.Entity.Question.get.question
-import ie.app.uetstudents.ui.Entity.Search.Question.search_question
-import ie.app.uetstudents.ui.Entity.Search.person.person
-import ie.app.uetstudents.ui.Entity.notifications_comment.get.get_notifi_comment
-import ie.app.uetstudents.ui.Entity.notifications_comment.post.post_notifi_comment
-import ie.app.uetstudents.ui.Entity.notifications_comment.put.request.comment_id_put
-import ie.app.uetstudents.ui.Entity.notifications_comment.put.response.comment_notifi_put
-import ie.app.uetstudents.ui.Entity.notifications_question.get.notification_question
-import ie.app.uetstudents.ui.Entity.notifications_question.post.notification_question_post
-import ie.app.uetstudents.ui.Entity.notifications_question.put.request.question_id_put
-import ie.app.uetstudents.ui.Entity.notifications_question.put.respont.question_notifi_put
-import ie.app.uetstudents.ui.Entity.userProfile.get.userprofile
-import ie.app.uetstudents.ui.Entity.userProfile.post.email.request.email_request
-import ie.app.uetstudents.ui.Entity.userProfile.post.khoa.request.khoa_request
-import ie.app.uetstudents.ui.Entity.userProfile.post.mssv.request.mssv_request
-import ie.app.uetstudents.ui.Entity.userProfile.post.response.update_user_response
+import ie.app.uetstudents.API.ApiClient
+import ie.app.uetstudents.Entity.Account.Put.request.password_put
+import ie.app.uetstudents.Entity.Account.Put.response.password_response
+import ie.app.uetstudents.Entity.Category.category
+import ie.app.uetstudents.Entity.Comment.get.Comment
+import ie.app.uetstudents.Entity.Question.get.QuestionDto
+import ie.app.uetstudents.Entity.Question.get.QuestionDtoX
+import ie.app.uetstudents.Entity.Question.get.question
+import ie.app.uetstudents.Entity.Search.Question.search_question
+import ie.app.uetstudents.Entity.Search.person.person
+import ie.app.uetstudents.Entity.like.disLike.dislike_comment
+import ie.app.uetstudents.Entity.notifications_comment.get.get_notifi_comment
+import ie.app.uetstudents.Entity.notifications_comment.post.post_notifi_comment
+import ie.app.uetstudents.Entity.notifications_comment.put.request.comment_id_put
+import ie.app.uetstudents.Entity.notifications_comment.put.response.comment_notifi_put
+import ie.app.uetstudents.Entity.notifications_question.get.notification_question
+import ie.app.uetstudents.Entity.notifications_question.post.notification_question_post
+import ie.app.uetstudents.Entity.notifications_question.put.request.question_id_put
+import ie.app.uetstudents.Entity.notifications_question.put.respont.question_notifi_put
+import ie.app.uetstudents.Entity.subcomment.get.SubcommentDto
+import ie.app.uetstudents.Entity.subcomment.get.getsubcomment
+import ie.app.uetstudents.Entity.userProfile.get.userprofile
+import ie.app.uetstudents.Entity.userProfile.post.email.request.email_request
+import ie.app.uetstudents.Entity.userProfile.post.khoa.request.khoa_request
+import ie.app.uetstudents.Entity.userProfile.post.mssv.request.mssv_request
+import ie.app.uetstudents.Entity.userProfile.post.response.update_user_response
 import ie.app.uetstudents.ui.diendan.category.CategoryContract
-import ie.app.uetstudents.ui.diendan.detailForum.DetailForumContract
+import ie.app.uetstudents.ui.detailForum.DetailForumContract
 import ie.app.uetstudents.ui.diendan.forum_main.forumContract
 import ie.app.uetstudents.ui.notifications.notification_Contract
 import ie.app.uetstudents.ui.profile.ProfileContract
@@ -337,11 +340,11 @@ val context: Context) {
     fun getPersons_LikeQuestion(presenter: DetailForumContract.Presenter,id_question: Int, page: Int)
     {
         var personslike : Int   = 0
-        val call : Call<ie.app.uetstudents.ui.Entity.like_question.get.like_question> = ApiClient.getClient.getPersonLikeQuestion(id_question,page)
-        call.enqueue(object : Callback<ie.app.uetstudents.ui.Entity.like_question.get.like_question>{
+        val call : Call<ie.app.uetstudents.Entity.like_question.get.like_question> = ApiClient.getClient.getPersonLikeQuestion(id_question,page)
+        call.enqueue(object : Callback<ie.app.uetstudents.Entity.like_question.get.like_question>{
             override fun onResponse(
-                call: Call<ie.app.uetstudents.ui.Entity.like_question.get.like_question>,
-                response: Response<ie.app.uetstudents.ui.Entity.like_question.get.like_question>
+                call: Call<ie.app.uetstudents.Entity.like_question.get.like_question>,
+                response: Response<ie.app.uetstudents.Entity.like_question.get.like_question>
             ) {
                 if (response.isSuccessful)
                 {
@@ -355,7 +358,7 @@ val context: Context) {
             }
 
             override fun onFailure(
-                call: Call<ie.app.uetstudents.ui.Entity.like_question.get.like_question>,
+                call: Call<ie.app.uetstudents.Entity.like_question.get.like_question>,
                 t: Throwable
             ) {
                 Log.e("test_get_person_like question","thất bại")
@@ -515,7 +518,7 @@ val context: Context) {
         })
     }
 
-    /*---------------------------------------------------------*/
+    /*------------------------thay đổi mật khẩu---------------------------------*/
     fun change_password(put_password : password_put)
     {
         val call: Call<password_response> = ApiClient.getClient.change_password(put_password)
@@ -536,5 +539,28 @@ val context: Context) {
             }
         })
     }
+    /*--------------------------Delete like comment--------------------------------*/
+
+    fun deletelike_comment(id_account: Int,id_comment : Int)
+    {
+        val call: Call<dislike_comment> = ApiClient.getClient.deletelikeComment(id_account,id_comment)
+        call.enqueue(object : Callback<dislike_comment>{
+            override fun onResponse(
+                call: Call<dislike_comment>,
+                response: Response<dislike_comment>
+            ) {
+                if (response.isSuccessful)
+                {
+                    Log.e("bỏ like comment","thành công")
+                }
+            }
+
+            override fun onFailure(call: Call<dislike_comment>, t: Throwable) {
+                Log.e("bỏ like comment","Thất bại")
+            }
+        })
+    }
+
+    /*-----------------------------Get sub comment---------------------------------------*/
 
 }

@@ -21,22 +21,22 @@ import ie.app.uetstudents.RealPathUtil.RealPathUtil
 import ie.app.uetstudents.Repository.Repository
 import ie.app.uetstudents.adapter.*
 import ie.app.uetstudents.databinding.FragmentUettalkBinding
-import ie.app.uetstudents.ui.API.ApiClient
-import ie.app.uetstudents.ui.API.ApiClient.BASE_URL
-import ie.app.uetstudents.ui.Entity.Comment.get.CommentDto
-import ie.app.uetstudents.ui.Entity.Comment.post.Question
-import ie.app.uetstudents.ui.Entity.Comment.post.comment_post
-import ie.app.uetstudents.ui.Entity.Question.get.ImageDto
-import ie.app.uetstudents.ui.Entity.Question.get.QuestionDtoX
-import ie.app.uetstudents.ui.Entity.Question.get.question
-import ie.app.uetstudents.ui.Entity.like.Post.Account
-import ie.app.uetstudents.ui.Entity.like.Post.Comment
-import ie.app.uetstudents.ui.Entity.like.Post.like_comment
-import ie.app.uetstudents.ui.Entity.like_question.post.like_question
-import ie.app.uetstudents.ui.Entity.notifications_comment.post.post_notifi_comment
-import ie.app.uetstudents.ui.Entity.notifications_question.post.notification_question_post
-import ie.app.uetstudents.ui.diendan.detailForum.DetailForumContract
-import ie.app.uetstudents.ui.diendan.detailForum.DetailForumPresenter
+import ie.app.uetstudents.API.ApiClient
+import ie.app.uetstudents.API.ApiClient.BASE_URL
+import ie.app.uetstudents.Entity.Comment.get.CommentDto
+import ie.app.uetstudents.Entity.Comment.post.Question
+import ie.app.uetstudents.Entity.Comment.post.comment_post
+import ie.app.uetstudents.Entity.Question.get.ImageDto
+import ie.app.uetstudents.Entity.Question.get.QuestionDtoX
+import ie.app.uetstudents.Entity.Question.get.question
+import ie.app.uetstudents.Entity.like.Post.Account
+import ie.app.uetstudents.Entity.like.Post.Comment
+import ie.app.uetstudents.Entity.like.Post.like_comment
+import ie.app.uetstudents.Entity.like_question.post.like_question
+import ie.app.uetstudents.Entity.notifications_comment.post.post_notifi_comment
+import ie.app.uetstudents.Entity.notifications_question.post.notification_question_post
+import ie.app.uetstudents.ui.detailForum.DetailForumContract
+import ie.app.uetstudents.ui.detailForum.DetailForumPresenter
 import ie.app.uetstudents.ui.diendan.forum_main.forumContract
 import ie.app.uetstudents.ui.diendan.forum_main.forumPresenter
 import ie.app.uetstudents.ui.tailieu.detailPDF
@@ -158,13 +158,12 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
     }
 
     /*-----------------------Click vào btn thích------------------------------------*/
-    override fun ClickItem_like(QuestionDto: QuestionDtoX) {
-        if (QuestionDto.liked == false) {
-            QuestionDto.liked = true
+    override fun ClickItem_like(QuestionDto: QuestionDtoX,liked: Boolean) {
+        if (liked == true) {
+
             PostApiLike(QuestionDto.id, QuestionDto.accountDto?.username ?: "", id_user!!)
             // update_notification("LIKE", QuestionDto.id!!, PreferenceUtils.getUser().username.toString(), QuestionDto.accountDto?.username ?: "")
         } else {
-            QuestionDto.liked = false
             deleteLikeQuestion(id_user!!, QuestionDto.id)
         }
 
@@ -221,9 +220,6 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
         })
 
         bottomSheetView.comment_uet_camera.setOnClickListener {
-//            val cameraIntent =
-//                Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-//            startActivityForResult(cameraIntent, CAMERA_REQUEST)
             if (activity?.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                 openGallery()
             } else {
@@ -232,9 +228,6 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
         }
 
         bottomSheetView.btn_update_comment_uettalk.setOnClickListener {
-
-
-            Log.e("uri", uri.toString())
             xulybtncommemt(QuestionDto.id, QuestionDto.accountDto?.username ?: "", uri)
         }
 
@@ -247,7 +240,6 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
             uri = data.data
             Toast.makeText(context, "Đã thêm ảnh vào bình luận!", Toast.LENGTH_LONG).show()
-            Log.e("uri", uri.toString())
         }
     }
 
@@ -255,7 +247,6 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
     override fun ClickItem_uettalk(QuestionDto: QuestionDtoX) {
         val bundle = Bundle()
         bundle.putInt("id_question", QuestionDto.id!!)
-        Toast.makeText(context, QuestionDto.id.toString(), Toast.LENGTH_SHORT).show()
         this.findNavController().navigate(R.id.action_nav_uettalk_to_detailForumFragment, bundle)
     }
 
@@ -264,44 +255,49 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
     }
 
     /*------------------------update data comment----------------------------------------*/
-    override fun getDataViewComment(datacomment: ie.app.uetstudents.ui.Entity.Comment.get.Comment) {
+    override fun getDataViewComment(datacomment: ie.app.uetstudents.Entity.Comment.get.Comment) {
         // bottomSheetView.comment_processbar.progress = View.GONE
         bottomSheetView.comment_progressbar.visibility = View.GONE
         if (datacomment.commentDtoList.isEmpty()) {
-            Toast.makeText(context, "trống", Toast.LENGTH_LONG).show()
             bottomSheetView.txt_comment_chuacobinhluan.text = "Chưa có bình luận nào!"
         } else {
             adapter_comment_uettalk.setData(datacomment.commentDtoList as ArrayList<CommentDto>)
-            Toast.makeText(context, "đã có dữ liệu", Toast.LENGTH_LONG).show()
             bottomSheetView.comment_recyclerview_uettalk.adapter?.notifyDataSetChanged()
         }
     }
 
 
     /*--------------------Post Like comment------------------------------*/
-    override fun clickOnItem(m: ie.app.uetstudents.ui.Entity.Comment.get.CommentDto) {
-        val idcomment = Comment(m.id!!.toInt())
-        val account = Account(null)
-        val likeComment = like_comment(account, idcomment)
-        val call: Call<like_comment> = ApiClient.getClient.setLikeComment(likeComment)
-        call.enqueue(object : Callback<like_comment> {
-            override fun onResponse(call: Call<like_comment>, response: Response<like_comment>) {
-                if (response.isSuccessful) {
-                    val notifi_item = post_notifi_comment(
-                        "LIKE",
-                        "",
-                        ie.app.uetstudents.ui.Entity.notifications_comment.post.Comment(m.id),
-                        PreferenceUtils.getUser().username.toString()
-                    )
-                    presenter_uettalk_comment.setNotificationComment(notifi_item)
+    override fun clickOnItem(m: ie.app.uetstudents.Entity.Comment.get.CommentDto,liked : Boolean) {
+        if (liked == true)
+        {
+            val idcomment = Comment(m.id!!.toInt())
+            val account = Account(null)
+            val likeComment = like_comment(account, idcomment)
+            val call: Call<like_comment> = ApiClient.getClient.setLikeComment(likeComment)
+            call.enqueue(object : Callback<like_comment> {
+                override fun onResponse(call: Call<like_comment>, response: Response<like_comment>) {
+                    if (response.isSuccessful) {
+                        val notifi_item = post_notifi_comment(
+                            "LIKE",
+                            "",
+                            ie.app.uetstudents.Entity.notifications_comment.post.Comment(m.id),
+                            PreferenceUtils.getUser().username.toString()
+                        )
+                        presenter_uettalk_comment.setNotificationComment(notifi_item)
+                    }
+                    Log.e("Test_API_Like_Comment", "Thành công")
                 }
-                Log.e("Test_API_Like_Comment", "Thành công")
-            }
 
-            override fun onFailure(call: Call<like_comment>, t: Throwable) {
-                Log.e("Test_API_Like_Comment", "Thất bại")
-            }
-        })
+                override fun onFailure(call: Call<like_comment>, t: Throwable) {
+                    Log.e("Test_API_Like_Comment", "Thất bại")
+                }
+            })
+        }else
+        {
+            Repository(requireContext()).deletelike_comment(id_user!!,m.id!!)
+        }
+
     }
 
     /*--------------------------------Xử lý khi click btn đăng binh luận-----------------------------------------*/
@@ -310,7 +306,7 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
             Toast.makeText(context, "Bạn Chưa nhập bình luận!", Toast.LENGTH_LONG).show()
         } else {
             val commentpost = comment_post(
-                ie.app.uetstudents.ui.Entity.Comment.post.Account(PreferenceUtils.getUser().id),
+                ie.app.uetstudents.Entity.Comment.post.Account(PreferenceUtils.getUser().id),
                 bottomSheetView.edt_comment_uettalk.text.toString(),
                 Question(id_question)
             )
@@ -332,12 +328,12 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
             }
 
 
-            val call: Call<ie.app.uetstudents.ui.Entity.Comment.get.Comment> =
+            val call: Call<ie.app.uetstudents.Entity.Comment.get.Comment> =
                 ApiClient.getClient.setCommentQuestion(builder.build())
-            call.enqueue(object : Callback<ie.app.uetstudents.ui.Entity.Comment.get.Comment> {
+            call.enqueue(object : Callback<ie.app.uetstudents.Entity.Comment.get.Comment> {
                 override fun onResponse(
-                    call: Call<ie.app.uetstudents.ui.Entity.Comment.get.Comment>,
-                    response: Response<ie.app.uetstudents.ui.Entity.Comment.get.Comment>
+                    call: Call<ie.app.uetstudents.Entity.Comment.get.Comment>,
+                    response: Response<ie.app.uetstudents.Entity.Comment.get.Comment>
                 ) {
                     Log.e("Test", "thành công")
                     Toast.makeText(context, "bình luận thành công!", Toast.LENGTH_LONG).show()
@@ -352,7 +348,7 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
                 }
 
                 override fun onFailure(
-                    call: Call<ie.app.uetstudents.ui.Entity.Comment.get.Comment>,
+                    call: Call<ie.app.uetstudents.Entity.Comment.get.Comment>,
                     t: Throwable
                 ) {
                     Log.e("Test", "thất bại")
@@ -363,12 +359,12 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
 
             bottomSheetView.comment_progressbar.visibility = View.VISIBLE
 
-            val call_get: Call<ie.app.uetstudents.ui.Entity.Comment.get.Comment> =
+            val call_get: Call<ie.app.uetstudents.Entity.Comment.get.Comment> =
                 ApiClient.getClient.getCommentQuestion(id_question, page_comment, id_user!!)
-            call_get.enqueue(object : Callback<ie.app.uetstudents.ui.Entity.Comment.get.Comment> {
+            call_get.enqueue(object : Callback<ie.app.uetstudents.Entity.Comment.get.Comment> {
                 override fun onResponse(
-                    call: Call<ie.app.uetstudents.ui.Entity.Comment.get.Comment>,
-                    response: Response<ie.app.uetstudents.ui.Entity.Comment.get.Comment>
+                    call: Call<ie.app.uetstudents.Entity.Comment.get.Comment>,
+                    response: Response<ie.app.uetstudents.Entity.Comment.get.Comment>
                 ) {
                     if (response.isSuccessful) {
                         adapter_comment_uettalk.setData(response.body()?.commentDtoList!! as ArrayList<CommentDto>)
@@ -378,7 +374,7 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
                 }
 
                 override fun onFailure(
-                    call: Call<ie.app.uetstudents.ui.Entity.Comment.get.Comment>,
+                    call: Call<ie.app.uetstudents.Entity.Comment.get.Comment>,
                     t: Throwable
                 ) {
                     Log.e("Test", "lỗi rồi")
@@ -400,7 +396,7 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
             val notifi_item = notification_question_post(
                 type_action,
                 PreferenceUtils.getUser().avatar.toString(),
-                ie.app.uetstudents.ui.Entity.notifications_question.post.Question(id_question),
+                ie.app.uetstudents.Entity.notifications_question.post.Question(id_question),
                 username,
                 owner_username
             )
@@ -409,7 +405,7 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
             val notifi_item = notification_question_post(
                 type_action,
                 null,
-                ie.app.uetstudents.ui.Entity.notifications_question.post.Question(id_question),
+                ie.app.uetstudents.Entity.notifications_question.post.Question(id_question),
                 username,
                 owner_username
             )
@@ -428,8 +424,8 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
 
     /*-----------------Post like lên server-------------------*/
     fun PostApiLike(id_question: Int, owner_username: String, id_account: Int) {
-        val account = ie.app.uetstudents.ui.Entity.like_question.post.Account(id_account)
-        val question = ie.app.uetstudents.ui.Entity.like_question.post.Question(id_question)
+        val account = ie.app.uetstudents.Entity.like_question.post.Account(id_account)
+        val question = ie.app.uetstudents.Entity.like_question.post.Question(id_question)
         val likeQuestion = like_question(account, question)
         val call: Call<like_question> = ApiClient.getClient.postlikequestion(likeQuestion)
         call.enqueue(object : Callback<like_question> {

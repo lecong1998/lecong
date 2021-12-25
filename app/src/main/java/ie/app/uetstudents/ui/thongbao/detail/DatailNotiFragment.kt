@@ -9,8 +9,8 @@ import ie.app.uetstudents.R
 import ie.app.uetstudents.Repository.Repository
 import ie.app.uetstudents.adapter.OnclickImageDto
 import ie.app.uetstudents.adapter.adapter_pdf
-import ie.app.uetstudents.ui.Entity.Question.get.ImageDto
-import ie.app.uetstudents.ui.Entity.Question.get.QuestionDtoX
+import ie.app.uetstudents.Entity.Question.get.ImageDto
+import ie.app.uetstudents.Entity.Question.get.QuestionDtoX
 import ie.app.uetstudents.ui.tailieu.detailPDF
 import ie.app.uetstudents.utils.PreferenceUtils
 import kotlinx.android.synthetic.main.fragment_detail_notifi.*

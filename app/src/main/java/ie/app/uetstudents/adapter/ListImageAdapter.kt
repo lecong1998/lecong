@@ -1,17 +1,13 @@
 package ie.app.uetstudents.adapter
 
 import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.core.content.ContextCompat.startActivity
 import com.bumptech.glide.Glide
-import ie.app.uetstudents.MainActivity
 import ie.app.uetstudents.R
-import ie.app.uetstudents.ui.API.ApiClient.BASE_URL
-import ie.app.uetstudents.ui.Entity.Question.get.ImageDto
-import ie.app.uetstudents.ui.tailieu.detailPDF
+import ie.app.uetstudents.API.ApiClient.BASE_URL
+import ie.app.uetstudents.Entity.Question.get.ImageDto
 
 class ListImageAdapter(context: Context,
 callback: BaseAdapter.OnclickPdf<ImageDto>)

@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import ie.app.uetstudents.R
-import ie.app.uetstudents.ui.API.ApiClient
+import ie.app.uetstudents.API.ApiClient
 import kotlinx.android.synthetic.main.anh_detail.view.*
 
 class adapter_hienthianh(var listanh: ArrayList<String>,var onclick : click_pdf) :

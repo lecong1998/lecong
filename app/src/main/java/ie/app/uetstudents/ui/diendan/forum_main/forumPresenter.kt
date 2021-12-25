@@ -1,8 +1,7 @@
 package ie.app.uetstudents.ui.diendan.forum_main
 
 import ie.app.uetstudents.Repository.Repository
-import ie.app.uetstudents.ui.Entity.Question.get.QuestionX
-import ie.app.uetstudents.ui.Entity.Question.get.question
+import ie.app.uetstudents.Entity.Question.get.question
 
 class forumPresenter(
     private val view : forumContract.View,

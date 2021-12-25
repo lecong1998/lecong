@@ -1,7 +1,6 @@
 package ie.app.uetstudents.adapter
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
@@ -9,11 +8,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import ie.app.uetstudents.R
-import ie.app.uetstudents.ui.API.ApiClient
-import ie.app.uetstudents.ui.Entity.notifications_comment.get.NotificationCommentDto
-import ie.app.uetstudents.ui.Entity.notifications_comment.get.get_notifi_comment
-import ie.app.uetstudents.ui.Entity.notifications_question.get.NotificationQuestionDto
-import ie.app.uetstudents.ui.Entity.notifications_question.notification_item
+import ie.app.uetstudents.API.ApiClient
+import ie.app.uetstudents.Entity.notifications_comment.get.NotificationCommentDto
+import ie.app.uetstudents.Entity.notifications_question.get.NotificationQuestionDto
+import ie.app.uetstudents.Entity.notifications_question.notification_item
 import kotlinx.android.synthetic.main.item_notification.view.*
 
 class adapter_notification( var ClickItem : OnClickItem_Notification)

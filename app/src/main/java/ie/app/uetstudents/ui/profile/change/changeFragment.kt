@@ -2,24 +2,21 @@ package ie.app.uetstudents.ui.profile.change
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.*
-import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import ie.app.uetstudents.R
 import ie.app.uetstudents.Repository.Repository
-import ie.app.uetstudents.ui.Entity.Account.Put.request.password_put
-import ie.app.uetstudents.ui.Entity.Question.get.question
-import ie.app.uetstudents.ui.Entity.userProfile.get.userprofile
-import ie.app.uetstudents.ui.Entity.userProfile.post.email.request.email_request
-import ie.app.uetstudents.ui.Entity.userProfile.post.khoa.request.khoa_request
-import ie.app.uetstudents.ui.Entity.userProfile.post.mssv.request.mssv_request
+import ie.app.uetstudents.Entity.Account.Put.request.password_put
+import ie.app.uetstudents.Entity.Question.get.question
+import ie.app.uetstudents.Entity.userProfile.get.userprofile
+import ie.app.uetstudents.Entity.userProfile.post.email.request.email_request
+import ie.app.uetstudents.Entity.userProfile.post.khoa.request.khoa_request
+import ie.app.uetstudents.Entity.userProfile.post.mssv.request.mssv_request
 import ie.app.uetstudents.ui.profile.ProfileContract
 import ie.app.uetstudents.ui.profile.ProfilePresenter
 import ie.app.uetstudents.utils.PreferenceUtils
 import kotlinx.android.synthetic.main.change.view.*
-import kotlinx.android.synthetic.main.change_password.*
 import kotlinx.android.synthetic.main.change_password.view.*
 import kotlinx.android.synthetic.main.fragment_change.*
 

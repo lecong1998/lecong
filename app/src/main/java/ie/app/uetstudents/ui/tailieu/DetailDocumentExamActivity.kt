@@ -1,19 +1,10 @@
 package ie.app.uetstudents.ui.tailieu
 
-import android.net.Uri
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.view.View
-import android.webkit.WebViewClient
-import android.widget.Toast
-import androidx.core.net.toUri
-import com.bumptech.glide.load.model.FileLoader
-import com.bumptech.glide.util.ByteBufferUtil.fromStream
 import com.github.barteksc.pdfviewer.PDFView
 import ie.app.uetstudents.R
-import ie.app.uetstudents.ui.Entity.subject.DataSubject.ExamDocumentDto
 import kotlinx.android.synthetic.main.activity_detail_document_exam.*
 import java.io.BufferedInputStream
 import java.io.IOException

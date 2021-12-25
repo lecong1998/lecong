@@ -1,7 +1,7 @@
 package ie.app.uetstudents.ui.thongbao
 
 import ie.app.uetstudents.Repository.Repository
-import ie.app.uetstudents.ui.Entity.Question.get.question
+import ie.app.uetstudents.Entity.Question.get.question
 
 class NotificationUetPresent(
     private val View : NotificationUetContract.View,

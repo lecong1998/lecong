@@ -1,9 +1,7 @@
 package ie.app.uetstudents.ui.profile
 
-import ie.app.uetstudents.ui.Entity.Comment.get.Comment
-import ie.app.uetstudents.ui.Entity.Question.get.QuestionDto
-import ie.app.uetstudents.ui.Entity.Question.get.question
-import ie.app.uetstudents.ui.Entity.userProfile.get.userprofile
+import ie.app.uetstudents.Entity.Question.get.question
+import ie.app.uetstudents.Entity.userProfile.get.userprofile
 
 interface ProfileContract {
     interface View{

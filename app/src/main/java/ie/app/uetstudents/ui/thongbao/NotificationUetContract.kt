@@ -1,6 +1,6 @@
 package ie.app.uetstudents.ui.thongbao
 
-import ie.app.uetstudents.ui.Entity.Question.get.question
+import ie.app.uetstudents.Entity.Question.get.question
 
 interface NotificationUetContract  {
     interface View{

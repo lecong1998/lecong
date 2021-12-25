@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.diendan.detailForum.DetailForumFragment">
+    tools:context=".ui.detailForum.DetailForumFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <androidx.core.widget.NestedScrollView
@@ -285,7 +285,8 @@
         <EditText
             android:id="@+id/edt_detail_forum"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
+            android:minHeight="50dp"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="5dp"
             android:layout_marginRight="10dp"
@@ -297,7 +298,9 @@
             android:paddingLeft="10dp"
             android:paddingTop="5dp"
             android:paddingRight="10dp"
-            android:paddingBottom="5dp"></EditText>
+            android:paddingBottom="5dp">
+
+        </EditText>
 
         <ImageView
             android:id="@+id/btndang_detail_forum"

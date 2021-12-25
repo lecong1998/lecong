@@ -83,9 +83,13 @@
         tools:layout="@layout/activity_signin" />
     <fragment
         android:id="@+id/detailForumFragment"
-        android:name="ie.app.uetstudents.ui.diendan.detailForum.DetailForumFragment"
+        android:name="ie.app.uetstudents.ui.detailForum.DetailForumFragment"
         android:label="Bài Viết"
-        tools:layout="@layout/fragment_detail_forum" />
+        tools:layout="@layout/fragment_detail_forum" >
+        <action
+            android:id="@+id/action_detailForumFragment_to_action_profile"
+            app:destination="@id/action_profile" />
+    </fragment>
     <fragment
         android:id="@+id/writingStatusFragment"
         android:name="ie.app.uetstudents.ui.uettalk.WritingStatusFragment"

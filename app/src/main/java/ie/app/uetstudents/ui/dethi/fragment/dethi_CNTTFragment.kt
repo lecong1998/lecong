@@ -13,11 +13,11 @@ import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
 import ie.app.uetstudents.R
 import ie.app.uetstudents.adapter.*
-import ie.app.uetstudents.ui.API.ApiClient
-import ie.app.uetstudents.ui.Entity.subject.DataSubject.ExamDocumentDto
-import ie.app.uetstudents.ui.Entity.subject.DataSubject.data_subject
-import ie.app.uetstudents.ui.Entity.subject.SubjectDto
-import ie.app.uetstudents.ui.Entity.subject.subject
+import ie.app.uetstudents.API.ApiClient
+import ie.app.uetstudents.Entity.subject.DataSubject.ExamDocumentDto
+import ie.app.uetstudents.Entity.subject.DataSubject.data_subject
+import ie.app.uetstudents.Entity.subject.SubjectDto
+import ie.app.uetstudents.Entity.subject.subject
 import ie.app.uetstudents.ui.tailieu.DetailDocumentExamActivity
 import ie.app.uetstudents.ui.tailieu.detailPDF
 import kotlinx.android.synthetic.main.dialog_listtailieudethi.view.*

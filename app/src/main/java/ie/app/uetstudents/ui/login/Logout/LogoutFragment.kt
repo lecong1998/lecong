@@ -10,9 +10,9 @@ import android.widget.Toast
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import ie.app.uetstudents.R
-import ie.app.uetstudents.ui.API.ApiClient
-import ie.app.uetstudents.ui.Entity.Account.Get.dangky.dangky_account
-import ie.app.uetstudents.ui.Entity.Account.Post.account
+import ie.app.uetstudents.API.ApiClient
+import ie.app.uetstudents.Entity.Account.Get.dangky.dangky_account
+import ie.app.uetstudents.Entity.Account.Post.account
 
 import kotlinx.android.synthetic.main.fragment_logout.*
 import retrofit2.Call
