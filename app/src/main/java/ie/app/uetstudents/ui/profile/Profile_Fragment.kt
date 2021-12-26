@@ -55,12 +55,18 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import ie.app.uetstudents.Entity.subcomment.get.SubcommentDto
+import ie.app.uetstudents.Entity.subcomment.get.getsubcomment
+import ie.app.uetstudents.Entity.subcomment.post.Subcomment_post
 import ie.app.uetstudents.data.response.AccountDto
 import ie.app.uetstudents.utils.Constants
+import kotlinx.android.synthetic.main.fragment_detail_forum.*
 
 
 class Profile_Fragment : Fragment(), ProfileContract.View, OnClickItem_UetTalk,
-    ClickItemCommentLike, ClickItem, BaseAdapter.OnclickPdf<ImageDto> {
+    ClickItemCommentLike, ClickItem, BaseAdapter.OnclickPdf<ImageDto> ,Clicktext{
 
     private val IMAGE_REQUEST: Int = 121
     private val MY_REQUEST: Int = 140
@@ -340,7 +346,7 @@ class Profile_Fragment : Fragment(), ProfileContract.View, OnClickItem_UetTalk,
 
     override fun ClickItem_comment(QuestionDto: QuestionDtoX) {
 
-        adapter_comment_uettalk = CommentAdapter(this)
+        adapter_comment_uettalk = CommentAdapter(this,this)
 
 
         bottomSheetDialog = BottomSheetDialog(
@@ -353,6 +359,77 @@ class Profile_Fragment : Fragment(), ProfileContract.View, OnClickItem_UetTalk,
             LinearLayoutManager(context)
 
         getComment(QuestionDto.id, page_comment, id_user!!)
+
+
+        adapter_comment_uettalk.listener(object : truyen_name_account{
+            override fun truyen_name_account(
+                id_account: Int,
+                id_comment: Int,
+                recyclerView: RecyclerView
+            ) {
+                val call : Call<userprofile> = ApiClient.getClient.getUserProfile(id_account)
+                call.enqueue(object : Callback<userprofile>{
+                    override fun onResponse(
+                        call: Call<userprofile>,
+                        response: Response<userprofile>
+                    ) {
+                        if (response.isSuccessful)
+                        {
+                            val username : String = response.body()!!.fullname.toString()
+                            bottomSheetView.edt_comment_uettalk.setText("@user/$username ", TextView.BufferType.EDITABLE)
+
+                            bottomSheetView.edt_comment_uettalk.setSelection(bottomSheetView.edt_comment_uettalk.text.length)
+                            bottomSheetView.edt_comment_uettalk.requestFocus()
+                            if (bottomSheetView.edt_comment_uettalk.text.toString().contains("@user/"))
+                            {
+                                val begin : Int = bottomSheetView.edt_comment_uettalk.text.toString().indexOf("@user/")
+                                val end : Int = bottomSheetView.edt_comment_uettalk.text.toString().indexOf(" ",begin)
+                                bottomSheetView.edt_comment_uettalk.setOnClickListener {
+                                    bottomSheetView.edt_comment_uettalk.setSelection(begin,end)
+                                    val bundle = Bundle()
+                                    bundle.putInt("id_user",id_account)
+                                    this@Profile_Fragment.findNavController().navigate(R.id.action_action_profile_self,bundle)
+                                    bottomSheetDialog!!.dismiss()
+                                }
+                            }
+
+                            bottomSheetView.btn_update_comment_uettalk.setOnClickListener {
+                                CallApiSubComment(edt_detail_forum.text.toString(), PreferenceUtils.getUser().id, id_comment!!, uri)
+                                bottomSheetView.edt_comment_uettalk.text.clear()
+                                val call : Call<getsubcomment> = ApiClient.getClient.getSubComment(id_comment,1)
+                                call.enqueue(object : Callback<getsubcomment>{
+                                    override fun onResponse(
+                                        call: Call<getsubcomment>,
+                                        response: Response<getsubcomment>
+                                    ) {
+                                        val adapter = SubCommentAdapter(id_comment)
+                                        adapter.setData(response.body()!!.subCommentDtoList as ArrayList<SubcommentDto>)
+                                        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+                                        recyclerView.adapter= adapter
+                                        Log.e("lay subcomment","Thành công")
+                                        getComment(QuestionDto.id!!,page_comment,id_user!!)
+                                    }
+
+                                    override fun onFailure(
+                                        call: Call<getsubcomment>,
+                                        t: Throwable
+                                    ) {
+                                        Log.e("lay subcomment","thất bại")
+                                    }
+                                })
+                            }
+
+
+                        }
+                    }
+
+                    override fun onFailure(call: Call<userprofile>, t: Throwable) {
+                        Log.e("lấy username comment","Thất bại")
+                    }
+                })
+            }
+        })
+
         bottomSheetView.comment_scrollview.setOnScrollChangeListener(object :
             NestedScrollView.OnScrollChangeListener {
             override fun onScrollChange(
@@ -394,6 +471,56 @@ class Profile_Fragment : Fragment(), ProfileContract.View, OnClickItem_UetTalk,
         bottomSheetDialog!!.setContentView(bottomSheetView)
         bottomSheetDialog!!.show()
     }
+
+    private fun CallApiSubComment(content: String, id_account: Int, idComment: Int, uri: Uri?) {
+        val account = ie.app.uetstudents.Entity.subcomment.post.Account(id_account)
+        val comment = ie.app.uetstudents.Entity.subcomment.post.Comment(idComment)
+        val subcommentpost = Subcomment_post(account,comment,content)
+        val gson = Gson()
+        val comment_to_json = gson.toJson(subcommentpost).toString()
+
+        val builder = MultipartBody.Builder()
+        builder.setType(MultipartBody.FORM)
+        builder.addFormDataPart("SubComment", comment_to_json)
+
+        uri?.let {
+            val strRealPath = RealPathUtil.getRealPath(requireContext(), uri)
+            val file = File(strRealPath)
+            builder.addFormDataPart("image_file", file.name, RequestBody.create(MediaType.parse("multipart/form-data"), file))
+            this.uri = null
+        }
+
+        val call: Call<getsubcomment> = ApiClient.getClient.postSubcomment(builder.build())
+        call.enqueue(object : Callback<getsubcomment> {
+            override fun onResponse(
+                call: Call<getsubcomment>,
+                response: Response<getsubcomment>
+            ) {
+                if (response.isSuccessful) {
+
+                    Toast.makeText(context, "Bình luận thành công", Toast.LENGTH_SHORT).show()
+
+                    val notifiItem = post_notifi_comment(
+                        "COMMENT",
+                        PreferenceUtils.getUser().avatar,
+                        ie.app.uetstudents.Entity.notifications_comment.post.Comment(idComment),
+                        PreferenceUtils.getUser().toString()
+                    )
+                    Repository(requireContext()).updateNotifi_Comment(notifiItem)
+                }
+            }
+
+            override fun onFailure(
+                call: Call<getsubcomment>,
+                t: Throwable
+            ) {
+                Log.e("Đăng comment", "Thất bại")
+            }
+        })
+
+
+    }
+
 
     fun openGallery() {
         val intent: Intent = Intent()
@@ -672,5 +799,9 @@ class Profile_Fragment : Fragment(), ProfileContract.View, OnClickItem_UetTalk,
         if (requestCode == MY_REQUEST && grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             openGallery()
         }
+    }
+
+    override fun clicktext(name_account: String) {
+        TODO("Not yet implemented")
     }
 }

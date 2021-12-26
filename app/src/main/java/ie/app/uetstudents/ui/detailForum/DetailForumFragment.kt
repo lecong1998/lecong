@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.core.widget.NestedScrollView
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import ie.app.uetstudents.R
@@ -31,6 +32,7 @@ import ie.app.uetstudents.Entity.like.Post.like_comment
 import ie.app.uetstudents.Entity.like_question.post.like_question
 import ie.app.uetstudents.Entity.notifications_comment.post.post_notifi_comment
 import ie.app.uetstudents.Entity.notifications_question.post.notification_question_post
+import ie.app.uetstudents.Entity.subcomment.get.SubcommentDto
 import ie.app.uetstudents.Entity.subcomment.get.getsubcomment
 import ie.app.uetstudents.Entity.subcomment.post.Subcomment_post
 import ie.app.uetstudents.Entity.userProfile.get.userprofile
@@ -48,7 +50,7 @@ import retrofit2.Response
 import java.io.File
 
 
-class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemCommentLike,click_pdf {
+class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemCommentLike,click_pdf, Clicktext {
 
     private val CAMERA_REQUEST: Int = 9999
     private var id_question: Int? = null
@@ -102,7 +104,7 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
         /*---------------------update Comment vào layout-----------------------------------*/
         id_question?.let { presenterDetailForum.getDetailComment(it, page_comment,id_user!!) }
 
-        adapter_comment = CommentAdapter(this)
+        adapter_comment = CommentAdapter(this,this)
 
         view.detail_comment_forum_recyclerview.layoutManager = LinearLayoutManager(context)
         view.detail_comment_forum_recyclerview.adapter = adapter_comment
@@ -143,7 +145,7 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
         /*----------------------Đăng -Bình luận-----------------------*/
 
         adapter_comment.listener(object : truyen_name_account{
-            override fun truyen_name_account(id_account: Int,id_comment: Int) {
+            override fun truyen_name_account(id_account: Int,id_comment: Int,recyclerView: RecyclerView) {
                 val call : Call<userprofile> = ApiClient.getClient.getUserProfile(id_account)
                 call.enqueue(object : Callback<userprofile>{
                     override fun onResponse(
@@ -172,6 +174,27 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
                             btndang_detail_forum.setOnClickListener {
                                 CallApiSubComment(edt_detail_forum.text.toString(), PreferenceUtils.getUser().id, id_comment!!, uri)
                                 edt_detail_forum.text.clear()
+                                val call : Call<getsubcomment> = ApiClient.getClient.getSubComment(id_comment,1)
+                                call.enqueue(object : Callback<getsubcomment>{
+                                    override fun onResponse(
+                                        call: Call<getsubcomment>,
+                                        response: Response<getsubcomment>
+                                    ) {
+                                        val adapter = SubCommentAdapter(id_comment)
+                                        adapter.setData(response.body()!!.subCommentDtoList as ArrayList<SubcommentDto>)
+                                        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+                                        recyclerView.adapter= adapter
+                                        Log.e("lay subcomment","Thành công")
+                                        presenterDetailForum.getDetailComment(id_question!!,page_comment,id_user!!)
+                                    }
+
+                                    override fun onFailure(
+                                        call: Call<getsubcomment>,
+                                        t: Throwable
+                                    ) {
+                                        Log.e("lay subcomment","thất bại")
+                                    }
+                                })
                             }
 
 
@@ -200,8 +223,7 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
                 {
                     soluotbinhluan_detail.text = "$soluotbinhluan Bình luận"
                 }
-              //  adapter_comment.dataList.add(CommentDto(id_user!!,edt_detail_forum.text.toString(),null,"",id_question!!,java.time.LocalDateTime.now().toString(),0,0,false))
-                //presenterDetailForum.getDetailComment(id_question!!, page_comment,id_user!!)
+
                 val call : Call<ie.app.uetstudents.Entity.Comment.get.Comment> = ApiClient.getClient.getCommentQuestion(
                     id_question!!,page_comment,id_user!!
                 )
@@ -582,5 +604,9 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
         val intent = Intent(activity, detailPDF::class.java)
         intent.putExtra("ExamDocument", anh)
         startActivity(intent)
+    }
+
+    override fun clicktext(name_account: String) {
+        TODO("Not yet implemented")
     }
 }

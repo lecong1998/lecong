@@ -1,9 +1,16 @@
 package ie.app.uetstudents.adapter
 
 import android.annotation.SuppressLint
+import android.graphics.Color
+import android.graphics.Typeface
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.method.LinkMovementMethod
+import android.text.style.*
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import ie.app.uetstudents.API.ApiClient
@@ -17,13 +24,9 @@ import kotlinx.android.synthetic.main.itemsub_comment.view.*
 class SubCommentAdapter (var id_comment : Int)
     : RecyclerView.Adapter<SubCommentAdapter.ViewHolder>() {
 
-    var dataList: List<SubcommentDto> = ArrayList()
+    var dataList: ArrayList<SubcommentDto> = ArrayList()
     var click_phanhoi : truyen_name_account? = null
 
-    fun listener(listener : truyen_name_account)
-    {
-        click_phanhoi = listener
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -31,7 +34,8 @@ class SubCommentAdapter (var id_comment : Int)
         )
     }
 
-    fun setData(list: List<SubcommentDto>) {
+    fun setData(list: ArrayList<SubcommentDto>) {
+        this.dataList.clear()
         this.dataList = list
         notifyDataSetChanged()
     }
@@ -66,8 +70,29 @@ class SubCommentAdapter (var id_comment : Int)
                     .error(R.drawable.img_default)
                     .into(itemView.anh_subcomment)
             }
-            itemView.content_subcomment.text = d.content
 
+            if (d.content?.contains("@user/") == true)
+            {
+
+                val begin : Int = d.content?.indexOf("@user/")
+                val end : Int = d.content?.indexOf(" ",begin)
+                val spaned = SpannableString(d.content)
+                val fcolor = ForegroundColorSpan(Color.BLUE)
+                spaned.setSpan(RelativeSizeSpan(1.5f),begin,end,Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                spaned.setSpan(fcolor,begin,end, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                spaned.setSpan(StyleSpan(Typeface.BOLD),begin,end,Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                 spaned.setSpan(object : ClickableSpan(){
+                     override fun onClick(widget: View) {
+                         Toast.makeText(itemView.context,d.content, Toast.LENGTH_LONG).show()
+                     }
+                 },begin,end,Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                itemView.content_subcomment.movementMethod = LinkMovementMethod.getInstance()
+                itemView.content_subcomment.text = spaned
+
+            }else
+            {
+                itemView.content_subcomment.text = d.content
+            }
             val time: String = d.time?.substring(11, 16)+ " " + d.time?.substring(0, 10)
             itemView.time_subcomment.text = time
 

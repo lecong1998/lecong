@@ -8,11 +8,13 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.Gson
@@ -35,12 +37,17 @@ import ie.app.uetstudents.Entity.like.Post.like_comment
 import ie.app.uetstudents.Entity.like_question.post.like_question
 import ie.app.uetstudents.Entity.notifications_comment.post.post_notifi_comment
 import ie.app.uetstudents.Entity.notifications_question.post.notification_question_post
+import ie.app.uetstudents.Entity.subcomment.get.SubcommentDto
+import ie.app.uetstudents.Entity.subcomment.get.getsubcomment
+import ie.app.uetstudents.Entity.subcomment.post.Subcomment_post
+import ie.app.uetstudents.Entity.userProfile.get.userprofile
 import ie.app.uetstudents.ui.detailForum.DetailForumContract
 import ie.app.uetstudents.ui.detailForum.DetailForumPresenter
 import ie.app.uetstudents.ui.diendan.forum_main.forumContract
 import ie.app.uetstudents.ui.diendan.forum_main.forumPresenter
 import ie.app.uetstudents.ui.tailieu.detailPDF
 import ie.app.uetstudents.utils.PreferenceUtils
+import kotlinx.android.synthetic.main.fragment_detail_forum.*
 import kotlinx.android.synthetic.main.fragment_uettalk.*
 import kotlinx.android.synthetic.main.fragment_uettalk.view.*
 import kotlinx.android.synthetic.main.layout_bottomsheet.*
@@ -56,7 +63,7 @@ import java.io.File
 
 class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
     DetailForumContract.View,
-    ClickItemCommentLike, BaseAdapter.OnclickPdf<ImageDto> {
+    ClickItemCommentLike, BaseAdapter.OnclickPdf<ImageDto>,Clicktext {
 
     private val CAMERA_REQUEST: Int = 8888
     private var _binding: FragmentUettalkBinding? = null
@@ -176,7 +183,7 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
         //presenter_uettalk_comment = DetailForumPresenter(this, Repository(requireContext()))
 
 
-        adapter_comment_uettalk = CommentAdapter(this)
+        adapter_comment_uettalk = CommentAdapter(this,this)
 
 
         bottomSheetDialog = BottomSheetDialog(
@@ -196,6 +203,76 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
         bottomSheetView.comment_recyclerview_uettalk.isNestedScrollingEnabled = false
         bottomSheetView.comment_recyclerview_uettalk.adapter = adapter_comment_uettalk
         bottomSheetView.comment_recyclerview_uettalk.adapter?.notifyDataSetChanged()
+
+
+        adapter_comment_uettalk.listener(object : truyen_name_account{
+            override fun truyen_name_account(
+                id_account: Int,
+                id_comment: Int,
+                recyclerView: RecyclerView
+            ) {
+                val call : Call<userprofile> = ApiClient.getClient.getUserProfile(id_account)
+                call.enqueue(object : Callback<userprofile>{
+                    override fun onResponse(
+                        call: Call<userprofile>,
+                        response: Response<userprofile>
+                    ) {
+                        if (response.isSuccessful)
+                        {
+                            val username : String = response.body()!!.fullname.toString()
+                            bottomSheetView.edt_comment_uettalk.setText("@user/$username ", TextView.BufferType.EDITABLE)
+
+                            bottomSheetView.edt_comment_uettalk.setSelection(bottomSheetView.edt_comment_uettalk.text.length)
+                            bottomSheetView.edt_comment_uettalk.requestFocus()
+                            if (bottomSheetView.edt_comment_uettalk.text.toString().contains("@user/"))
+                            {
+                                val begin : Int = bottomSheetView.edt_comment_uettalk.text.toString().indexOf("@user/")
+                                val end : Int = bottomSheetView.edt_comment_uettalk.text.toString().indexOf(" ",begin)
+                                bottomSheetView.edt_comment_uettalk.setOnClickListener {
+                                    bottomSheetView.edt_comment_uettalk.setSelection(begin,end)
+                                    val bundle = Bundle()
+                                    bundle.putInt("id_user",id_account)
+                                    this@UETTalkFragment.findNavController().navigate(R.id.action_nav_uettalk_to_action_profile,bundle)
+                                    bottomSheetDialog!!.dismiss()
+                                }
+                            }
+
+                            bottomSheetView.btn_update_comment_uettalk.setOnClickListener {
+                                CallApiSubComment(edt_detail_forum.text.toString(), PreferenceUtils.getUser().id, id_comment!!, uri)
+                                bottomSheetView.edt_comment_uettalk.text.clear()
+                                val call : Call<getsubcomment> = ApiClient.getClient.getSubComment(id_comment,1)
+                                call.enqueue(object : Callback<getsubcomment>{
+                                    override fun onResponse(
+                                        call: Call<getsubcomment>,
+                                        response: Response<getsubcomment>
+                                    ) {
+                                        val adapter = SubCommentAdapter(id_comment)
+                                        adapter.setData(response.body()!!.subCommentDtoList as ArrayList<SubcommentDto>)
+                                        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+                                        recyclerView.adapter= adapter
+                                        Log.e("lay subcomment","Thành công")
+                                        presenter_uettalk_comment.getDetailComment(QuestionDto.id!!,page_comment,id_user!!)
+                                    }
+
+                                    override fun onFailure(
+                                        call: Call<getsubcomment>,
+                                        t: Throwable
+                                    ) {
+                                        Log.e("lay subcomment","thất bại")
+                                    }
+                                })
+                            }
+
+
+                        }
+                    }
+
+                    override fun onFailure(call: Call<userprofile>, t: Throwable) {
+                        Log.e("lấy username comment","Thất bại")
+                    }
+                })
+            }
+        })
 
         bottomSheetView.comment_scrollview.setOnScrollChangeListener(object :
             NestedScrollView.OnScrollChangeListener {
@@ -241,6 +318,54 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
             uri = data.data
             Toast.makeText(context, "Đã thêm ảnh vào bình luận!", Toast.LENGTH_LONG).show()
         }
+    }
+    private fun CallApiSubComment(content: String, id_account: Int, idComment: Int, uri: Uri?) {
+        val account = ie.app.uetstudents.Entity.subcomment.post.Account(id_account)
+        val comment = ie.app.uetstudents.Entity.subcomment.post.Comment(idComment)
+        val subcommentpost = Subcomment_post(account,comment,content)
+        val gson = Gson()
+        val comment_to_json = gson.toJson(subcommentpost).toString()
+
+        val builder = MultipartBody.Builder()
+        builder.setType(MultipartBody.FORM)
+        builder.addFormDataPart("SubComment", comment_to_json)
+
+        uri?.let {
+            val strRealPath = RealPathUtil.getRealPath(requireContext(), uri)
+            val file = File(strRealPath)
+            builder.addFormDataPart("image_file", file.name, RequestBody.create(MediaType.parse("multipart/form-data"), file))
+            this.uri = null
+        }
+
+        val call: Call<getsubcomment> = ApiClient.getClient.postSubcomment(builder.build())
+        call.enqueue(object : Callback<getsubcomment> {
+            override fun onResponse(
+                call: Call<getsubcomment>,
+                response: Response<getsubcomment>
+            ) {
+                if (response.isSuccessful) {
+
+                    Toast.makeText(context, "Bình luận thành công", Toast.LENGTH_SHORT).show()
+
+                    val notifiItem = post_notifi_comment(
+                        "COMMENT",
+                        PreferenceUtils.getUser().avatar,
+                        ie.app.uetstudents.Entity.notifications_comment.post.Comment(idComment),
+                        PreferenceUtils.getUser().toString()
+                    )
+                    Repository(requireContext()).updateNotifi_Comment(notifiItem)
+                }
+            }
+
+            override fun onFailure(
+                call: Call<getsubcomment>,
+                t: Throwable
+            ) {
+                Log.e("Đăng comment", "Thất bại")
+            }
+        })
+
+
     }
 
     /*------------------------Click vao itemUet chuyển sang DetailFragment-------------------------------*/
@@ -472,6 +597,10 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
         val intent = Intent(activity, detailPDF::class.java)
         intent.putExtra("ExamDocument", item.image)
         startActivity(intent)
+    }
+
+    override fun clicktext(name_account: String) {
+        TODO("Not yet implemented")
     }
 
 

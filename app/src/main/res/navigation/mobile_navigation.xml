@@ -68,6 +68,9 @@
         <action
             android:id="@+id/action_nav_uettalk_to_detailForumFragment"
             app:destination="@id/detailForumFragment" />
+        <action
+            android:id="@+id/action_nav_uettalk_to_action_profile"
+            app:destination="@id/action_profile" />
     </fragment>
     <fragment android:id="@+id/write_fragment"
         android:name="ie.app.uetstudents.ui.diendan.Write.WriteFragment"
@@ -128,6 +131,9 @@
         <action
             android:id="@+id/action_action_profile_to_changeFragment"
             app:destination="@id/changeFragment" />
+        <action
+            android:id="@+id/action_action_profile_self"
+            app:destination="@id/action_profile" />
     </fragment>
     <fragment
         android:id="@+id/detailNotiFragment"
