@@ -27,6 +27,15 @@
                     android:layout_height="wrap_content">
 
                 </androidx.recyclerview.widget.RecyclerView>
+                <TextView
+                    android:id="@+id/search_more"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Xem thêm..."
+                    android:textSize="18sp"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:textAlignment="center"/>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
     </LinearLayout>

@@ -7,10 +7,17 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.Color
+import android.graphics.Typeface
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
+import android.text.style.RelativeSizeSpan
+import android.text.style.StyleSpan
 import android.util.Log
 import android.view.*
 import android.widget.Toast
@@ -375,9 +382,13 @@ class Profile_Fragment : Fragment(), ProfileContract.View, OnClickItem_UetTalk,
                     ) {
                         if (response.isSuccessful)
                         {
-                            val username : String = response.body()!!.fullname.toString()
-                            bottomSheetView.edt_comment_uettalk.setText("@user/$username ", TextView.BufferType.EDITABLE)
+                            val stringspanner = SpannableString("@user/$username ")
+                            val fcolor = ForegroundColorSpan(Color.BLUE)
+                            stringspanner.setSpan(RelativeSizeSpan(1.0f),0,stringspanner.length, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                            stringspanner.setSpan(fcolor,0,stringspanner.length, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                            stringspanner.setSpan(StyleSpan(Typeface.BOLD),0,stringspanner.length, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
 
+                            bottomSheetView.edt_comment_uettalk.setText(stringspanner, TextView.BufferType.EDITABLE)
                             bottomSheetView.edt_comment_uettalk.setSelection(bottomSheetView.edt_comment_uettalk.text.length)
                             bottomSheetView.edt_comment_uettalk.requestFocus()
                             if (bottomSheetView.edt_comment_uettalk.text.toString().contains("@user/"))

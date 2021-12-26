@@ -73,7 +73,7 @@ class CommentAdapter(
 
             if (liked == false)
             {
-                holder.itemView.like_comment.text = "Đã thích"
+                holder.itemView.like_comment.text = "Đã Thích"
                 holder.itemView.like_comment.setTextColor(R.color.purple_500)
                 liked = true
                 solanthich++
@@ -210,6 +210,7 @@ class CommentAdapter(
             }
             if (d.liked == true)
             {
+                itemView.like_comment.text = "Đã Thích"
                 itemView.like_comment.setTextColor(ContextCompat.getColor(itemView.context,R.color.purple_500))
             }else
             {

@@ -5,8 +5,15 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
+import android.text.style.RelativeSizeSpan
+import android.text.style.StyleSpan
 import android.util.Log
 import android.view.*
 import android.widget.TextView
@@ -142,7 +149,7 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
             }
         }
 
-        /*----------------------Đăng -Bình luận-----------------------*/
+        /*----------------------Đăng -Bình luận------sub comment-----------------*/
 
         adapter_comment.listener(object : truyen_name_account{
             override fun truyen_name_account(id_account: Int,id_comment: Int,recyclerView: RecyclerView) {
@@ -154,8 +161,14 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
                     ) {
                         if (response.isSuccessful)
                         {
+
                             val username : String = response.body()!!.fullname.toString()
-                            edt_detail_forum.setText("@user/$username ", TextView.BufferType.EDITABLE)
+                            val stringspanner = SpannableString("@user/$username ")
+                            val fcolor = ForegroundColorSpan(Color.BLUE)
+                            stringspanner.setSpan(RelativeSizeSpan(1.0f),0,stringspanner.length, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                            stringspanner.setSpan(fcolor,0,stringspanner.length, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                            stringspanner.setSpan(StyleSpan(Typeface.BOLD),0,stringspanner.length, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                            edt_detail_forum.setText(stringspanner, TextView.BufferType.EDITABLE)
 
                             edt_detail_forum.setSelection(edt_detail_forum.text.length)
                             edt_detail_forum.requestFocus()
@@ -430,7 +443,6 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
                         Log.e("Test_bỏ_like", "Thất bại")
                     }
                 })
-              //  presenterDetailForum.getDetailForum(id_question!!,id_user!!)
             }
 
 
