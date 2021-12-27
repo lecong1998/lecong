@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.itemcoment.view.*
 import kotlinx.android.synthetic.main.itemcoment.view.like_comment
 import kotlinx.android.synthetic.main.itemsub_comment.view.*
 
-class SubCommentAdapter (var id_comment : Int)
+class SubCommentAdapter (var id_comment : Int, var clicktext: Clicktext)
     : RecyclerView.Adapter<SubCommentAdapter.ViewHolder>() {
 
     var dataList: ArrayList<SubcommentDto> = ArrayList()
@@ -47,7 +47,7 @@ class SubCommentAdapter (var id_comment : Int)
     @SuppressLint("ResourceAsColor")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val dataModel = dataList.get(position)
-        holder.bindData(dataModel)
+        holder.bindData(dataModel,clicktext)
 
 
 
@@ -55,7 +55,7 @@ class SubCommentAdapter (var id_comment : Int)
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         @SuppressLint("ResourceAsColor")
-        fun bindData(d: SubcommentDto) {
+        fun bindData(d: SubcommentDto,clicktext: Clicktext) {
             itemView.name_subcomment_account.text = d.accountDto?.username
 
             Glide.with(itemView.context)
@@ -75,15 +75,18 @@ class SubCommentAdapter (var id_comment : Int)
             {
 
                 val begin : Int = d.content?.indexOf("@user/")
+                val startname : Int = d.content?.indexOf("/",begin)
                 val end : Int = d.content?.indexOf(" ",begin)
+
                 val spaned = SpannableString(d.content)
                 val fcolor = ForegroundColorSpan(Color.BLUE)
-                spaned.setSpan(RelativeSizeSpan(1.5f),begin,end,Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                spaned.setSpan(RelativeSizeSpan(1.0f),begin,end,Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
                 spaned.setSpan(fcolor,begin,end, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
                 spaned.setSpan(StyleSpan(Typeface.BOLD),begin,end,Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
                  spaned.setSpan(object : ClickableSpan(){
                      override fun onClick(widget: View) {
-                         Toast.makeText(itemView.context,d.content, Toast.LENGTH_LONG).show()
+                         val stringname = d.content.substring(startname+1,end)
+                         clicktext.clicktext(stringname)
                      }
                  },begin,end,Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
                 itemView.content_subcomment.movementMethod = LinkMovementMethod.getInstance()

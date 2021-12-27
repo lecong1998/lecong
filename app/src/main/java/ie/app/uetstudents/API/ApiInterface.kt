@@ -213,4 +213,7 @@ interface ApiInterface {
     fun getSubComment(@Path("id_comment") id_comment: Int,@Query("index") index: Int) : Call<getsubcomment>
     @POST("sub-comment/create")
     fun postSubcomment(@Body body : RequestBody) : Call<getsubcomment>
+
+    @GET("user-profile/get/username/{username}")
+    fun getUserProfile(@Path("username") username : String) : Call<userprofile>
 }

@@ -28,6 +28,8 @@
     </style>
     <style name="BottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@android:color/transparent</item>
+        <item name="android:minHeight">200dp</item>
+        <item name="maxHeight">500dp</item>
     </style>
 
     <!-- Dialog Full Screen -->

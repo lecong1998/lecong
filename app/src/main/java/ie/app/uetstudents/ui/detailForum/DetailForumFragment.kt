@@ -9,13 +9,17 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
+import android.text.Editable
 import android.text.Spannable
 import android.text.SpannableString
+import android.text.TextWatcher
 import android.text.style.ForegroundColorSpan
 import android.text.style.RelativeSizeSpan
 import android.text.style.StyleSpan
 import android.util.Log
 import android.view.*
+import android.widget.AdapterView
+import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import android.widget.Toast
@@ -33,6 +37,7 @@ import ie.app.uetstudents.Entity.Comment.get.CommentDto
 import ie.app.uetstudents.Entity.Comment.post.Question
 import ie.app.uetstudents.Entity.Comment.post.comment_post
 import ie.app.uetstudents.Entity.Question.get.QuestionDtoX
+import ie.app.uetstudents.Entity.Search.person.person
 import ie.app.uetstudents.Entity.like.Post.Account
 import ie.app.uetstudents.Entity.like.Post.Comment
 import ie.app.uetstudents.Entity.like.Post.like_comment
@@ -44,6 +49,7 @@ import ie.app.uetstudents.Entity.subcomment.get.getsubcomment
 import ie.app.uetstudents.Entity.subcomment.post.Subcomment_post
 import ie.app.uetstudents.Entity.userProfile.get.userprofile
 import ie.app.uetstudents.adapter.*
+import ie.app.uetstudents.data.response.AccountDto
 import ie.app.uetstudents.ui.tailieu.detailPDF
 import ie.app.uetstudents.utils.PreferenceUtils
 import kotlinx.android.synthetic.main.fragment_detail_forum.*
@@ -51,6 +57,8 @@ import kotlinx.android.synthetic.main.fragment_detail_forum.view.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -107,6 +115,78 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
 
 
         /*---------------------------------------------------------------*/
+        edt_detail_forum.addTextChangedListener(object : TextWatcher{
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                Log.e("call person","Thành công")
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (s.toString().toLowerCase().contains("@user/"))
+                {
+                    val str: String = s.toString()
+                    val begin = str.indexOf("@user/")
+                    val startkitu = str.lastIndexOf("/", s.toString().length)
+                    val end = str.indexOf(" ", begin)
+                    if (end<0)
+                    {
+                        val text = s?.substring(startkitu+1,s?.length).toString()
+                        val call : Call<person> = ApiClient.getClient.getPerSonSearch(1,text!!)
+                        call.enqueue(object : Callback<person>{
+                            override fun onResponse(
+                                call: Call<person>,
+                                response: Response<person>
+                            ) {
+                                if (response.isSuccessful)
+                                {
+                                    val person : person = response.body()!!
+                                    val adapterperson = adapter_person(person.accountDtoList)
+                                    listperson.adapter = adapterperson
+                                    Log.e("call person","Thành công")
+                                }
+                            }
+
+                            override fun onFailure(call: Call<person>, t: Throwable) {
+                                TODO("Not yet implemented")
+                            }
+                        })
+                    }
+                }
+
+                listperson.setOnItemClickListener(object : AdapterView.OnItemClickListener
+                {
+                    override fun onItemClick(
+                        parent: AdapterView<*>?,
+                        view: View?,
+                        position: Int,
+                        id: Long
+                    ) {
+                        val startkitu = s.toString().lastIndexOf("/", s.toString().length)
+                        val p = listperson.getItemAtPosition(position) as AccountDto
+                        val str = s.toString()?.substring(0,startkitu)
+                        var string = ""
+                        if (str.contains("@user/"))
+                        {
+
+                            string = str + p.username+" "
+                        }else
+                        {
+                            string = str+"/" + p.username+" "
+                        }
+
+                        edt_detail_forum.text.clear()
+                        edt_detail_forum.setText(string)
+                        listperson.visibility = View.GONE
+                        edt_detail_forum.setSelection(edt_detail_forum.text.length)
+                        edt_detail_forum.requestFocus()
+                    }
+                })
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                Log.e("call person","Thành công")
+            }
+        })
+
 
         /*---------------------update Comment vào layout-----------------------------------*/
         id_question?.let { presenterDetailForum.getDetailComment(it, page_comment,id_user!!) }
@@ -188,12 +268,12 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
                                 CallApiSubComment(edt_detail_forum.text.toString(), PreferenceUtils.getUser().id, id_comment!!, uri)
                                 edt_detail_forum.text.clear()
                                 val call : Call<getsubcomment> = ApiClient.getClient.getSubComment(id_comment,1)
-                                call.enqueue(object : Callback<getsubcomment>{
+                                call.enqueue(object : Callback<getsubcomment>, Clicktext {
                                     override fun onResponse(
                                         call: Call<getsubcomment>,
                                         response: Response<getsubcomment>
                                     ) {
-                                        val adapter = SubCommentAdapter(id_comment)
+                                        val adapter = SubCommentAdapter(id_comment,this)
                                         adapter.setData(response.body()!!.subCommentDtoList as ArrayList<SubcommentDto>)
                                         recyclerView.layoutManager = LinearLayoutManager(requireContext())
                                         recyclerView.adapter= adapter
@@ -206,6 +286,10 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
                                         t: Throwable
                                     ) {
                                         Log.e("lay subcomment","thất bại")
+                                    }
+
+                                    override fun clicktext(name_account: String) {
+                                        chuyentrangprofile(name_account)
                                     }
                                 })
                             }
@@ -267,6 +351,8 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
 
         }
     }
+
+
 
     private fun CallApiSubComment(content: String, id_account: Int, idComment: Int, uri: Uri?) {
         val account = ie.app.uetstudents.Entity.subcomment.post.Account(id_account)
@@ -619,6 +705,27 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
     }
 
     override fun clicktext(name_account: String) {
-        TODO("Not yet implemented")
+       chuyentrangprofile(name_account)
+    }
+
+    fun chuyentrangprofile(username: String)
+    {
+        val call : Call<userprofile> = ApiClient.getClient.getUserProfile(username)
+        call.enqueue(object : Callback<userprofile>{
+            override fun onResponse(call: Call<userprofile>, response: Response<userprofile>) {
+                if (response.isSuccessful)
+                {
+                    val id_account = response.body()!!.id
+                    val bundle = Bundle()
+                    bundle.putInt("id_user",id_account)
+                    this@DetailForumFragment.findNavController().navigate(R.id.action_detailForumFragment_to_action_profile,bundle)
+
+                }
+            }
+
+            override fun onFailure(call: Call<userprofile>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
+        })
     }
 }

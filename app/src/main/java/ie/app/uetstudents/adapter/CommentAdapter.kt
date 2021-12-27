@@ -22,6 +22,7 @@ import ie.app.uetstudents.API.ApiClient
 import ie.app.uetstudents.Entity.Comment.get.CommentDto
 import ie.app.uetstudents.Entity.subcomment.get.SubcommentDto
 import ie.app.uetstudents.Entity.subcomment.get.getsubcomment
+import ie.app.uetstudents.RealPathUtil.MyMovementMethod
 import ie.app.uetstudents.utils.PreferenceUtils
 import kotlinx.android.synthetic.main.fragment_detail_forum.*
 import kotlinx.android.synthetic.main.itemcoment.view.*
@@ -140,7 +141,7 @@ class CommentAdapter(
             ) {
                 if (response.isSuccessful)
                 {
-                    adapter_subcomment = SubCommentAdapter(dataModel.id)
+                    adapter_subcomment = SubCommentAdapter(dataModel.id,clicktext)
                     adapter_subcomment!!.setData(response.body()?.subCommentDtoList!! as ArrayList<SubcommentDto>)
                     holder.itemView.listsubcomment.layoutManager = LinearLayoutManager(holder.itemView.context)
                     holder.itemView.listsubcomment.adapter?.notifyDataSetChanged()
@@ -181,19 +182,29 @@ class CommentAdapter(
                 val begin : Int = d.content?.indexOf("@user/")
                 val startname : Int = d.content?.indexOf("/",begin)
                 val end : Int = d.content?.indexOf(" ",begin)
-                val spaned = SpannableString(d.content)
-                val fcolor = ForegroundColorSpan(Color.BLUE)
-                spaned.setSpan(RelativeSizeSpan(1.5f),begin,end,Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
-                spaned.setSpan(fcolor,begin,end, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
-                spaned.setSpan(StyleSpan(Typeface.BOLD),begin,end,Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
-                spaned.setSpan(object : ClickableSpan(){
-                    override fun onClick(widget: View) {
-                        val stringname = d.content.substring(startname+1,end-1)
-                        clicktext.clicktext(stringname)
-                    }
-                },begin,end,Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
-                itemView.content_subcomment.movementMethod = LinkMovementMethod.getInstance()
-                itemView.content_comment.text = spaned
+                if (end>0)
+                {
+                    val spaned = SpannableString(d.content)
+                    val fcolor = ForegroundColorSpan(Color.BLUE)
+                    spaned.setSpan(RelativeSizeSpan(1.0f),begin,end,0)
+                    spaned.setSpan(fcolor,begin,end,0)
+                    spaned.setSpan(StyleSpan(Typeface.BOLD),begin,end,0)
+                    spaned.setSpan(object : ClickableSpan(){
+                        override fun onClick(widget: View) {
+                            val stringname = d.content.substring(startname+1,end)
+                            clicktext.clicktext(stringname)
+                        }
+                    },begin,end,0)
+
+
+//                     itemView.content_subcomment.movementMethod = MyMovementMethod.getInstance()
+                    itemView.content_comment.text = spaned
+                }else
+                {
+                    itemView.content_comment.text = d.content
+                }
+
+
             }
             else
             {
