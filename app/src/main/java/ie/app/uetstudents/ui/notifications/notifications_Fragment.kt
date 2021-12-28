@@ -68,10 +68,10 @@ class notifications_Fragment : Fragment() , OnClickItem_Notification,notificatio
         adapterNotification.listnotifi_item?.sortedByDescending { notificationItem: notification_item -> notificationItem.time   }
         adapterNotification?.notifyDataSetChanged()
 
-        if (adapterNotification.itemCount % 10 != 0)
+     /*   if (adapterNotification.itemCount % 10 != 0)
         {
             search_more.visibility = View.GONE
-        }
+        }*/
         /*search_more.setOnClickListener {
             progress_bar_notifi.visibility = View.VISIBLE
             page++
@@ -93,9 +93,11 @@ class notifications_Fragment : Fragment() , OnClickItem_Notification,notificatio
                 {
                     progress_bar_notifi.visibility = View.VISIBLE
                     page++
+                    adapterNotification.resetList()
                     presenter.getNotificationQuestion(id_user!!,page)
                     presenter.getNotificationComment(id_user!!,page)
                     progress_bar_notifi.visibility = View.GONE
+
                     adapterNotification.listnotifi_item?.sortedByDescending { notificationItem: notification_item -> notificationItem.time   }
                     adapterNotification?.notifyDataSetChanged()
                 }

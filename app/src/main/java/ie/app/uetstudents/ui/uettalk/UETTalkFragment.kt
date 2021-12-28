@@ -734,4 +734,10 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
         })
     }
 
+    override fun onItemCLickImage(position: Int, item: ImageDto) {
+        val bundle : Bundle = Bundle()
+        bundle.putString("image",item.image)
+        this.findNavController().navigate(R.id.action_nav_uettalk_to_imageFragment,bundle)
+    }
+
 }

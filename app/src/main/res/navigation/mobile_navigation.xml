@@ -71,6 +71,9 @@
         <action
             android:id="@+id/action_nav_uettalk_to_action_profile"
             app:destination="@id/action_profile" />
+        <action
+            android:id="@+id/action_nav_uettalk_to_imageFragment"
+            app:destination="@id/imageFragment" />
     </fragment>
     <fragment android:id="@+id/write_fragment"
         android:name="ie.app.uetstudents.ui.diendan.Write.WriteFragment"
@@ -134,6 +137,9 @@
         <action
             android:id="@+id/action_action_profile_self"
             app:destination="@id/action_profile" />
+        <action
+            android:id="@+id/action_action_profile_to_imageFragment"
+            app:destination="@id/imageFragment" />
     </fragment>
     <fragment
         android:id="@+id/detailNotiFragment"
@@ -156,6 +162,11 @@
             android:id="@+id/action_writeNotificationFragment_to_nav_notifications"
             app:destination="@id/nav_notifications" />
     </fragment>
+    <fragment
+        android:id="@+id/imageFragment"
+        android:name="ie.app.uetstudents.ui.detailForum.ImageFragment"
+        android:label="Ảnh"
+        tools:layout="@layout/fragment_image" />
 
 
 </navigation>

@@ -39,5 +39,6 @@ abstract class BaseAdapter<T>(val context: Context) : RecyclerView.Adapter<BaseV
 
     interface OnclickPdf<T> {
         fun onItemClick(position: Int, item: T)
+        fun onItemCLickImage(position: Int,item: T)
     }
 }

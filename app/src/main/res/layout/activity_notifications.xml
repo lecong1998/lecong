@@ -27,7 +27,7 @@
                     android:layout_height="wrap_content">
 
                 </androidx.recyclerview.widget.RecyclerView>
-                <TextView
+         <!--       <TextView
                     android:id="@+id/search_more"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -35,7 +35,7 @@
                     android:textSize="18sp"
                     android:textColor="@color/black"
                     android:textStyle="bold"
-                    android:textAlignment="center"/>
+                    android:textAlignment="center"/> -->
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
     </LinearLayout>

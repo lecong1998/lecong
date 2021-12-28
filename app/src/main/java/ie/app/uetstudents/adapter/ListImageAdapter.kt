@@ -42,7 +42,11 @@ callback: BaseAdapter.OnclickPdf<ImageDto>)
         holder.findViewById<ImageView>(R.id.imageItem).setOnClickListener {
             if(item.image.contains(".pdf")) {
                 callback!!.onItemClick(position, item)
+            }else
+            {
+                callback!!.onItemCLickImage(position, item)
             }
+
         }
 
 
