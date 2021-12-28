@@ -3,6 +3,10 @@ package ie.app.uetstudents.ui.detailForum
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.AlertDialog
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
@@ -52,6 +56,7 @@ import ie.app.uetstudents.adapter.*
 import ie.app.uetstudents.data.response.AccountDto
 import ie.app.uetstudents.ui.tailieu.detailPDF
 import ie.app.uetstudents.utils.PreferenceUtils
+import kotlinx.android.synthetic.main.dialoglink.view.*
 import kotlinx.android.synthetic.main.fragment_detail_forum.*
 import kotlinx.android.synthetic.main.fragment_detail_forum.view.*
 import okhttp3.MediaType
@@ -147,7 +152,72 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
                         })
                     }
                 }
+             /*   else if (s.toString().toLowerCase().contains("@forum/")
+                     )
+                {
+                    val str: String = s.toString()
+                    val begin = str.indexOf("@forum/")
+                    val startkitu = str.lastIndexOf("/", s.toString().length)
+                    val end = str.indexOf(" ", begin)
+                    if (end>0)
+                    {
+                        val spanned = SpannableString(s.toString())
+                        val fcolor = ForegroundColorSpan(Color.BLUE)
+                        spanned.setSpan(
+                            RelativeSizeSpan(1.0f),
+                            begin,
+                            end,
+                            Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                        )
+                        spanned.setSpan(
+                            fcolor,
+                            begin,
+                            end,
+                            Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                        )
+                        spanned.setSpan(
+                            StyleSpan(Typeface.BOLD),
+                            begin,
+                            end,
+                            Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                        )
+                        edt_detail_forum.setText(spanned)
+                    }
+                }
+                else if (s.toString().toLowerCase().contains("@uettalk/")
+                )
+                {
+                    val str: String = s.toString()
+                    val begin = str.indexOf("@uettalk/")
+                    val startkitu = str.lastIndexOf("/", s.toString().length)
+                    val end = str.indexOf(" ", begin)
+                    if (end>0)
+                    {
+                        val spanned = SpannableString(s.toString())
+                        val fcolor = ForegroundColorSpan(Color.BLUE)
+                        spanned.setSpan(
+                            RelativeSizeSpan(1.0f),
+                            begin,
+                            end,
+                            Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                        )
+                        spanned.setSpan(
+                            fcolor,
+                            begin,
+                            end,
+                            Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                        )
+                        spanned.setSpan(
+                            StyleSpan(Typeface.BOLD),
+                            begin,
+                            end,
+                            Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                        )
+                        edt_detail_forum.setText(spanned)
+                    }
 
+
+                }*/
                 listperson.setOnItemClickListener(object : AdapterView.OnItemClickListener {
                     override fun onItemClick(
                         parent: AdapterView<*>?,
@@ -189,7 +259,7 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
                         )
                         stringspanner.setSpan(
                             StyleSpan(Typeface.BOLD),
-                            0,
+                            begin,
                             stringspanner.length,
                             Spannable.SPAN_INCLUSIVE_EXCLUSIVE
                         )
@@ -352,8 +422,18 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
                                         Log.e("lay subcomment", "thất bại")
                                     }
 
-                                    override fun clicktext(name_account: String) {
-                                        chuyentrangprofile(name_account)
+                                    override fun clicktext(name_account: String,type: String) {
+                                        if (type.equals("person"))
+                                        {
+                                            chuyentrangprofile(name_account)
+                                        }else
+                                            if (type.equals("forum")|| type.equals("uettalk"))
+                                            {
+                                                val id = name_account.toInt()
+                                                val bundle = Bundle()
+                                                bundle.putInt("id_question",id)
+                                                this@DetailForumFragment.findNavController().navigate(R.id.action_detailForumFragment_self,bundle)
+                                            }
                                     }
                                 })
                             }
@@ -605,7 +685,31 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
 
 
         getlink.setOnClickListener {
+            val dialogBuilder = AlertDialog.Builder(context)
+            val view = LayoutInflater.from(context).inflate(R.layout.dialoglink,null)
+            dialogBuilder.setView(view)
+            val dialog = dialogBuilder.create()
+            dialog.show()
+            if (data.type_content_id==1)
+            {
+                view.link_question.setText("@forum/${data.id} ")
+            }else
+            if (data.type_content_id==2)
+            {
+                view.link_question.setText("@uettalk/${data.id} ")
+            }
+            view.link_question.setOnClickListener {
+                view.link_question.setSelection(0,view.link_question.text.length)
+            }
 
+            view.clickcopy.setOnClickListener {
+                val txtcopy : String = view.link_question.text.toString()
+                val clipData : ClipData = ClipData.newPlainText("link",txtcopy)
+                val clipboardManager = activity?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                clipboardManager.setPrimaryClip(clipData)
+                Toast.makeText(context,"Đã Copy!",Toast.LENGTH_LONG).show()
+                dialog.dismiss()
+            }
         }
     }
 
@@ -621,7 +725,8 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
             chuacocomment.text = ""
         }
         detailforum_progressbar.visibility = View.GONE
-        if (datacomment.result_quantity?.rem(10) != 0) {
+
+        if (datacomment.result_quantity?.rem(10) != 0||datacomment.result_quantity == 0) {
             detail_more.visibility = View.GONE
         } else {
             detail_more.visibility = View.VISIBLE
@@ -797,8 +902,19 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
         this.findNavController().navigate(R.id.action_detailForumFragment_to_imageFragment,bundle)
     }
 
-    override fun clicktext(name_account: String) {
-        chuyentrangprofile(name_account)
+    override fun clicktext(name_account: String,type: String) {
+        if (type.equals("person"))
+        {
+            chuyentrangprofile(name_account)
+        }else
+            if (type.equals("forum")|| type.equals("uettalk"))
+            {
+                val id = name_account.toInt()
+                val bundle = Bundle()
+                bundle.putInt("id_question",id)
+                this.findNavController().navigate(R.id.action_detailForumFragment_self,bundle)
+            }
+
     }
 
     fun chuyentrangprofile(username: String) {

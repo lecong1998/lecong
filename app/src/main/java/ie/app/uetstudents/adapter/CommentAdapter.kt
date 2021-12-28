@@ -186,13 +186,13 @@ class CommentAdapter(
                     spaned.setSpan(object : ClickableSpan() {
                         override fun onClick(widget: View) {
                             val stringname = d.content.substring(startname + 1, end)
-                            clicktext.clicktext(stringname)
+                            clicktext.clicktext(stringname,"person")
                         }
                     }, begin, end, 0)
                     itemView.content_comment.setText(spaned, TextView.BufferType.SPANNABLE).let {
                         itemView.content_comment.setOnClickListener {
                             val stringname = d.content.substring(startname + 1, end)
-                            clicktext.clicktext(stringname)
+                            clicktext.clicktext(stringname,"person")
                         }
                     }
 
@@ -202,7 +202,80 @@ class CommentAdapter(
                 }
 
 
-            } else {
+            }else
+                if(d.content?.contains("@forum/") == true)
+            {
+                val begin: Int = d.content?.indexOf("@forum/")!!
+                val startname: Int = d.content?.indexOf("/", begin)
+                val end: Int = d.content?.indexOf(" ", begin)
+
+                val spaned = SpannableString(d.content)
+                val fcolor = ForegroundColorSpan(Color.BLUE)
+                spaned.setSpan(
+                    RelativeSizeSpan(1.0f),
+                    begin,
+                    end,
+                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                )
+                spaned.setSpan(fcolor, begin, end, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                spaned.setSpan(
+                    StyleSpan(Typeface.BOLD),
+                    begin,
+                    end,
+                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                )
+                spaned.setSpan(object : ClickableSpan() {
+                    override fun onClick(widget: View) {
+                        val stringname = d.content.substring(startname + 1, end)
+                        clicktext.clicktext(stringname,"forum")
+                    }
+                }, begin, end, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+
+                itemView.content_comment.setText(spaned, TextView.BufferType.SPANNABLE).let {
+                    itemView.content_comment.setOnClickListener {
+                        val stringname = d.content.substring(startname + 1, end)
+                        clicktext.clicktext(stringname,"forum")
+                    }
+                }
+            }else
+                if (d.content?.contains("@uettalk/") == true)
+                {
+                    val begin: Int = d.content?.indexOf("@uettalk/")
+                    val startname: Int = d.content?.indexOf("/", begin)
+                    val end: Int = d.content?.indexOf(" ", begin)
+
+                    val spaned = SpannableString(d.content)
+                    val fcolor = ForegroundColorSpan(Color.BLUE)
+                    spaned.setSpan(
+                        RelativeSizeSpan(1.0f),
+                        begin,
+                        end,
+                        Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                    )
+                    spaned.setSpan(fcolor, begin, end, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                    spaned.setSpan(
+                        StyleSpan(Typeface.BOLD),
+                        begin,
+                        end,
+                        Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                    )
+                    spaned.setSpan(object : ClickableSpan() {
+                        override fun onClick(widget: View) {
+                            val stringname = d.content.substring(startname + 1, end)
+                            clicktext.clicktext(stringname,"uettalk")
+                        }
+                    }, begin, end, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+
+
+
+                    itemView.content_comment.setText(spaned, TextView.BufferType.SPANNABLE).let {
+                        itemView.content_comment.setOnClickListener {
+                            val stringname = d.content.substring(startname + 1, end)
+                            clicktext.clicktext(stringname,"uettalk")
+                        }
+                    }
+                }
+            else {
                 itemView.content_comment.text = d.content
             }
 
@@ -249,5 +322,5 @@ interface truyen_name_account {
 }
 
 interface Clicktext {
-    fun clicktext(name_account: String)
+    fun clicktext(name_account: String,type: String)
 }

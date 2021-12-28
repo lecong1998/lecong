@@ -98,6 +98,9 @@
         <action
             android:id="@+id/action_detailForumFragment_to_imageFragment"
             app:destination="@id/imageFragment" />
+        <action
+            android:id="@+id/action_detailForumFragment_self"
+            app:destination="@id/detailForumFragment" />
     </fragment>
     <fragment
         android:id="@+id/writingStatusFragment"

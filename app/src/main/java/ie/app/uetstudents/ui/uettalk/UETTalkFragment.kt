@@ -252,6 +252,69 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
                         })
                     }
                 }
+                /*else if (s.toString().toLowerCase().contains("@forum/"))
+                {
+                    val str: String = s.toString()
+                    val begin = str.indexOf("@forum/")
+                    val startkitu = str.lastIndexOf("/", s.toString().length)
+                    val end = str.indexOf(" ", begin)
+                    if (end>0)
+                    {
+                        val spanned = SpannableString(s.toString())
+                        val fcolor = ForegroundColorSpan(Color.BLUE)
+                        spanned.setSpan(
+                            RelativeSizeSpan(1.0f),
+                            begin,
+                            end,
+                            Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                        )
+                        spanned.setSpan(
+                            fcolor,
+                            begin,
+                            end,
+                            Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                        )
+                        spanned.setSpan(
+                            StyleSpan(Typeface.BOLD),
+                            begin,
+                            end,
+                            Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                        )
+                        bottomSheetView.edt_comment_uettalk.setText(spanned)
+                    }
+
+
+                } else if (s.toString().toLowerCase().contains("@uettalk/"))
+                {
+                    val str: String = s.toString()
+                    val begin = str.indexOf("@uettalk/")
+                    val startkitu = str.lastIndexOf("/", s.toString().length)
+                    val end = str.indexOf(" ", begin)
+                    if (end>0)
+                    {
+                        val spanned = SpannableString(s.toString())
+                        val fcolor = ForegroundColorSpan(Color.BLUE)
+                        spanned.setSpan(
+                            RelativeSizeSpan(1.0f),
+                            begin,
+                            end,
+                            Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                        )
+                        spanned.setSpan(
+                            fcolor,
+                            begin,
+                            end,
+                            Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                        )
+                        spanned.setSpan(
+                            StyleSpan(Typeface.BOLD),
+                            begin,
+                            end,
+                            Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                        )
+                        bottomSheetView.edt_comment_uettalk.setText(spanned)
+                    }
+                } */
 
                 bottomSheetView.listperson_uet.setOnItemClickListener(object : AdapterView.OnItemClickListener
                 {
@@ -366,8 +429,20 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
                                         Log.e("lay subcomment","thất bại")
                                     }
 
-                                    override fun clicktext(name_account: String) {
-                                        chuyentrangprofile(name_account)
+                                    override fun clicktext(name_account: String,type: String) {
+                                        if (type.equals("person"))
+                                        {
+                                            chuyentrangprofile(name_account)
+                                        }else
+                                            if (type.equals("forum")|| type.equals("uettalk"))
+                                            {
+                                                val id = name_account.toInt()
+                                                val bundle = Bundle()
+                                                bundle.putInt("id_question",id)
+                                                this@UETTalkFragment.findNavController().navigate(R.id.action_nav_uettalk_to_detailForumFragment,bundle)
+                                                bottomSheetDialog?.dismiss()
+                                            }
+
                                     }
                                 })
                             }
@@ -708,8 +783,20 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
         startActivity(intent)
     }
 
-    override fun clicktext(name_account: String) {
-        chuyentrangprofile(name_account)
+    override fun clicktext(name_account: String,type : String) {
+        if (type.equals("person"))
+        {
+            chuyentrangprofile(name_account)
+        }else
+            if (type.equals("forum")|| type.equals("uettalk"))
+            {
+                val id = name_account.toInt()
+                val bundle = Bundle()
+                bundle.putInt("id_question",id)
+                this.findNavController().navigate(R.id.action_nav_uettalk_to_detailForumFragment,bundle)
+                bottomSheetDialog?.dismiss()
+            }
+
     }
 
     fun chuyentrangprofile(username: String)

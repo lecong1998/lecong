@@ -211,11 +211,9 @@ class WritingStatusFragment : Fragment(), OnclickItem_deleteanh {
     private fun callApi(writeContent: String, listUri: List<Uri>, user: Int) {
         val builder = MultipartBody.Builder()
         builder.setType(MultipartBody.FORM)
-
-        val category = Category(1)
         val typeContent = TypeContent(2)
         val account = Account(user)
-        val question = QuestionPost(account, category, writeContent, writeContent, typeContent)
+        val question = QuestionPost(account, null, writeContent, writeContent, typeContent)
         val gson = Gson()
         val questionString = gson.toJson(question).toString()
 

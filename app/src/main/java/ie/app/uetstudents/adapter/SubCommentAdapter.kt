@@ -94,13 +94,74 @@ class SubCommentAdapter(var id_comment: Int, var clicktext: Clicktext) :
                 spaned.setSpan(object : ClickableSpan() {
                     override fun onClick(widget: View) {
                         val stringname = d.content.substring(startname + 1, end)
-                        clicktext.clicktext(stringname)
+                        clicktext.clicktext(stringname,"person")
                     }
                 }, begin, end, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
                 itemView.content_subcomment.movementMethod = LinkMovementMethod.getInstance()
                 itemView.content_subcomment.text = spaned
 
-            } else {
+            } else
+            if(d.content?.contains("@forum/"))
+            {
+                val begin: Int = d.content?.indexOf("@forum/")
+                val startname: Int = d.content?.indexOf("/", begin)
+                val end: Int = d.content?.indexOf(" ", begin)
+
+                val spaned = SpannableString(d.content)
+                val fcolor = ForegroundColorSpan(Color.BLUE)
+                spaned.setSpan(
+                    RelativeSizeSpan(1.0f),
+                    begin,
+                    end,
+                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                )
+                spaned.setSpan(fcolor, begin, end, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                spaned.setSpan(
+                    StyleSpan(Typeface.BOLD),
+                    begin,
+                    end,
+                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                )
+                spaned.setSpan(object : ClickableSpan() {
+                    override fun onClick(widget: View) {
+                        val stringname = d.content.substring(startname + 1, end)
+                       clicktext.clicktext(stringname,"forum")
+                    }
+                }, begin, end, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                itemView.content_subcomment.movementMethod = LinkMovementMethod.getInstance()
+                itemView.content_subcomment.text = spaned
+            }else
+            if (d.content?.contains("@uettalk/"))
+            {
+                val begin: Int = d.content?.indexOf("@uettalk/")
+                val startname: Int = d.content?.indexOf("/", begin)
+                val end: Int = d.content?.indexOf(" ", begin)
+
+                val spaned = SpannableString(d.content)
+                val fcolor = ForegroundColorSpan(Color.BLUE)
+                spaned.setSpan(
+                    RelativeSizeSpan(1.0f),
+                    begin,
+                    end,
+                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                )
+                spaned.setSpan(fcolor, begin, end, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                spaned.setSpan(
+                    StyleSpan(Typeface.BOLD),
+                    begin,
+                    end,
+                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                )
+                spaned.setSpan(object : ClickableSpan() {
+                    override fun onClick(widget: View) {
+                        val stringname = d.content.substring(startname + 1, end)
+                          clicktext.clicktext(stringname,"uettalk")
+                    }
+                }, begin, end, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                itemView.content_subcomment.movementMethod = LinkMovementMethod.getInstance()
+                itemView.content_subcomment.text = spaned
+            }
+            else{
                 itemView.content_subcomment.text = d.content
             }
             val time: String = d.time?.substring(11, 16) + " " + d.time?.substring(0, 10)
