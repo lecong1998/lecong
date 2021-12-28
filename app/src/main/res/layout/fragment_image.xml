@@ -5,12 +5,28 @@
     android:layout_height="match_parent"
     android:background="@color/black"
     android:gravity="center"
+    android:orientation="vertical"
     tools:context=".ui.detailForum.ImageFragment">
     <!-- TODO: Update blank fragment layout -->
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/image_image"
+        android:layout_weight="1"
         android:scaleType="centerInside"
         android:src="@drawable/img_default_user"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Tải ảnh"
+        android:id="@+id/taianh"
+        android:background="@drawable/vien_button"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="10dp"
+        android:textColor="@color/white"
+        android:textSize="18sp"/>
+
+
 </LinearLayout>

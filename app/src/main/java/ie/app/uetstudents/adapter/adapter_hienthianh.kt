@@ -41,6 +41,9 @@ class adapter_hienthianh(var listanh: ArrayList<String>,var onclick : click_pdf)
             if (datamode.contains(".pdf"))
             {
                 onclick.Onclick_Pdf(datamode)
+            }else
+            {
+                onclick.OnclickAnh(datamode)
             }
         }
     }
@@ -52,4 +55,5 @@ class adapter_hienthianh(var listanh: ArrayList<String>,var onclick : click_pdf)
 
 interface click_pdf{
     fun Onclick_Pdf(anh : String)
+    fun OnclickAnh(anh: String)
 }

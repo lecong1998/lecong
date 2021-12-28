@@ -602,6 +602,11 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
 
 
         }
+
+
+        getlink.setOnClickListener {
+
+        }
     }
 
     /*----------------Lấy Thông tin commnet---------------------------*/
@@ -784,6 +789,12 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
         val intent = Intent(activity, detailPDF::class.java)
         intent.putExtra("ExamDocument", anh)
         startActivity(intent)
+    }
+
+    override fun OnclickAnh(anh: String) {
+        val bundle = Bundle()
+        bundle.putString("image",anh)
+        this.findNavController().navigate(R.id.action_detailForumFragment_to_imageFragment,bundle)
     }
 
     override fun clicktext(name_account: String) {

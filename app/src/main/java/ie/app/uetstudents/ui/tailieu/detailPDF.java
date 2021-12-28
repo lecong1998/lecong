@@ -36,8 +36,6 @@ public class detailPDF extends AppCompatActivity {
     URL url = null;
     String filename ;
 
-
-   // String pdfurl = "http://34.126.110.103:8080/uetshare/image/home/uet/data/account_1/exam_document_5/giaitich.pdf";
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

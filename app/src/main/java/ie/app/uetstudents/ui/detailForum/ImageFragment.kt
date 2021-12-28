@@ -1,7 +1,12 @@
 package ie.app.uetstudents.ui.detailForum
 
+import android.app.DownloadManager
+import android.content.Context
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.view.*
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import ie.app.uetstudents.API.ApiClient
@@ -30,9 +35,24 @@ class ImageFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Glide.with(requireActivity()).load(ApiClient.BASE_URL+"image"+image)
+
+        var url : String = ApiClient.BASE_URL+"image"+image as String
+        Glide.with(requireActivity()).load(url)
             .error(R.drawable.img_error)
             .into(image_image)
+
+        taianh.setOnClickListener {
+            val request = DownloadManager.Request(Uri.parse(url.toString() + ""))
+            val filename = image?.substring(image?.lastIndexOf("/")?.plus(1)!!)
+            request.setTitle(filename)
+            request.setMimeType("image/*")
+            request.allowScanningByMediaScanner()
+            request.setAllowedOverMetered(true)
+            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename)
+            val dl = activity?.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+            dl.enqueue(request)
+        }
     }
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
