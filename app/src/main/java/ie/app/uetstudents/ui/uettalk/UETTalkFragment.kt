@@ -273,12 +273,28 @@ class UETTalkFragment : Fragment(), forumContract.View, OnClickItem_UetTalk,
                         {
                             string = str+"/" + p.username+" "
                         }
-
+                        val begin = string.indexOf("@user/")
+                        val end = string.indexOf(" ", begin)
                         bottomSheetView.edt_comment_uettalk.text.clear()
-                        bottomSheetView.edt_comment_uettalk.setText(string)
+
+                        val stringspanner = SpannableString(string)
+                        val fcolor = ForegroundColorSpan(Color.BLUE)
+                        stringspanner.setSpan(RelativeSizeSpan(1.0f),begin,end, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                        stringspanner.setSpan(fcolor,begin,end, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                        stringspanner.setSpan(StyleSpan(Typeface.BOLD),begin,end, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+
+                        bottomSheetView.edt_comment_uettalk.setText(stringspanner)
                         bottomSheetView.listperson_uet.visibility = View.GONE
                         bottomSheetView.edt_comment_uettalk.setSelection(bottomSheetView.edt_comment_uettalk.text.length)
                         bottomSheetView.edt_comment_uettalk.requestFocus()
+                        bottomSheetView.edt_comment_uettalk.setOnClickListener {
+                            bottomSheetView.edt_comment_uettalk.setSelection(begin,end)
+                            val bundle = Bundle()
+                            bundle.putInt("id_user",p.id)
+                            this@UETTalkFragment.findNavController().navigate(R.id.action_nav_uettalk_to_action_profile,bundle)
+                            bottomSheetDialog!!.dismiss()
+                        }
+
                     }
                 })
             }
