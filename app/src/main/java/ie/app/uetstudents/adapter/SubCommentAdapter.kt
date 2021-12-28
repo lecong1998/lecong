@@ -21,11 +21,11 @@ import kotlinx.android.synthetic.main.itemcoment.view.*
 import kotlinx.android.synthetic.main.itemcoment.view.like_comment
 import kotlinx.android.synthetic.main.itemsub_comment.view.*
 
-class SubCommentAdapter (var id_comment : Int, var clicktext: Clicktext)
-    : RecyclerView.Adapter<SubCommentAdapter.ViewHolder>() {
+class SubCommentAdapter(var id_comment: Int, var clicktext: Clicktext) :
+    RecyclerView.Adapter<SubCommentAdapter.ViewHolder>() {
 
     var dataList: ArrayList<SubcommentDto> = ArrayList()
-    var click_phanhoi : truyen_name_account? = null
+    var click_phanhoi: truyen_name_account? = null
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -47,15 +47,14 @@ class SubCommentAdapter (var id_comment : Int, var clicktext: Clicktext)
     @SuppressLint("ResourceAsColor")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val dataModel = dataList.get(position)
-        holder.bindData(dataModel,clicktext)
-
+        holder.bindData(dataModel, clicktext)
 
 
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         @SuppressLint("ResourceAsColor")
-        fun bindData(d: SubcommentDto,clicktext: Clicktext) {
+        fun bindData(d: SubcommentDto, clicktext: Clicktext) {
             itemView.name_subcomment_account.text = d.accountDto?.username
 
             Glide.with(itemView.context)
@@ -71,38 +70,45 @@ class SubCommentAdapter (var id_comment : Int, var clicktext: Clicktext)
                     .into(itemView.anh_subcomment)
             }
 
-            if (d.content?.contains("@user/") == true)
-            {
+            if (d.content?.contains("@user/") == true) {
 
-                val begin : Int = d.content?.indexOf("@user/")
-                val startname : Int = d.content?.indexOf("/",begin)
-                val end : Int = d.content?.indexOf(" ",begin)
+                val begin: Int = d.content?.indexOf("@user/")
+                val startname: Int = d.content?.indexOf("/", begin)
+                val end: Int = d.content?.indexOf(" ", begin)
 
                 val spaned = SpannableString(d.content)
                 val fcolor = ForegroundColorSpan(Color.BLUE)
-                spaned.setSpan(RelativeSizeSpan(1.0f),begin,end,Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
-                spaned.setSpan(fcolor,begin,end, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
-                spaned.setSpan(StyleSpan(Typeface.BOLD),begin,end,Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
-                 spaned.setSpan(object : ClickableSpan(){
-                     override fun onClick(widget: View) {
-                         val stringname = d.content.substring(startname+1,end)
-                         clicktext.clicktext(stringname)
-                     }
-                 },begin,end,Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                spaned.setSpan(
+                    RelativeSizeSpan(1.0f),
+                    begin,
+                    end,
+                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                )
+                spaned.setSpan(fcolor, begin, end, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                spaned.setSpan(
+                    StyleSpan(Typeface.BOLD),
+                    begin,
+                    end,
+                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                )
+                spaned.setSpan(object : ClickableSpan() {
+                    override fun onClick(widget: View) {
+                        val stringname = d.content.substring(startname + 1, end)
+                        clicktext.clicktext(stringname)
+                    }
+                }, begin, end, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
                 itemView.content_subcomment.movementMethod = LinkMovementMethod.getInstance()
                 itemView.content_subcomment.text = spaned
 
-            }else
-            {
+            } else {
                 itemView.content_subcomment.text = d.content
             }
-            val time: String = d.time?.substring(11, 16)+ " " + d.time?.substring(0, 10)
+            val time: String = d.time?.substring(11, 16) + " " + d.time?.substring(0, 10)
             itemView.time_subcomment.text = time
 
 
         }
     }
-
 
 
 }

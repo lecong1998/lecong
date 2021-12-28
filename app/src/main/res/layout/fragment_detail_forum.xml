@@ -223,10 +223,7 @@
                                     android:background="@color/teal_700" />
                             </LinearLayout>
 
-                            <androidx.core.widget.NestedScrollView
-                                android:id="@+id/detail_scrollview"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent">
+
 
                                 <FrameLayout
                                     android:layout_width="match_parent"
@@ -250,6 +247,14 @@
                                             android:id="@+id/detail_comment_forum_recyclerview"
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content" />
+                                        <TextView
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:text="Xem thêm"
+                                            android:textAlignment="center"
+                                            android:textColor="@color/purple_700"
+                                            android:id="@+id/detail_more"
+                                            android:textStyle="bold"/>
                                     </LinearLayout>
 
                                     <ProgressBar
@@ -260,7 +265,7 @@
                                         android:visibility="visible" />
 
                                 </FrameLayout>
-                            </androidx.core.widget.NestedScrollView>
+
                         </LinearLayout>
                     </FrameLayout>
                 </LinearLayout>

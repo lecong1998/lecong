@@ -65,11 +65,12 @@ import retrofit2.Response
 import java.io.File
 
 
-class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemCommentLike,click_pdf, Clicktext {
+class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemCommentLike, click_pdf,
+    Clicktext {
 
     private val CAMERA_REQUEST: Int = 9999
     private var id_question: Int? = null
-    private var owner_username : String? = null
+    private var owner_username: String? = null
 
     private lateinit var adapter_comment: CommentAdapter
     private lateinit var presenterDetailForum: DetailForumContract.Presenter
@@ -77,10 +78,9 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
 
     private var uri: Uri? = null
 
-    var id_user : Int?= null
-     var soluotthich : Int? = null
-    var soluotbinhluan : Int? = null
-
+    var id_user: Int? = null
+    var soluotthich: Int? = null
+    var soluotbinhluan: Int? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -108,40 +108,36 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
 
         presenterDetailForum = DetailForumPresenter(this, Repository(requireContext()))
 
-        id_question?.let { presenterDetailForum.getDetailForum(it,PreferenceUtils.getUser().id!!) }
+        id_question?.let { presenterDetailForum.getDetailForum(it, PreferenceUtils.getUser().id!!) }
 
         /*-------------------Thích Question---------------------------*/
 
 
-
         /*---------------------------------------------------------------*/
-        edt_detail_forum.addTextChangedListener(object : TextWatcher{
+        edt_detail_forum.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                Log.e("call person","Thành công")
+                Log.e("call person", "Thành công")
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (s.toString().toLowerCase().contains("@user/"))
-                {
+                if (s.toString().toLowerCase().contains("@user/")) {
                     val str: String = s.toString()
                     val begin = str.indexOf("@user/")
                     val startkitu = str.lastIndexOf("/", s.toString().length)
                     val end = str.indexOf(" ", begin)
-                    if (end<0)
-                    {
-                        val text = s?.substring(startkitu+1,s?.length).toString()
-                        val call : Call<person> = ApiClient.getClient.getPerSonSearch(1,text!!)
-                        call.enqueue(object : Callback<person>{
+                    if (end < 0) {
+                        val text = s?.substring(startkitu + 1, s?.length).toString()
+                        val call: Call<person> = ApiClient.getClient.getPerSonSearch(1, text!!)
+                        call.enqueue(object : Callback<person> {
                             override fun onResponse(
                                 call: Call<person>,
                                 response: Response<person>
                             ) {
-                                if (response.isSuccessful)
-                                {
-                                    val person : person = response.body()!!
+                                if (response.isSuccessful) {
+                                    val person: person = response.body()!!
                                     val adapterperson = adapter_person(person.accountDtoList)
                                     listperson.adapter = adapterperson
-                                    Log.e("call person","Thành công")
+                                    Log.e("call person", "Thành công")
                                 }
                             }
 
@@ -152,72 +148,109 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
                     }
                 }
 
-                listperson.setOnItemClickListener(object : AdapterView.OnItemClickListener
-                {
+                listperson.setOnItemClickListener(object : AdapterView.OnItemClickListener {
                     override fun onItemClick(
                         parent: AdapterView<*>?,
                         view: View?,
                         position: Int,
                         id: Long
                     ) {
+
                         val startkitu = s.toString().lastIndexOf("/", s.toString().length)
+
                         val p = listperson.getItemAtPosition(position) as AccountDto
-                        val str = s.toString()?.substring(0,startkitu)
+                        val str = s.toString()?.substring(0, startkitu)
                         var string = ""
-                        if (str.contains("@user/"))
-                        {
+                        if (str.contains("@user/")) {
 
-                            string = str + p.username+" "
-                        }else
-                        {
-                            string = str+"/" + p.username+" "
+                            string = str + p.username + " "
+                        } else {
+                            string = str + "/" + p.username + " "
                         }
-
+                        val begin = string.indexOf("@user/")
+                        val end = string.indexOf(" ", begin)
                         edt_detail_forum.text.clear()
-                        edt_detail_forum.setText(string)
+
+
                         listperson.visibility = View.GONE
+                        val fcolor = ForegroundColorSpan(Color.BLUE)
+                        val stringspanner = SpannableString(string)
+                        stringspanner.setSpan(
+                            RelativeSizeSpan(1.0f),
+                            begin,
+                            stringspanner.length,
+                            Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                        )
+                        stringspanner.setSpan(
+                            fcolor,
+                            begin,
+                            stringspanner.length,
+                            Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                        )
+                        stringspanner.setSpan(
+                            StyleSpan(Typeface.BOLD),
+                            0,
+                            stringspanner.length,
+                            Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                        )
+                        edt_detail_forum.setText(stringspanner)
+
                         edt_detail_forum.setSelection(edt_detail_forum.text.length)
                         edt_detail_forum.requestFocus()
+
+                        edt_detail_forum.setOnClickListener {
+                            edt_detail_forum.setSelection(begin, end)
+                            val bundle = Bundle()
+                            bundle.putInt("id_user", p.id)
+                            this@DetailForumFragment.findNavController()
+                                .navigate(R.id.action_detailForumFragment_to_action_profile, bundle)
+                        }
                     }
                 })
             }
 
             override fun afterTextChanged(s: Editable?) {
-                Log.e("call person","Thành công")
+                Log.e("call person", "Thành công")
             }
         })
 
 
         /*---------------------update Comment vào layout-----------------------------------*/
-        id_question?.let { presenterDetailForum.getDetailComment(it, page_comment,id_user!!) }
+        id_question?.let { presenterDetailForum.getDetailComment(it, page_comment, id_user!!) }
 
-        adapter_comment = CommentAdapter(this,this)
+        adapter_comment = CommentAdapter(this, this)
 
         view.detail_comment_forum_recyclerview.layoutManager = LinearLayoutManager(context)
         view.detail_comment_forum_recyclerview.adapter = adapter_comment
         view.detail_comment_forum_recyclerview.isNestedScrollingEnabled = false
-        view.detail_scrollview.setOnScrollChangeListener(object :
-            NestedScrollView.OnScrollChangeListener {
-            override fun onScrollChange(
-                v: NestedScrollView?,
-                scrollX: Int,
-                scrollY: Int,
-                oldScrollX: Int,
-                oldScrollY: Int
-            ) {
-                if (scrollY == v?.getChildAt(0)?.measuredHeight?.minus(v.measuredHeight)) {
-                    page_comment++
-                    view.detailforum_progressbar.visibility = View.VISIBLE
-                    id_question?.let { presenterDetailForum.getDetailComment(it, page_comment,id_user!!) }
+        /*  view.detail_scrollview.setOnScrollChangeListener(object :
+              NestedScrollView.OnScrollChangeListener {
+              override fun onScrollChange(
+                  v: NestedScrollView?,
+                  scrollX: Int,
+                  scrollY: Int,
+                  oldScrollX: Int,
+                  oldScrollY: Int
+              ) {
+                  if (scrollY == v?.getChildAt(0)?.measuredHeight?.minus(v.measuredHeight)) {
+                      page_comment++
+                      view.detailforum_progressbar.visibility = View.VISIBLE
+                      id_question?.let { presenterDetailForum.getDetailComment(it, page_comment,id_user!!) }
 
-                }
-                if (scrollY == oldScrollY.plus(v?.getChildAt(0)?.measuredHeight!!)) {
-                    view.detailforum_progressbar.visibility = View.VISIBLE
-                    id_question?.let { presenterDetailForum.getDetailComment(it, 1,id_user!!) }
-                }
-            }
-        })
-        view.detail_comment_forum_recyclerview.scrollToPosition(-1)
+                  }
+                  if (scrollY == oldScrollY.plus(v?.getChildAt(0)?.measuredHeight!!)) {
+                      view.detailforum_progressbar.visibility = View.VISIBLE
+                      id_question?.let { presenterDetailForum.getDetailComment(it, 1,id_user!!) }
+                  }
+              }
+          }) */
+        detail_more.setOnClickListener {
+            page_comment++
+            detailforum_progressbar.visibility = View.VISIBLE
+            id_question?.let { presenterDetailForum.getDetailComment(it, page_comment, id_user!!) }
+            detail_comment_forum_recyclerview?.adapter?.notifyDataSetChanged()
+        }
+
         /*--------------------Lấy ảnh bình luận-----------------------------------------*/
 
         view.camera_comment.setOnClickListener {
@@ -231,61 +264,92 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
 
         /*----------------------Đăng -Bình luận------sub comment-----------------*/
 
-        adapter_comment.listener(object : truyen_name_account{
-            override fun truyen_name_account(id_account: Int,id_comment: Int,recyclerView: RecyclerView) {
-                val call : Call<userprofile> = ApiClient.getClient.getUserProfile(id_account)
-                call.enqueue(object : Callback<userprofile>{
+        adapter_comment.listener(object : truyen_name_account {
+            override fun truyen_name_account(
+                id_account: Int,
+                id_comment: Int,
+                recyclerView: RecyclerView
+            ) {
+                val call: Call<userprofile> = ApiClient.getClient.getUserProfile(id_account)
+                call.enqueue(object : Callback<userprofile> {
                     override fun onResponse(
                         call: Call<userprofile>,
                         response: Response<userprofile>
                     ) {
-                        if (response.isSuccessful)
-                        {
+                        if (response.isSuccessful) {
 
-                            val username : String = response.body()!!.fullname.toString()
+                            val username: String = response.body()!!.fullname.toString()
                             val stringspanner = SpannableString("@user/$username ")
                             val fcolor = ForegroundColorSpan(Color.BLUE)
-                            stringspanner.setSpan(RelativeSizeSpan(1.0f),0,stringspanner.length, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
-                            stringspanner.setSpan(fcolor,0,stringspanner.length, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
-                            stringspanner.setSpan(StyleSpan(Typeface.BOLD),0,stringspanner.length, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                            stringspanner.setSpan(
+                                RelativeSizeSpan(1.0f),
+                                0,
+                                stringspanner.length,
+                                Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                            )
+                            stringspanner.setSpan(
+                                fcolor,
+                                0,
+                                stringspanner.length,
+                                Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                            )
+                            stringspanner.setSpan(
+                                StyleSpan(Typeface.BOLD),
+                                0,
+                                stringspanner.length,
+                                Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                            )
                             edt_detail_forum.setText(stringspanner, TextView.BufferType.EDITABLE)
 
                             edt_detail_forum.setSelection(edt_detail_forum.text.length)
                             edt_detail_forum.requestFocus()
-                            if (edt_detail_forum.text.toString().contains("@user/"))
-                            {
-                                val begin : Int = edt_detail_forum.text.toString().indexOf("@user/")
-                                val end : Int = edt_detail_forum.text.toString().indexOf(" ",begin)
+                            if (edt_detail_forum.text.toString().contains("@user/")) {
+                                val begin: Int = edt_detail_forum.text.toString().indexOf("@user/")
+                                val end: Int = edt_detail_forum.text.toString().indexOf(" ", begin)
                                 edt_detail_forum.setOnClickListener {
-                                    edt_detail_forum.setSelection(begin,end)
+                                    edt_detail_forum.setSelection(begin, end)
                                     val bundle = Bundle()
-                                    bundle.putInt("id_user",id_account)
-                                    this@DetailForumFragment.findNavController().navigate(R.id.action_detailForumFragment_to_action_profile,bundle)
+                                    bundle.putInt("id_user", id_account)
+                                    this@DetailForumFragment.findNavController().navigate(
+                                        R.id.action_detailForumFragment_to_action_profile,
+                                        bundle
+                                    )
                                 }
                             }
 
                             btndang_detail_forum.setOnClickListener {
-                                CallApiSubComment(edt_detail_forum.text.toString(), PreferenceUtils.getUser().id, id_comment!!, uri)
+                                CallApiSubComment(
+                                    edt_detail_forum.text.toString(),
+                                    PreferenceUtils.getUser().id,
+                                    id_comment!!,
+                                    uri
+                                )
                                 edt_detail_forum.text.clear()
-                                val call : Call<getsubcomment> = ApiClient.getClient.getSubComment(id_comment,1)
+                                val call: Call<getsubcomment> =
+                                    ApiClient.getClient.getSubComment(id_comment, 1)
                                 call.enqueue(object : Callback<getsubcomment>, Clicktext {
                                     override fun onResponse(
                                         call: Call<getsubcomment>,
                                         response: Response<getsubcomment>
                                     ) {
-                                        val adapter = SubCommentAdapter(id_comment,this)
+                                        val adapter = SubCommentAdapter(id_comment, this)
                                         adapter.setData(response.body()!!.subCommentDtoList as ArrayList<SubcommentDto>)
-                                        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-                                        recyclerView.adapter= adapter
-                                        Log.e("lay subcomment","Thành công")
-                                        presenterDetailForum.getDetailComment(id_question!!,page_comment,id_user!!)
+                                        recyclerView.layoutManager =
+                                            LinearLayoutManager(requireContext())
+                                        recyclerView.adapter = adapter
+                                        Log.e("lay subcomment", "Thành công")
+                                        presenterDetailForum.getDetailComment(
+                                            id_question!!,
+                                            page_comment,
+                                            id_user!!
+                                        )
                                     }
 
                                     override fun onFailure(
                                         call: Call<getsubcomment>,
                                         t: Throwable
                                     ) {
-                                        Log.e("lay subcomment","thất bại")
+                                        Log.e("lay subcomment", "thất bại")
                                     }
 
                                     override fun clicktext(name_account: String) {
@@ -299,7 +363,7 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
                     }
 
                     override fun onFailure(call: Call<userprofile>, t: Throwable) {
-                        Log.e("lấy username comment","Thất bại")
+                        Log.e("lấy username comment", "Thất bại")
                     }
                 })
             }
@@ -312,30 +376,34 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
                 Toast.makeText(context, "Bạn chưa nhập bình luận!", Toast.LENGTH_LONG).show()
                 detailforum_progressbar.visibility = View.GONE
             } else {
-                CallApiComment(edt_detail_forum.text.toString(), PreferenceUtils.getUser().id, id_question!!, uri)
+                CallApiComment(
+                    edt_detail_forum.text.toString(),
+                    PreferenceUtils.getUser().id,
+                    id_question!!,
+                    uri
+                )
                 edt_detail_forum.text.clear()
                 chuacocomment.text = ""
-                soluotbinhluan = soluotbinhluan!! +1
-                if (soluotbinhluan!!>0)
-                {
+                soluotbinhluan = soluotbinhluan!! + 1
+                if (soluotbinhluan!! > 0) {
                     soluotbinhluan_detail.text = "$soluotbinhluan Bình luận"
                 }
 
-                val call : Call<ie.app.uetstudents.Entity.Comment.get.Comment> = ApiClient.getClient.getCommentQuestion(
-                    id_question!!,page_comment,id_user!!
-                )
-                call.enqueue(object : Callback<ie.app.uetstudents.Entity.Comment.get.Comment>{
+                val call: Call<ie.app.uetstudents.Entity.Comment.get.Comment> =
+                    ApiClient.getClient.getCommentQuestion(
+                        id_question!!, page_comment, id_user!!
+                    )
+                call.enqueue(object : Callback<ie.app.uetstudents.Entity.Comment.get.Comment> {
                     override fun onResponse(
                         call: Call<ie.app.uetstudents.Entity.Comment.get.Comment>,
                         response: Response<ie.app.uetstudents.Entity.Comment.get.Comment>
                     ) {
-                        if (response.isSuccessful)
-                        {
+                        if (response.isSuccessful) {
                             adapter_comment.setData(response.body()!!.commentDtoList as ArrayList<CommentDto>)
                             view.detail_comment_forum_recyclerview.adapter?.notifyDataSetChanged()
                             view.detail_comment_forum_recyclerview.adapter = adapter_comment
                             detailforum_progressbar.visibility = View.GONE
-                            Log.e("Test_call_lai_comment","Thành công")
+                            Log.e("Test_call_lai_comment", "Thành công")
                         }
                     }
 
@@ -343,7 +411,7 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
                         call: Call<ie.app.uetstudents.Entity.Comment.get.Comment>,
                         t: Throwable
                     ) {
-                        Log.e("Test_call_lai_comment","Thất bại")
+                        Log.e("Test_call_lai_comment", "Thất bại")
                     }
                 })
 
@@ -353,11 +421,10 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
     }
 
 
-
     private fun CallApiSubComment(content: String, id_account: Int, idComment: Int, uri: Uri?) {
         val account = ie.app.uetstudents.Entity.subcomment.post.Account(id_account)
         val comment = ie.app.uetstudents.Entity.subcomment.post.Comment(idComment)
-        val subcommentpost = Subcomment_post(account,comment,content)
+        val subcommentpost = Subcomment_post(account, comment, content)
         val gson = Gson()
         val comment_to_json = gson.toJson(subcommentpost).toString()
 
@@ -368,7 +435,11 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
         uri?.let {
             val strRealPath = RealPathUtil.getRealPath(requireContext(), uri)
             val file = File(strRealPath)
-            builder.addFormDataPart("image_file", file.name, RequestBody.create(MediaType.parse("multipart/form-data"), file))
+            builder.addFormDataPart(
+                "image_file",
+                file.name,
+                RequestBody.create(MediaType.parse("multipart/form-data"), file)
+            )
             this.uri = null
         }
 
@@ -381,7 +452,11 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
                 if (response.isSuccessful) {
 
                     Toast.makeText(context, "Bình luận thành công", Toast.LENGTH_SHORT).show()
-                    update_notification_comment("COMMENT", idComment, PreferenceUtils.getUser().username.toString())
+                    update_notification_comment(
+                        "COMMENT",
+                        idComment,
+                        PreferenceUtils.getUser().username.toString()
+                    )
 
                 }
             }
@@ -406,37 +481,38 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
     }
 
     /*-------------------------Click Nút thích comment----------------------------------*/
-    override fun clickOnItem(m: ie.app.uetstudents.Entity.Comment.get.CommentDto,liked : Boolean) {
+    override fun clickOnItem(m: ie.app.uetstudents.Entity.Comment.get.CommentDto, liked: Boolean) {
 
         // Toast.makeText(context,"Đã thích",Toast.LENGTH_SHORT).show()
-       if (liked == true)
-       {
-           val idcomment = Comment(m.id!!.toInt())
-           val account = Account(PreferenceUtils.getUser().id)
-           val likeComment = like_comment(account, idcomment)
-           val call: Call<like_comment> = ApiClient.getClient.setLikeComment(likeComment)
-           call.enqueue(object : Callback<like_comment> {
-               override fun onResponse(call: Call<like_comment>, response: Response<like_comment>) {
+        if (liked == true) {
+            val idcomment = Comment(m.id!!.toInt())
+            val account = Account(PreferenceUtils.getUser().id)
+            val likeComment = like_comment(account, idcomment)
+            val call: Call<like_comment> = ApiClient.getClient.setLikeComment(likeComment)
+            call.enqueue(object : Callback<like_comment> {
+                override fun onResponse(
+                    call: Call<like_comment>,
+                    response: Response<like_comment>
+                ) {
 
-                   if (response.isSuccessful) {
-                       Log.e("Test_API_Like_Comment", "Thành công")
-                       update_notification_comment(
-                           "LIKE",
-                           m.id!!,
-                           PreferenceUtils.getUser().username.toString()
-                       )
-                   }
-               }
+                    if (response.isSuccessful) {
+                        Log.e("Test_API_Like_Comment", "Thành công")
+                        update_notification_comment(
+                            "LIKE",
+                            m.id!!,
+                            PreferenceUtils.getUser().username.toString()
+                        )
+                    }
+                }
 
-               override fun onFailure(call: Call<like_comment>, t: Throwable) {
-                   Log.e("Test_API_Like_Comment", "Thất bại")
-               }
-           })
+                override fun onFailure(call: Call<like_comment>, t: Throwable) {
+                    Log.e("Test_API_Like_Comment", "Thất bại")
+                }
+            })
 
-       }else
-       {
-           Repository(requireContext()).deletelike_comment(id_user!!,m.id!!)
-       }
+        } else {
+            Repository(requireContext()).deletelike_comment(id_user!!, m.id!!)
+        }
 
 
     }
@@ -460,23 +536,18 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
         date_detail_forum.setText(ngay)
         soluotbinhluan = data.comment_quantity
         soluotthich = data.like_quantity
-        var liked : Boolean = data.liked
-        if(data.comment_quantity != 0)
-        {
+        var liked: Boolean = data.liked
+        if (data.comment_quantity != 0) {
             soluotbinhluan_detail.text = "${data.comment_quantity} bình luận"
         }
-        if (data.like_quantity > 0)
-        {
+        if (data.like_quantity > 0) {
             soluotlike_detail.text = "${data.like_quantity} Người thích"
         }
 
-        if (liked == false)
-        {
+        if (liked == false) {
             imagelike_detail.setImageResource(R.drawable.ic_baseline_favorite_border_24)
-            textlike_detail.text= "Thích"
-        }
-        else
-        {
+            textlike_detail.text = "Thích"
+        } else {
             imagelike_detail.setImageResource(R.drawable.ic_baseline_favorite_24)
             textlike_detail.text = "Đã Thích"
         }
@@ -486,7 +557,7 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
                 listlink.add(it.image)
             }
         }
-        val adapterhienthi = adapter_hienthianh(listlink,this)
+        val adapterhienthi = adapter_hienthianh(listlink, this)
         detail_listanh.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         detail_listanh.adapter = adapterhienthi
@@ -497,19 +568,17 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
                 textlike_detail.setTextColor(R.color.purple_500)
                 imagelike_detail.setImageResource(R.drawable.ic_baseline_favorite_24)
                 PostApiLike(id_question!!, id_user!!)
-                presenterDetailForum.getDetailForum(id_question!!,id_user!!)
+                presenterDetailForum.getDetailForum(id_question!!, id_user!!)
                 soluotthich = soluotthich!! + 1
                 soluotlike_detail.text = "$soluotthich Người thích"
                 liked = true
-            }
-            else if (liked== true ) {
+            } else if (liked == true) {
                 textlike_detail.text = "Thích"
                 textlike_detail.setTextColor(R.color.black)
                 imagelike_detail.setImageResource(R.drawable.ic_baseline_favorite_border_24)
-                soluotthich = soluotthich!! -1
+                soluotthich = soluotthich!! - 1
                 liked = false
-                if (soluotthich!! >0)
-                {
+                if (soluotthich!! > 0) {
                     soluotlike_detail.text = "$soluotthich Người thích"
                 }
 
@@ -540,12 +609,21 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
 
         adapter_comment.setData(datacomment.commentDtoList as ArrayList<CommentDto>)
         adapter_comment.notifyDataSetChanged()
+        detail_comment_forum_recyclerview?.adapter?.notifyDataSetChanged()
         if (datacomment.commentDtoList.isEmpty()) {
             chuacocomment.text = "Chưa có bình luận nào"
         } else {
             chuacocomment.text = ""
         }
         detailforum_progressbar.visibility = View.GONE
+        if (datacomment.result_quantity?.rem(10) != 0) {
+            detail_more.visibility = View.GONE
+        } else {
+            detail_more.visibility = View.VISIBLE
+
+        }
+
+
     }
 
 
@@ -564,11 +642,16 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
         uri?.let {
             val strRealPath = RealPathUtil.getRealPath(requireContext(), uri)
             val file = File(strRealPath)
-            builder.addFormDataPart("image_file", file.name, RequestBody.create(MediaType.parse("multipart/form-data"), file))
+            builder.addFormDataPart(
+                "image_file",
+                file.name,
+                RequestBody.create(MediaType.parse("multipart/form-data"), file)
+            )
             this.uri = null
         }
 
-        val call: Call<ie.app.uetstudents.Entity.Comment.get.Comment> = ApiClient.getClient.setCommentQuestion(builder.build())
+        val call: Call<ie.app.uetstudents.Entity.Comment.get.Comment> =
+            ApiClient.getClient.setCommentQuestion(builder.build())
         call.enqueue(object : Callback<ie.app.uetstudents.Entity.Comment.get.Comment> {
             override fun onResponse(
                 call: Call<ie.app.uetstudents.Entity.Comment.get.Comment>,
@@ -594,7 +677,6 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
                 Log.e("Đăng comment", "Thất bại")
             }
         })
-
 
 
     }
@@ -639,9 +721,13 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
 
 
     /*---------------------------update notification question-------------------------------------------*/
-    fun update_notification(type_action: String, id_question: Int, username: String, owner_username : String) {
-        if (PreferenceUtils.getUser().avatar != null)
-        {
+    fun update_notification(
+        type_action: String,
+        id_question: Int,
+        username: String,
+        owner_username: String
+    ) {
+        if (PreferenceUtils.getUser().avatar != null) {
             val notifi_item = notification_question_post(
                 type_action,
                 PreferenceUtils.getUser().avatar.toString(),
@@ -650,9 +736,7 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
                 owner_username
             )
             presenterDetailForum.setNotificationQuestion(notifi_item)
-        }
-        else
-        {
+        } else {
             val notifi_item = notification_question_post(
                 type_action,
                 null,
@@ -668,8 +752,7 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
     /*-----------------------------update notification comment-----------------------------------------------*/
     fun update_notification_comment(type: String, id_comment: Int, username: String) {
 
-        if (PreferenceUtils.getUser().avatar != null)
-        {
+        if (PreferenceUtils.getUser().avatar != null) {
             val notifiItem = post_notifi_comment(
                 type,
                 PreferenceUtils.getUser().avatar.toString(),
@@ -677,8 +760,7 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
                 username
             )
             presenterDetailForum.setNotificationComment(notifiItem)
-        }else
-        {
+        } else {
             val notifiItem = post_notifi_comment(
                 type,
                 null,
@@ -705,20 +787,19 @@ class DetailForumFragment : Fragment(), DetailForumContract.View, ClickItemComme
     }
 
     override fun clicktext(name_account: String) {
-       chuyentrangprofile(name_account)
+        chuyentrangprofile(name_account)
     }
 
-    fun chuyentrangprofile(username: String)
-    {
-        val call : Call<userprofile> = ApiClient.getClient.getUserProfile(username)
-        call.enqueue(object : Callback<userprofile>{
+    fun chuyentrangprofile(username: String) {
+        val call: Call<userprofile> = ApiClient.getClient.getUserProfile(username)
+        call.enqueue(object : Callback<userprofile> {
             override fun onResponse(call: Call<userprofile>, response: Response<userprofile>) {
-                if (response.isSuccessful)
-                {
+                if (response.isSuccessful) {
                     val id_account = response.body()!!.id
                     val bundle = Bundle()
-                    bundle.putInt("id_user",id_account)
-                    this@DetailForumFragment.findNavController().navigate(R.id.action_detailForumFragment_to_action_profile,bundle)
+                    bundle.putInt("id_user", id_account)
+                    this@DetailForumFragment.findNavController()
+                        .navigate(R.id.action_detailForumFragment_to_action_profile, bundle)
 
                 }
             }
